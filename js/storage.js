@@ -55,6 +55,7 @@ const Supa = (() => {
             const { data, error } = await client
                 .from('reviews')
                 .select('*')
+                .eq('status', 'approved')
                 .order('created_at', { ascending: false });
             if (error) throw error;
             return data || [];
@@ -221,6 +222,7 @@ const Supa = (() => {
         const { data, error } = await client
             .from('fanfics')
             .select('*')
+            .eq('status', 'approved')
             .order('created_at', { ascending: false });
         if (error) throw error;
         return data || [];
@@ -231,6 +233,7 @@ const Supa = (() => {
         const { data, error } = await client
             .from('illustrations')
             .select('*')
+            .eq('status', 'approved')
             .order('created_at', { ascending: false });
         if (error) throw error;
         return data || [];
