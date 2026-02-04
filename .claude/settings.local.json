@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:agatha-mistery.com)",
+      "Read(//Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/pages/**)",
+      "Read(//Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/pages/**)",
+      "Read(//Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/css/**)",
+      "Read(//Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/css/**)",
+      "Read(//Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/**)",
+      "Read(//Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/css",
+      "/Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери/css"
+    ]
+  }
+}

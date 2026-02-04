@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Викторины по книгам Агаты Мистери.">
+  <title>Викторины | Агата Мистери</title>
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/navigation.css">
+</head>
+
+<body>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <div class="logo">
+        <h1>Агата Мистери</h1>
+      </div>
+      <button class="burger-menu" aria-label="Меню">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+        <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+        <li><a href="quiz.html" class="active" data-i18n="nav.quizzes">Викторины</a></li>
+        <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
+        <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="container">
+      <h2 class="section-title">Викторины</h2>
+      <p>Проверь свои знания о героях и приключениях Агаты Мистери.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div id="quizzes-grid" class="grid grid-2"></div>
+    </div>
+  </section>
+
+  <footer class="main-footer">
+    <div class="container">
+      <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+    </div>
+  </footer>
+
+  <script id="quizzes-data" type="application/json">
+[
+  {
+    "id": 1,
+    "title": "Насколько хорошо ты знаешь Агату?",
+    "description": "Проверь свои знания о главной героине серии книг!",
+    "questionsCount": 5,
+    "questions": [
+      {
+        "id": 1,
+        "text": "Как должна выглядеть ваша Аватарка?",
+        "type": "image",
+        "options": [
+          {
+            "id": "a",
+            "text": "Агата",
+            "image": "assets/images/characters/agatha.svg",
+            "isCorrect": false
+          },
+          {
+            "id": "b",
+            "text": "Ларри",
+            "image": "assets/images/characters/larry.svg",
+            "isCorrect": false
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "text": "Какой особенностью обладает Агата?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Фотографическая память", "isCorrect": true },
+          { "id": "b", "text": "Телепатия", "isCorrect": false },
+          { "id": "c", "text": "Сверхсила", "isCorrect": false },
+          { "id": "d", "text": "Невидимость", "isCorrect": false }
+        ]
+      },
+      {
+        "id": 3,
+        "text": "Как зовут кота Агаты?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Шерлок", "isCorrect": false },
+          { "id": "b", "text": "Ватсон", "isCorrect": true },
+          { "id": "c", "text": "Холмс", "isCorrect": false },
+          { "id": "d", "text": "Пуаро", "isCorrect": false }
+        ]
+      },
+      {
+        "id": 4,
+        "text": "Кем работает отец Агаты?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Полицейский", "isCorrect": false },
+          { "id": "b", "text": "Владелец детективной школы", "isCorrect": true },
+          { "id": "c", "text": "Писатель", "isCorrect": false },
+          { "id": "d", "text": "Учитель", "isCorrect": false }
+        ]
+      },
+      {
+        "id": 5,
+        "text": "Кем приходится Ларри Агате?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Брат", "isCorrect": false },
+          { "id": "b", "text": "Двоюродный брат", "isCorrect": true },
+          { "id": "c", "text": "Друг", "isCorrect": false },
+          { "id": "d", "text": "Одноклассник", "isCorrect": false }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Приключения по всему миру",
+    "description": "Помнишь ли ты все места, где побывала Агата?",
+    "questionsCount": 4,
+    "questions": [
+      {
+        "id": 1,
+        "text": "В каком городе находится дом семьи Мистери?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Париж", "isCorrect": false },
+          { "id": "b", "text": "Лондон", "isCorrect": true },
+          { "id": "c", "text": "Нью-Йорк", "isCorrect": false },
+          { "id": "d", "text": "Рим", "isCorrect": false }
+        ]
+      },
+      {
+        "id": 2,
+        "text": "Где Агата расследовала тайну исчезнувшей картины?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "В Лувре, Париж", "isCorrect": true },
+          { "id": "b", "text": "В Эрмитаже, Санкт-Петербург", "isCorrect": false },
+          { "id": "c", "text": "В Британском музее, Лондон", "isCorrect": false },
+          { "id": "d", "text": "В Прадо, Мадрид", "isCorrect": false }
+        ]
+      },
+      {
+        "id": 3,
+        "text": "В какой стране Агата разгадала проклятие фараона?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Греция", "isCorrect": false },
+          { "id": "b", "text": "Египет", "isCorrect": true },
+          { "id": "c", "text": "Мексика", "isCorrect": false },
+          { "id": "d", "text": "Перу", "isCorrect": false }
+        ]
+      },
+      {
+        "id": 4,
+        "text": "Где произошла история с похищенной маской на карнавале?",
+        "type": "text",
+        "options": [
+          { "id": "a", "text": "Рио-де-Жанейро", "isCorrect": false },
+          { "id": "b", "text": "Венеция", "isCorrect": true },
+          { "id": "c", "text": "Новый Орлеан", "isCorrect": false },
+          { "id": "d", "text": "Барселона", "isCorrect": false }
+        ]
+      }
+    ]
+  }
+]
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+
+</html>

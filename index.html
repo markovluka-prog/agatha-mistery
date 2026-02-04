@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Фан-сайт по книгам про Агату Мистери. Карты приключений, викторины, персонажи и фан-фикшны.">
+    <title>Фанаты Агаты Мистери</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/reviews.css">
+</head>
+
+<body>
+    <!-- Навигация -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Агата Мистери</h1>
+            </div>
+            <button class="burger-menu" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active" data-i18n="nav.home">Главная</a></li>
+                <li><a href="pages/map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="pages/quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="pages/characters.html" data-i18n="nav.characters">Персонажи</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Главный контент -->
+    <main>
+        <!-- Приветственный баннер -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2 data-i18n="hero.title">Добро пожаловать в мир Агаты Мистери!</h2>
+                <p data-i18n="hero.text">Погрузись в захватывающий мир тайн и приключений вместе с Агатой Мистери. У нас
+                    ты найдёшь уникальные
+                    карты с местами действия историй, интересные викторины, а также подробные биографии персонажей.
+                    Проверь свою память и знания о книгах, участвуй в увлекательных играх и делись своими впечатлениями.
+                    Создавай иллюстрации и пиши фанфики — у нас есть всё для настоящих фанатов.</p>
+                <div class="hero-buttons">
+                    <a href="pages/map.html" class="btn btn-primary" data-i18n="hero.btn.map">Исследовать карту</a>
+                    <a href="pages/quiz.html" class="btn btn-secondary" data-i18n="hero.btn.quiz">Пройти викторину</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция отзывов -->
+        <section class="reviews-section">
+            <div class="container">
+                <h2 data-i18n="reviews.title">Отзывы фанатов</h2>
+
+                <!-- Список отзывов -->
+                <div id="reviews-list" class="reviews-list">
+                    <!-- Отзывы будут загружаться из LocalStorage через JavaScript -->
+                </div>
+
+                <!-- Форма добавления отзыва -->
+                <div class="review-form-wrapper">
+                    <h3 data-i18n="reviews.form.title">Оставить отзыв</h3>
+                    <form id="review-form" class="review-form">
+                        <div class="form-group">
+                            <label for="review-name" data-i18n="reviews.form.name">Ваше имя:</label>
+                            <input type="text" id="review-name" name="name" required placeholder="Введите ваше имя"
+                                maxlength="50" data-i18n-placeholder="reviews.form.name.placeholder">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="review-text" data-i18n="reviews.form.text">Ваш отзыв:</label>
+                            <textarea id="review-text" name="text" required
+                                placeholder="Поделитесь своими впечатлениями о книгах..." rows="5" maxlength="500"
+                                data-i18n-placeholder="reviews.form.text.placeholder"></textarea>
+                            <small class="char-counter"><span id="char-count">0</span> / 500</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" data-i18n="reviews.form.submit">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer class="main-footer">
+        <div class="container">
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/reviews.js"></script>
+</body>
+
+</html>

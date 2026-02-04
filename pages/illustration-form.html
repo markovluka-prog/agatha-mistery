@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Форма отправки иллюстраций по книгам Агаты Мистери.">
+    <title>Иллюстрации | Агата Мистери</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/navigation.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Агата Мистери</h1>
+            </div>
+            <button class="burger-menu" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="map.html">Карта мира</a></li>
+                <li><a href="quiz.html">Викторины</a></li>
+                <li><a href="characters.html" class="active">Персонажи</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h2 class="section-title">Отправить иллюстрацию</h2>
+            <p>Поделись своим рисунком или коллажем по мотивам приключений Агаты.</p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form class="review-form" data-storage-key="agatha_illustrations">
+                        <div class="form-message"></div>
+                        <div class="form-group">
+                            <label for="illustration-name">Ваше имя</label>
+                            <input type="text" id="illustration-name" name="name" placeholder="Имя автора" required maxlength="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="illustration-title">Название работы</label>
+                            <input type="text" id="illustration-title" name="title" placeholder="Например: Тайна в Лондоне" required maxlength="80">
+                        </div>
+                        <div class="form-group">
+                            <label for="illustration-desc">Описание</label>
+                            <textarea id="illustration-desc" name="description" rows="4" placeholder="Что вдохновило тебя?" maxlength="500"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="illustration-file">Файл иллюстрации</label>
+                            <input type="file" id="illustration-file" name="file">
+                            <small>Мы сохраняем информацию о работе в архиве фанатов.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+        </div>
+    </footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

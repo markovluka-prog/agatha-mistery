@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Персонажи серии книг про Агату Мистери.">
+    <title>Персонажи | Агата Мистери</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/navigation.css">
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Агата Мистери</h1>
+            </div>
+            <button class="burger-menu" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" class="active" data-i18n="nav.characters">Персонажи</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h2 class="section-title" data-i18n="characters.title">Персонажи</h2>
+            <p data-i18n="characters.subtitle">Познакомься с героями, которые помогают Агате раскрывать самые сложные
+                тайны.</p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <div id="characters-grid" class="grid grid-3"></div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title" data-i18n="workshop.title">Творческая мастерская</h3>
+                    <p class="card-text" data-i18n="workshop.subtitle">Создай иллюстрацию или напиши фанфик, чтобы
+                        поделиться своим видением мира
+                        Агаты Мистери.</p>
+                    <div class="grid grid-2">
+                        <a class="btn btn-secondary" href="illustration-form.html"
+                            data-i18n="illustrations.btn.submit">Отправить иллюстрацию</a>
+                        <a class="btn btn-primary" href="fanfiction-form.html" data-i18n="fanfics.btn.submit">Отправить
+                            фанфик</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="fanfics.title">Фанфики</h2>
+            <div id="fanfics-list"></div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+        </div>
+    </footer>
+
+    <script id="characters-data" type="application/json">
+[
+  {
+    "id": 1,
+    "name": "Агата Мистери",
+    "image": "assets/images/characters/agatha.svg",
+    "shortDescription": "Двенадцатилетняя гениальная сыщица с фотографической памятью.",
+    "fullBio": "Агата Мистери — двенадцатилетняя девочка с невероятными детективными способностями. Обладает фотографической памятью и острым умом. Мечтает стать лучшим детективом в мире. Всегда берет с собой верного кота Ватсона и своего двоюродного брата Ларри."
+  },
+  {
+    "id": 2,
+    "name": "Ларри Мистери",
+    "image": "assets/images/characters/larry.svg",
+    "shortDescription": "Двоюродный брат Агаты, начинающий писатель и её верный помощник.",
+    "fullBio": "Ларри — четырнадцатилетний двоюродный брат Агаты. Мечтает стать знаменитым писателем детективов. Всегда сопровождает Агату в её расследованиях, записывая все приключения. Иногда попадает в неловкие ситуации, но всегда готов помочь."
+  },
+  {
+    "id": 3,
+    "name": "Ватсон (кот)",
+    "image": "assets/images/characters/watson.svg",
+    "shortDescription": "Сибирский кот Агаты, её верный спутник во всех приключениях.",
+    "fullBio": "Ватсон — пушистый сибирский кот с голубыми глазами. Удивительно умён для кота. Часто помогает Агате находить улики. Обожает лакомства и комфорт, но никогда не бросит свою хозяйку в беде."
+  },
+  {
+    "id": 4,
+    "name": "Мистер Кент",
+    "image": "assets/images/characters/kent.svg",
+    "shortDescription": "Дворецкий семьи Мистери, всегда готов помочь детям.",
+    "fullBio": "Мистер Кент — верный дворецкий семьи Мистери. Безупречно вежлив и организован. Тайно гордится детективными успехами Агаты и всегда готов поддержать юных сыщиков полезным советом или чашкой горячего чая."
+  },
+  {
+    "id": 5,
+    "name": "Чандлер Мистери",
+    "image": "assets/images/characters/chandler.svg",
+    "shortDescription": "Отец Агаты, владелец детективной школы Eye International.",
+    "fullBio": "Чандлер Мистери — отец Агаты и владелец престижной детективной школы Eye International. Именно он привил дочери любовь к расследованиям. Поддерживает её стремление стать великим детективом."
+  }
+]
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

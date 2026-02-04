@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Карта приключений Агаты Мистери по всему миру.">
+    <title>Карта мира | Агата Мистери</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/navigation.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Агата Мистери</h1>
+            </div>
+            <button class="burger-menu" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" class="active" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h2 class="section-title" data-i18n="map.title">Карта приключений</h2>
+            <p data-i18n="map.subtitle">От Лондона до Токио — здесь собраны главные места, где Агата раскрывала загадки.
+            </p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <div class="map-layout">
+                <div class="map-panel">
+                    <div id="places-map" class="places-map" aria-label="Карта приключений"></div>
+                    <p class="map-note" data-i18n="map.note">Нажми на карточку локации, чтобы приблизить карту.</p>
+                </div>
+                <aside class="map-sidebar">
+                    <h3 data-i18n="map.sidebar.title">Локации</h3>
+                    <div id="places-grid" class="grid map-grid"></div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="illustrations.title">Иллюстрации фанатов</h2>
+            <p style="text-align: center; margin-bottom: var(--spacing-large);" data-i18n="illustrations.subtitle">
+                Делитесь своими иллюстрациями локаций из
+                приключений Агаты!</p>
+            <div style="text-align: center; margin-bottom: var(--spacing-xlarge);">
+                <a class="btn btn-primary" href="illustration-form.html" data-i18n="illustrations.btn.submit">Отправить
+                    иллюстрацию</a>
+            </div>
+            <div id="illustrations-list"></div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>
