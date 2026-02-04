@@ -2,7 +2,9 @@
 create table if not exists places (
   id bigint primary key,
   name text not null,
+  name_en text,
   description text,
+  description_en text,
   lat numeric,
   lng numeric,
   image_url text
@@ -14,6 +16,7 @@ create table if not exists place_images (
   place_id bigint not null references places(id) on delete cascade,
   image_url text not null,
   caption text,
+  caption_en text,
   sort_order integer default 0
 );
 
@@ -21,8 +24,11 @@ create table if not exists place_images (
 create table if not exists characters (
   id bigint primary key,
   name text not null,
+  name_en text,
   short_description text,
+  short_description_en text,
   full_bio text,
+  full_bio_en text,
   image_url text
 );
 
@@ -30,7 +36,9 @@ create table if not exists characters (
 create table if not exists quizzes (
   id bigint primary key,
   title text not null,
+  title_en text,
   description text,
+  description_en text,
   questions_count integer,
   questions jsonb
 );

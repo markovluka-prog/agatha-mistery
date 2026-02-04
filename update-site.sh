@@ -7,7 +7,7 @@ cd "/Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери"
 git add .
 
 # Коммит с описанием
-git commit -m "Admin panel fixes: removed alerts, added base64 image upload, fixed question types"
+git commit -m "Admin panel: added English translation support for places, characters, and quizzes"
 
 # Отправляем на GitHub
 git push

@@ -463,7 +463,9 @@ const Admin = (() => {
             if (quiz) {
                 document.getElementById('quiz-id').value = quiz.id;
                 document.getElementById('quiz-title').value = quiz.title || '';
+                document.getElementById('quiz-title-en').value = quiz.title_en || '';
                 document.getElementById('quiz-description').value = quiz.description || '';
+                document.getElementById('quiz-description-en').value = quiz.description_en || '';
                 document.getElementById('delete-quiz-btn').hidden = false;
 
                 if (quiz.questions && quiz.questions.length) {
@@ -733,7 +735,9 @@ const Admin = (() => {
     async function saveQuiz() {
         const quizId = document.getElementById('quiz-id').value;
         const title = document.getElementById('quiz-title').value.trim();
+        const titleEn = document.getElementById('quiz-title-en').value.trim();
         const description = document.getElementById('quiz-description').value.trim();
+        const descriptionEn = document.getElementById('quiz-description-en').value.trim();
 
         if (!title) {
             showToast('Введите название квиза');
@@ -779,7 +783,9 @@ const Admin = (() => {
 
         const quizData = {
             title: title,
+            title_en: titleEn,
             description: description,
+            description_en: descriptionEn,
             questions_count: questions.length,
             questions: questions
         };
@@ -954,7 +960,9 @@ const Admin = (() => {
                 if (place) {
                     document.getElementById('place-id').value = place.id;
                     document.getElementById('place-name').value = place.name || '';
+                    document.getElementById('place-name-en').value = place.name_en || '';
                     document.getElementById('place-description').value = place.description || '';
+                    document.getElementById('place-description-en').value = place.description_en || '';
                     document.getElementById('place-lat').value = place.lat || '';
                     document.getElementById('place-lng').value = place.lng || '';
 
@@ -1031,7 +1039,9 @@ const Admin = (() => {
     async function savePlace() {
         const placeId = document.getElementById('place-id').value;
         const name = document.getElementById('place-name').value.trim();
+        const nameEn = document.getElementById('place-name-en').value.trim();
         const description = document.getElementById('place-description').value.trim();
+        const descriptionEn = document.getElementById('place-description-en').value.trim();
         const lat = parseFloat(document.getElementById('place-lat').value);
         const lng = parseFloat(document.getElementById('place-lng').value);
 
@@ -1047,7 +1057,9 @@ const Admin = (() => {
 
         const placeData = {
             name: name,
+            name_en: nameEn,
             description: description,
+            description_en: descriptionEn,
             lat: lat,
             lng: lng
         };
@@ -1152,8 +1164,11 @@ const Admin = (() => {
             if (char) {
                 document.getElementById('character-id').value = char.id;
                 document.getElementById('character-name').value = char.name || '';
+                document.getElementById('character-name-en').value = char.name_en || '';
                 document.getElementById('character-short').value = char.short_description || '';
+                document.getElementById('character-short-en').value = char.short_description_en || '';
                 document.getElementById('character-bio').value = char.full_bio || '';
+                document.getElementById('character-bio-en').value = char.full_bio_en || '';
 
                 if (char.image_url) {
                     preview.innerHTML = `<img src="${char.image_url}" alt="${escapeHtml(char.name)}">`;
@@ -1204,8 +1219,11 @@ const Admin = (() => {
 
         const charData = {
             name: name,
+            name_en: document.getElementById('character-name-en').value.trim(),
             short_description: shortDesc,
-            full_bio: bio
+            short_description_en: document.getElementById('character-short-en').value.trim(),
+            full_bio: bio,
+            full_bio_en: document.getElementById('character-bio-en').value.trim()
         };
 
         if (imageUrl) {

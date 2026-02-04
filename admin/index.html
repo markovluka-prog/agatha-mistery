@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="admin.css">
 </head>
+
 <body>
     <!-- Login Screen -->
     <div id="login-screen" class="login-screen">
@@ -21,8 +23,8 @@
                 <div class="form-group">
                     <label for="password">Пароль администратора</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="password" name="password" required
-                               placeholder="Введите пароль" autocomplete="off">
+                        <input type="password" id="password" name="password" required placeholder="Введите пароль"
+                            autocomplete="off">
                         <button type="button" id="toggle-password" class="toggle-password">
                             <span class="eye-icon">👁</span>
                         </button>
@@ -166,13 +168,24 @@
             <div class="modal-body">
                 <form id="quiz-form" class="editor-form">
                     <input type="hidden" id="quiz-id">
-                    <div class="form-group">
-                        <label for="quiz-title">Название квиза</label>
-                        <input type="text" id="quiz-title" required placeholder="Введите название">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quiz-title">Название</label>
+                            <input type="text" id="quiz-title" required placeholder="Название квиза">
+                        </div>
+                        <div class="form-group">
+                            <label for="quiz-title-en">Title (English)</label>
+                            <input type="text" id="quiz-title-en" placeholder="Quiz Title in English">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="quiz-description">Описание</label>
                         <textarea id="quiz-description" rows="2" placeholder="Краткое описание квиза"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="quiz-description-en">Description (English)</label>
+                        <textarea id="quiz-description-en" rows="2"
+                            placeholder="Quiz Description in English"></textarea>
                     </div>
                     <div class="questions-section">
                         <div class="questions-header">
@@ -181,7 +194,8 @@
                         <div id="questions-container" class="questions-container">
                             <!-- Questions will be rendered here -->
                         </div>
-                        <button type="button" id="add-question-btn" class="btn btn-secondary btn-small" style="margin-top: 16px; width: 100%;">
+                        <button type="button" id="add-question-btn" class="btn btn-secondary btn-small"
+                            style="margin-top: 16px; width: 100%;">
                             + Добавить вопрос
                         </button>
                     </div>
@@ -212,10 +226,21 @@
                             <label for="place-name">Название</label>
                             <input type="text" id="place-name" required placeholder="Название локации">
                         </div>
+                        <div class="form-group">
+                            <label for="place-name-en">Name (English)</label>
+                            <input type="text" id="place-name-en" placeholder="Location Name in English">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="place-description">Описание</label>
-                        <textarea id="place-description" rows="3" placeholder="Описание локации"></textarea>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="place-description">Описание</label>
+                            <textarea id="place-description" rows="3" placeholder="Описание локации"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="place-description-en">Description (English)</label>
+                            <textarea id="place-description-en" rows="3"
+                                placeholder="Description in English"></textarea>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -263,17 +288,35 @@
             <div class="modal-body">
                 <form id="character-form" class="editor-form">
                     <input type="hidden" id="character-id">
-                    <div class="form-group">
-                        <label for="character-name">Имя персонажа</label>
-                        <input type="text" id="character-name" required placeholder="Имя">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-name">Имя персонажа</label>
+                            <input type="text" id="character-name" required placeholder="Имя">
+                        </div>
+                        <div class="form-group">
+                            <label for="character-name-en">Name (English)</label>
+                            <input type="text" id="character-name-en" placeholder="Character Name in English">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="character-short">Краткое описание</label>
-                        <input type="text" id="character-short" placeholder="Одно предложение о персонаже">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-short">Краткое описание</label>
+                            <input type="text" id="character-short" placeholder="Одно предложение о персонаже">
+                        </div>
+                        <div class="form-group">
+                            <label for="character-short-en">Short Description (English)</label>
+                            <input type="text" id="character-short-en" placeholder="One sentence in English">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="character-bio">Полная биография</label>
-                        <textarea id="character-bio" rows="5" placeholder="Подробное описание персонажа"></textarea>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-bio">Полная биография</label>
+                            <textarea id="character-bio" rows="5" placeholder="Подробное описание персонажа"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="character-bio-en">Bio (English)</label>
+                            <textarea id="character-bio-en" rows="5" placeholder="Detailed bio in English"></textarea>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Изображение</label>
@@ -321,4 +364,5 @@
     <script src="../js/supabase-config.js"></script>
     <script src="admin.js"></script>
 </body>
+
 </html>
