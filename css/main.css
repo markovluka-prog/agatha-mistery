@@ -50,16 +50,29 @@ body {
     background-color: var(--background-light);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-heading);
     font-weight: 600;
     margin-bottom: var(--spacing-medium);
     color: var(--accent-color);
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
 
 p {
     margin-bottom: var(--spacing-medium);
@@ -136,13 +149,15 @@ img {
 }
 
 .card-image {
-    height: 180px;
+    height: 240px;
     background: linear-gradient(120deg, #E9D8A6 0%, #F6D400 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--accent-color);
     font-weight: 600;
+    position: relative;
+    cursor: zoom-in;
 }
 
 .card-image img {
@@ -306,7 +321,7 @@ img {
 }
 
 .map-grid .card-image {
-    height: 120px;
+    height: 200px;
 }
 
 .popup-content {
@@ -318,11 +333,12 @@ img {
 }
 
 .popup-image {
-    width: 160px;
-    height: 110px;
+    width: 240px;
+    height: 160px;
     object-fit: cover;
     border-radius: 6px;
     border: 1px solid var(--border-color);
+    cursor: zoom-in;
 }
 
 /* Кнопки */
@@ -494,9 +510,17 @@ input[type="file"] {
 
 /* ===== Responsive Design ===== */
 @media (max-width: 768px) {
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.75rem; }
-    h3 { font-size: 1.25rem; }
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
 
     .hero {
         padding: 110px 0 70px;
@@ -567,7 +591,9 @@ input[type="file"] {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-text {
@@ -769,11 +795,11 @@ input[type="file"] {
 
 /* Card image gallery adjustments */
 .card-image .image-gallery {
-    height: 180px;
+    height: 240px;
 }
 
 .map-grid .card-image .image-gallery {
-    height: 120px;
+    height: 200px;
 }
 
 /* Responsive gallery */
@@ -781,20 +807,103 @@ input[type="file"] {
     .gallery-thumbnails {
         padding: 4px;
     }
-    
+
     .gallery-thumb {
         width: 40px;
         height: 30px;
     }
-    
+
     .gallery-nav {
         padding: 4px;
     }
-    
+
     .gallery-prev,
     .gallery-next {
         width: 24px;
         height: 24px;
         font-size: 1rem;
     }
+}
+
+/* Lightbox Styles */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    display: none;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 80%;
+    object-fit: contain;
+    border: 2px solid var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-caption {
+    color: var(--secondary-color);
+    margin-top: 20px;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.lightbox-close:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.lightbox-btn {
+    pointer-events: auto;
+    background: rgba(246, 212, 0, 0.2);
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.lightbox-btn:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
 }

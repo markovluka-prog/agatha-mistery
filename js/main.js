@@ -10,6 +10,7 @@ const App = (() => {
     const resolveAsset = (path) => {
         if (!path) return '';
         if (path.startsWith('http')) return path;
+        if (path.startsWith('data:image')) return path;
         if (path.startsWith('assets/')) return `${state.basePath}${path}`;
         return path;
     };
@@ -180,7 +181,7 @@ const App = (() => {
         if (images.length === 1) {
             return `
                 <div class="image-gallery">
-                    <div class="gallery-main">
+                    <div class="gallery-main" onclick="App.openLightbox('${mainImage}', '${placeName}')">
                         <img src="${mainImage}" alt="${placeName}" class="gallery-main-img">
                         ${caption ? `<div class="gallery-caption">${caption}</div>` : ''}
                     </div>
@@ -202,7 +203,7 @@ const App = (() => {
 
         return `
             <div class="image-gallery" data-gallery>
-                <div class="gallery-main">
+                <div class="gallery-main" onclick="App.openLightboxWithGallery(this, '${placeName}')">
                     <img src="${mainImage}" alt="${placeName}" class="gallery-main-img">
                     ${caption ? `<div class="gallery-caption">${caption}</div>` : ''}
                 </div>
@@ -360,11 +361,11 @@ const App = (() => {
             }
 
             marker.bindPopup(`
-                <div class="popup-content">
+                <div class="popup-content" onclick="App.openLightboxFromPopup(this, '${place.name}')">
                     ${popupGallery}
                     <strong>${place.name}</strong><br>${place.description}
                 </div>
-            `, { maxWidth: 280 });
+            `, { maxWidth: 320 });
 
             // Инициализируем галерею в попапе при открытии
             marker.on('popupopen', () => {
@@ -423,7 +424,7 @@ const App = (() => {
                 const image = resolveAsset(character.image);
                 return `
                     <article class="card">
-                        <div class="card-image">
+                        <div class="card-image" onclick="App.openLightbox('${image}', '${character.name}')">
                             ${image ? `<img src="${image}" alt="${character.name}">` : noImageText}
                         </div>
                         <div class="card-body">
@@ -463,7 +464,7 @@ const App = (() => {
             const image = resolveAsset(character.image);
             container.innerHTML = `
                 <article class="card">
-                    <div class="card-image">
+                    <div class="card-image" style="height: 400px;" onclick="App.openLightbox('${image}', '${character.name}')">
                         ${image ? `<img src="${image}" alt="${character.name}">` : 'Нет изображения'}
                     </div>
                     <div class="card-body">
@@ -723,7 +724,7 @@ const App = (() => {
             const authorText = t('fanfics.author', 'Автор');
             container.innerHTML = `<div class="grid grid-3">${illustrations.map((ill) => `
                 <article class="card illustration-card">
-                    ${ill.file_url ? `<div class="card-image"><img src="${ill.file_url}" alt="${ill.title}"></div>` : ''}
+                    ${ill.file_url ? `<div class="card-image" style="height: 300px;" onclick="App.openLightbox('${ill.file_url}', '${ill.title}')"><img src="${ill.file_url}" alt="${ill.title}"></div>` : ''}
                     <div class="card-body">
                         <h4 class="card-title">${ill.title}</h4>
                         <div class="card-meta">${authorText}: ${ill.name}</div>
@@ -782,7 +783,86 @@ const App = (() => {
         });
     };
 
-    return { init, reloadContent };
+    const openLightbox = (url, caption) => {
+        let lightbox = document.querySelector('.lightbox');
+        if (!lightbox) {
+            lightbox = document.createElement('div');
+            lightbox.className = 'lightbox';
+            lightbox.innerHTML = `
+                <span class="lightbox-close">&times;</span>
+                <img class="lightbox-content">
+                <div class="lightbox-caption"></div>
+                <div class="lightbox-nav" style="display:none">
+                    <button class="lightbox-btn lb-prev">‹</button>
+                    <button class="lightbox-btn lb-next">›</button>
+                </div>
+            `;
+            document.body.appendChild(lightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target.classList.contains('lightbox') || e.target.classList.contains('lightbox-close')) {
+                    lightbox.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        const img = lightbox.querySelector('.lightbox-content');
+        const cap = lightbox.querySelector('.lightbox-caption');
+        lightbox.querySelector('.lightbox-nav').style.display = 'none';
+
+        img.src = url;
+        cap.textContent = caption || '';
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+
+    const openLightboxWithGallery = (galleryMain, placeName) => {
+        const gallery = galleryMain.closest('.image-gallery');
+        const thumbs = Array.from(gallery.querySelectorAll('.gallery-thumb'));
+        const images = thumbs.map(t => ({ url: t.dataset.url, caption: t.dataset.caption }));
+        const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
+
+        showLightboxGallery(images, activeIndex || 0, placeName);
+    };
+
+    const openLightboxFromPopup = (popupContent, placeName) => {
+        const mainImg = popupContent.querySelector('.popup-main-image') || popupContent.querySelector('.popup-image');
+        if (!mainImg) return;
+
+        const thumbs = Array.from(popupContent.querySelectorAll('.popup-thumb'));
+        if (thumbs.length > 0) {
+            const images = thumbs.map(t => ({ url: t.dataset.url, caption: t.alt }));
+            const currentUrl = mainImg.src;
+            const activeIndex = thumbs.findIndex(t => t.dataset.url === currentUrl);
+            showLightboxGallery(images, activeIndex >= 0 ? activeIndex : 0, placeName);
+        } else {
+            openLightbox(mainImg.src, placeName);
+        }
+    };
+
+    const showLightboxGallery = (images, startIndex, placeName) => {
+        openLightbox(images[startIndex].url, images[startIndex].caption || placeName);
+        const lightbox = document.querySelector('.lightbox');
+        const nav = lightbox.querySelector('.lightbox-nav');
+        const img = lightbox.querySelector('.lightbox-content');
+        const cap = lightbox.querySelector('.lightbox-caption');
+
+        if (images.length > 1) {
+            nav.style.display = 'flex';
+            let currentIndex = startIndex;
+
+            const update = (idx) => {
+                currentIndex = (idx + images.length) % images.length;
+                img.src = images[currentIndex].url;
+                cap.textContent = images[currentIndex].caption || placeName;
+            };
+
+            lightbox.querySelector('.lb-prev').onclick = (e) => { e.stopPropagation(); update(currentIndex - 1); };
+            lightbox.querySelector('.lb-next').onclick = (e) => { e.stopPropagation(); update(currentIndex + 1); };
+        }
+    };
+
+    return { init, reloadContent, openLightbox, openLightboxWithGallery, openLightboxFromPopup };
 })();
 
 document.addEventListener('DOMContentLoaded', App.init);
