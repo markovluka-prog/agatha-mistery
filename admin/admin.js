@@ -1620,13 +1620,13 @@ const Admin = (() => {
     // ===========================================
 
     function init() {
-        if (!initSupabase()) {
-            showToast('Ошибка подключения к базе данных');
-            return;
-        }
-
         setupConfirmDialog();
         setupEventListeners();
+
+        if (!initSupabase()) {
+            showToast('Ошибка подключения к базе данных');
+        }
+
         checkAuth();
     }
 
