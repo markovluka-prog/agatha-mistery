@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Админ-панель | Агата Мистери</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <span class="logo-icon">🔐</span>
+                <h1>Админ-панель</h1>
+                <p>Сайт фанатов Агаты Мистери</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="password">Пароль администратора</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" name="password" required
+                               placeholder="Введите пароль" autocomplete="off">
+                        <button type="button" id="toggle-password" class="toggle-password">
+                            <span class="eye-icon">👁</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="login-error" class="login-error" hidden>
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text"></span>
+                </div>
+                <button type="submit" id="login-btn" class="btn btn-primary btn-login">
+                    Войти
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel" hidden>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Админ-панель</h2>
+                <button id="logout-btn" class="btn-logout" title="Выйти">
+                    <span>🚪</span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-section="quizzes">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">Квизы</span>
+                </button>
+                <button class="nav-item" data-section="places">
+                    <span class="nav-icon">📍</span>
+                    <span class="nav-text">Карта</span>
+                </button>
+                <button class="nav-item" data-section="characters">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Персонажи</span>
+                </button>
+                <button class="nav-item" data-section="moderation">
+                    <span class="nav-icon">✅</span>
+                    <span class="nav-text">Модерация</span>
+                    <span id="moderation-badge" class="nav-badge" hidden>0</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Save Indicator -->
+            <div id="save-indicator" class="save-indicator" hidden>
+                <span class="save-icon">💾</span>
+                <span class="save-text">Сохранено</span>
+            </div>
+
+            <!-- Quizzes Section -->
+            <section id="section-quizzes" class="content-section active">
+                <div class="section-header">
+                    <h2>Управление квизами</h2>
+                    <button id="add-quiz-btn" class="btn btn-primary">
+                        <span>+</span> Новый квиз
+                    </button>
+                </div>
+                <div id="quizzes-list" class="items-grid">
+                    <div class="loading-state">Загрузка...</div>
+                </div>
+            </section>
+
+            <!-- Places Section -->
+            <section id="section-places" class="content-section">
+                <div class="section-header">
+                    <h2>Управление маркерами</h2>
+                    <button id="add-place-btn" class="btn btn-primary">
+                        <span>+</span> Новый маркер
+                    </button>
+                </div>
+                <div class="places-layout">
+                    <div id="places-list" class="places-sidebar">
+                        <div class="loading-state">Загрузка...</div>
+                    </div>
+                    <div id="admin-map" class="admin-map"></div>
+                </div>
+            </section>
+
+            <!-- Characters Section -->
+            <section id="section-characters" class="content-section">
+                <div class="section-header">
+                    <h2>Управление персонажами</h2>
+                    <button id="add-character-btn" class="btn btn-primary">
+                        <span>+</span> Новый персонаж
+                    </button>
+                </div>
+                <div id="characters-list" class="items-grid characters-grid">
+                    <div class="loading-state">Загрузка...</div>
+                </div>
+            </section>
+
+            <!-- Moderation Section -->
+            <section id="section-moderation" class="content-section">
+                <div class="section-header">
+                    <h2>Модерация контента</h2>
+                </div>
+                <div class="moderation-tabs">
+                    <button class="tab-btn active" data-tab="reviews">
+                        Впечатления <span id="reviews-count" class="tab-count">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="illustrations">
+                        Иллюстрации <span id="illustrations-count" class="tab-count">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="fanfics">
+                        Фанфики <span id="fanfics-count" class="tab-count">0</span>
+                    </button>
+                </div>
+                <div id="moderation-content" class="moderation-content">
+                    <div class="loading-state">Загрузка...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Template -->
+    <div id="modal-overlay" class="modal-overlay" hidden>
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Заголовок</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Editor Modal -->
+    <div id="quiz-editor-modal" class="modal-overlay" hidden>
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3>Редактор квиза</h3>
+                <button class="modal-close" data-close="quiz-editor-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="quiz-form" class="editor-form">
+                    <input type="hidden" id="quiz-id">
+                    <div class="form-group">
+                        <label for="quiz-title">Название квиза</label>
+                        <input type="text" id="quiz-title" required placeholder="Введите название">
+                    </div>
+                    <div class="form-group">
+                        <label for="quiz-description">Описание</label>
+                        <textarea id="quiz-description" rows="2" placeholder="Краткое описание квиза"></textarea>
+                    </div>
+                    <div class="questions-section">
+                        <div class="questions-header">
+                            <h4>Вопросы</h4>
+                        </div>
+                        <div id="questions-container" class="questions-container">
+                            <!-- Questions will be rendered here -->
+                        </div>
+                        <button type="button" id="add-question-btn" class="btn btn-secondary btn-small" style="margin-top: 16px; width: 100%;">
+                            + Добавить вопрос
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="delete-quiz-btn" class="btn btn-danger" hidden>Удалить</button>
+                <div class="footer-right">
+                    <button type="button" class="btn btn-secondary" data-close="quiz-editor-modal">Отмена</button>
+                    <button type="button" id="save-quiz-btn" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Place Editor Modal -->
+    <div id="place-editor-modal" class="modal-overlay" hidden>
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3>Редактор маркера</h3>
+                <button class="modal-close" data-close="place-editor-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="place-form" class="editor-form">
+                    <input type="hidden" id="place-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="place-name">Название</label>
+                            <input type="text" id="place-name" required placeholder="Название локации">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="place-description">Описание</label>
+                        <textarea id="place-description" rows="3" placeholder="Описание локации"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="place-lat">Широта (lat)</label>
+                            <input type="number" id="place-lat" step="any" required placeholder="51.5074">
+                        </div>
+                        <div class="form-group">
+                            <label for="place-lng">Долгота (lng)</label>
+                            <input type="number" id="place-lng" step="any" required placeholder="-0.1278">
+                        </div>
+                    </div>
+                    <p class="hint">Кликните на карту для выбора координат</p>
+                    <div id="place-editor-map" class="place-editor-map"></div>
+                    <div class="form-group">
+                        <label>Галерея изображений</label>
+                        <div id="place-images-gallery" class="images-gallery">
+                            <!-- Images will be rendered here -->
+                        </div>
+                        <div class="image-upload">
+                            <input type="file" id="place-image-upload" accept="image/*" multiple>
+                            <label for="place-image-upload" class="upload-btn">
+                                <span>📷</span> Загрузить изображения
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="delete-place-btn" class="btn btn-danger">Удалить</button>
+                <div class="footer-right">
+                    <button type="button" class="btn btn-secondary" data-close="place-editor-modal">Отмена</button>
+                    <button type="button" id="save-place-btn" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Editor Modal -->
+    <div id="character-editor-modal" class="modal-overlay" hidden>
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Редактор персонажа</h3>
+                <button class="modal-close" data-close="character-editor-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="character-form" class="editor-form">
+                    <input type="hidden" id="character-id">
+                    <div class="form-group">
+                        <label for="character-name">Имя персонажа</label>
+                        <input type="text" id="character-name" required placeholder="Имя">
+                    </div>
+                    <div class="form-group">
+                        <label for="character-short">Краткое описание</label>
+                        <input type="text" id="character-short" placeholder="Одно предложение о персонаже">
+                    </div>
+                    <div class="form-group">
+                        <label for="character-bio">Полная биография</label>
+                        <textarea id="character-bio" rows="5" placeholder="Подробное описание персонажа"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Изображение</label>
+                        <div id="character-image-preview" class="image-preview">
+                            <span class="placeholder">Нет изображения</span>
+                        </div>
+                        <div class="image-upload">
+                            <input type="file" id="character-image-upload" accept="image/*">
+                            <label for="character-image-upload" class="upload-btn">
+                                <span>📷</span> Загрузить изображение
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="delete-character-btn" class="btn btn-danger">Удалить</button>
+                <div class="footer-right">
+                    <button type="button" class="btn btn-secondary" data-close="character-editor-modal">Отмена</button>
+                    <button type="button" id="save-character-btn" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div id="confirm-dialog" class="modal-overlay" hidden>
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h3 id="confirm-title">Подтверждение</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Вы уверены?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirm-cancel" class="btn btn-secondary">Отмена</button>
+                <button type="button" id="confirm-ok" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -3,11 +3,11 @@
 
 cd "/Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери"
 
-# Добавляем только нужные файлы
-git add index.html css/ js/ pages/
+# Добавляем все изменения
+git add .
 
-# Коммит с текущей датой
-git commit -m "Update $(date '+%Y-%m-%d %H:%M')"
+# Коммит с описанием
+git commit -m "Admin panel fixes: removed alerts, added base64 image upload, fixed question types"
 
 # Отправляем на GitHub
 git push

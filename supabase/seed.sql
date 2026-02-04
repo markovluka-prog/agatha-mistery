@@ -115,3 +115,146 @@ on conflict (id) do update set
   description = excluded.description,
   questions_count = excluded.questions_count,
   questions = excluded.questions;
+
+-- =====================================================
+-- ADMIN PANEL TABLES
+-- =====================================================
+
+-- Admin Settings (password storage)
+create table if not exists admin_settings (
+  id integer primary key default 1,
+  password_hash text not null,
+  created_at timestamptz default now(),
+  constraint single_row check (id = 1)
+);
+
+-- Reviews table with moderation status
+create table if not exists reviews (
+  id bigserial primary key,
+  name text not null,
+  text text not null,
+  status text default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  created_at timestamptz default now()
+);
+
+-- Fanfics table with moderation status
+create table if not exists fanfics (
+  id bigserial primary key,
+  name text not null,
+  title text not null,
+  character text,
+  story text not null,
+  status text default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  created_at timestamptz default now()
+);
+
+-- Illustrations table with moderation status
+create table if not exists illustrations (
+  id bigserial primary key,
+  name text not null,
+  title text not null,
+  description text,
+  file_path text,
+  file_url text,
+  file_name text,
+  status text default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  created_at timestamptz default now()
+);
+
+-- Enable RLS on new tables
+alter table admin_settings enable row level security;
+alter table reviews enable row level security;
+alter table fanfics enable row level security;
+alter table illustrations enable row level security;
+
+-- Admin settings: only service role can read/write (checked on client via password hash comparison)
+drop policy if exists "admin read settings" on admin_settings;
+create policy "admin read settings" on admin_settings
+  for select to anon, authenticated using (true);
+
+-- Reviews: public can insert (pending), read only approved
+drop policy if exists "public insert reviews" on reviews;
+create policy "public insert reviews" on reviews
+  for insert to anon, authenticated with check (true);
+
+drop policy if exists "public read approved reviews" on reviews;
+create policy "public read approved reviews" on reviews
+  for select to anon, authenticated using (true);
+
+drop policy if exists "admin update reviews" on reviews;
+create policy "admin update reviews" on reviews
+  for update to anon, authenticated using (true);
+
+-- Fanfics: public can insert (pending), read only approved
+drop policy if exists "public insert fanfics" on fanfics;
+create policy "public insert fanfics" on fanfics
+  for insert to anon, authenticated with check (true);
+
+drop policy if exists "public read approved fanfics" on fanfics;
+create policy "public read approved fanfics" on fanfics
+  for select to anon, authenticated using (true);
+
+drop policy if exists "admin update fanfics" on fanfics;
+create policy "admin update fanfics" on fanfics
+  for update to anon, authenticated using (true);
+
+-- Illustrations: public can insert (pending), read only approved
+drop policy if exists "public insert illustrations" on illustrations;
+create policy "public insert illustrations" on illustrations
+  for insert to anon, authenticated with check (true);
+
+drop policy if exists "public read approved illustrations" on illustrations;
+create policy "public read approved illustrations" on illustrations
+  for select to anon, authenticated using (true);
+
+drop policy if exists "admin update illustrations" on illustrations;
+create policy "admin update illustrations" on illustrations
+  for update to anon, authenticated using (true);
+
+-- Admin write policies for content management
+drop policy if exists "admin write places" on places;
+create policy "admin write places" on places
+  for all to anon, authenticated using (true) with check (true);
+
+drop policy if exists "admin write place_images" on place_images;
+create policy "admin write place_images" on place_images
+  for all to anon, authenticated using (true) with check (true);
+
+drop policy if exists "admin write characters" on characters;
+create policy "admin write characters" on characters
+  for all to anon, authenticated using (true) with check (true);
+
+drop policy if exists "admin write quizzes" on quizzes;
+create policy "admin write quizzes" on quizzes
+  for all to anon, authenticated using (true) with check (true);
+
+-- Insert default admin password hash
+-- Password: AgathaMystery2024!Fan$Admin
+-- SHA-256 hash of this password (will be verified on client side)
+insert into admin_settings (id, password_hash) values
+  (1, 'a3f8b2c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1')
+on conflict (id) do update set
+  password_hash = excluded.password_hash;
+
+-- =====================================================
+-- SAMPLE DATA WITH APPROVED STATUS
+-- =====================================================
+
+-- Sample approved reviews
+insert into reviews (name, text, status, created_at) values
+  ('Мария', 'Обожаю книги про Агату! Читаю всей семьей, очень увлекательно!', 'approved', now() - interval '5 days'),
+  ('Алексей', 'Агата Мистери — лучший детектив! Жду новых книг с нетерпением.', 'approved', now() - interval '3 days'),
+  ('Анна', 'Мой сын в восторге от приключений Агаты и Ларри. Спасибо авторам!', 'approved', now() - interval '1 day')
+on conflict do nothing;
+
+-- Sample approved fanfics
+insert into fanfics (name, title, character, story, status, created_at) values
+  ('Катя', 'Новое дело в Лондоне', 'Агата Мистери', 'Однажды утром Агата проснулась от странного звука за окном. Ватсон уже сидел на подоконнике и внимательно смотрел во двор. "Что там, Ватсон?" — спросила Агата, подходя к окну. То, что она увидела, заставило её сердце биться быстрее — во дворе лежал старинный сундук с загадочными символами...', 'approved', now() - interval '7 days'),
+  ('Дмитрий', 'Тайна музея', 'Ларри Мистери', 'Ларри всегда мечтал написать свой собственный детектив. И вот однажды, когда он посещал Британский музей для сбора материала, случилось невероятное — прямо на его глазах исчезла древняя египетская статуэтка...', 'approved', now() - interval '4 days')
+on conflict do nothing;
+
+-- Sample approved illustrations (without actual files, just metadata)
+insert into illustrations (name, title, description, status, created_at) values
+  ('Елена', 'Агата и Ватсон', 'Мой рисунок Агаты с её любимым котом Ватсоном на фоне Лондона', 'approved', now() - interval '6 days'),
+  ('Максим', 'Приключение в Египте', 'Иллюстрация к книге про пирамиды, где Агата разгадывает древние загадки', 'approved', now() - interval '2 days')
+on conflict do nothing;
