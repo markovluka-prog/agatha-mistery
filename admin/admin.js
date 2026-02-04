@@ -8,8 +8,8 @@ const Admin = (() => {
     // Configuration
     // ===========================================
     const CONFIG = {
-        // SHA-256 hash of password: AgathaMystery2024!Fan$Admin
-        PASSWORD_HASH: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+        // SHA-256 hash of password: themarluk8
+        PASSWORD_HASH: '129f3b174ec668580fbb4463d69078a11cc598190223825cb578ed3999f39991',
         MAX_LOGIN_ATTEMPTS: 5,
         LOCKOUT_TIME: 30000, // 30 seconds
         AUTOSAVE_DELAY: 1000, // 1 second debounce
@@ -238,12 +238,7 @@ const Admin = (() => {
         try {
             const hash = await sha256(password);
 
-            // For demo purposes, accept the hardcoded password
-            // In production, compare with hash from database
-            const correctPassword = 'AgathaMystery2024!Fan$Admin';
-            const correctHash = await sha256(correctPassword);
-
-            if (hash === correctHash) {
+            if (hash === CONFIG.PASSWORD_HASH) {
                 state.isAuthenticated = true;
                 state.loginAttempts = 0;
                 sessionStorage.setItem('admin_auth', 'true');
