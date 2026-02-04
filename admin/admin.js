@@ -8,7 +8,6 @@ const Admin = (() => {
     // Configuration
     // ===========================================
     const CONFIG = {
-        // SHA-256 hash of password: themarluk8
         PASSWORD_HASH: '129f3b174ec668580fbb4463d69078a11cc598190223825cb578ed3999f39991',
         MAX_LOGIN_ATTEMPTS: 5,
         LOCKOUT_TIME: 30000, // 30 seconds
