@@ -374,10 +374,9 @@ const Admin = (() => {
     }
 
     function checkAuth() {
-        if (sessionStorage.getItem('admin_auth') === 'true') {
-            state.isAuthenticated = true;
-            showAdminPanel();
-        }
+        // Password disabled - auto-login
+        state.isAuthenticated = true;
+        showAdminPanel();
     }
 
     function togglePasswordVisibility() {
