@@ -7,7 +7,7 @@ cd "/Users/lukamarkov/Desktop/Сайт Фанатов агаты мистери"
 git add .
 
 # Коммит с описанием
-git commit -m "Admin panel: added English translation support for places, characters, and quizzes"
+git commit -m "Admin panel: added pure JS SHA-256 for Kindle compatibility"
 
 # Отправляем на GitHub
 git push
