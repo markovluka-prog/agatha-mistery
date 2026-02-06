@@ -205,7 +205,18 @@ const Supa = (() => {
             const lang = (typeof I18n !== 'undefined' && I18n.getLang) ? I18n.getLang() : 'ru';
 
             return (data || []).map((quiz) => {
-                const questions = lang === 'en' && quiz.questions_en ? quiz.questions_en : (quiz.questions || []);
+                // Translate questions based on language
+                const rawQuestions = quiz.questions || [];
+                const questions = rawQuestions.map((q) => ({
+                    ...q,
+                    text: lang === 'en' && q.text_en ? q.text_en : q.text,
+                    options: (q.options || []).map((opt) => ({
+                        ...opt,
+                        text: lang === 'en' && opt.text_en ? opt.text_en : opt.text
+                    })),
+                    correctAnswer: lang === 'en' && q.correctAnswer_en ? q.correctAnswer_en : q.correctAnswer
+                }));
+
                 return {
                     ...quiz,
                     title: lang === 'en' && quiz.title_en ? quiz.title_en : quiz.title,
