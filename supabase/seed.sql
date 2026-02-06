@@ -64,63 +64,70 @@ drop policy if exists "public read quizzes" on quizzes;
 create policy "public read quizzes" on quizzes
   for select to anon, authenticated using (true);
 
-insert into places (id, name, description, lat, lng, image_url) values
-  (1, 'Лондон, Англия', 'Родной город Агаты Мистери. Здесь находится дом семьи Мистери и начинаются многие приключения.', 51.5074, -0.1278, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/london.svg'),
-  (2, 'Париж, Франция', 'Город любви и загадок, где Агата и Ларри раскрывали тайну исчезнувшей картины в Лувре.', 48.8566, 2.3522, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/paris.svg'),
-  (3, 'Египет, Каир', 'Земля пирамид и фараонов. Агата исследовала древние гробницы и разгадала загадку проклятия.', 30.0444, 31.2357, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/cairo.svg'),
-  (4, 'Венеция, Италия', 'Романтический город на воде, где происходила история с похищенной маской на карнавале.', 45.4408, 12.3155, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/venice.svg'),
-  (5, 'Токио, Япония', 'Современный мегаполис, где Агата расследовала пропажу древнего самурайского меча.', 35.6762, 139.6503, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/tokyo.svg')
+insert into places (id, name, name_en, description, description_en, lat, lng, image_url) values
+  (1, 'Лондон, Англия', 'London, England', 'Родной город Агаты Мистери. Здесь находится дом семьи Мистери и начинаются многие приключения.', 'The hometown of Agatha Mistery. This is where the Mistery family home is located and where many adventures begin.', 51.5074, -0.1278, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/london.svg'),
+  (2, 'Париж, Франция', 'Paris, France', 'Город любви и загадок, где Агата и Ларри раскрывали тайну исчезнувшей картины в Лувре.', 'The city of love and mysteries, where Agatha and Larry solved the mystery of the missing painting at the Louvre.', 48.8566, 2.3522, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/paris.svg'),
+  (3, 'Египет, Каир', 'Egypt, Cairo', 'Земля пирамид и фараонов. Агата исследовала древние гробницы и разгадала загадку проклятия.', 'The land of pyramids and pharaohs. Agatha explored ancient tombs and solved the mystery of the curse.', 30.0444, 31.2357, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/cairo.svg'),
+  (4, 'Венеция, Италия', 'Venice, Italy', 'Романтический город на воде, где происходила история с похищенной маской на карнавале.', 'A romantic city on water, where the story of the stolen carnival mask took place.', 45.4408, 12.3155, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/venice.svg'),
+  (5, 'Токио, Япония', 'Tokyo, Japan', 'Современный мегаполис, где Агата расследовала пропажу древнего самурайского меча.', 'A modern metropolis where Agatha investigated the disappearance of an ancient samurai sword.', 35.6762, 139.6503, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/tokyo.svg')
 on conflict (id) do update set
   name = excluded.name,
+  name_en = excluded.name_en,
   description = excluded.description,
+  description_en = excluded.description_en,
   lat = excluded.lat,
   lng = excluded.lng,
   image_url = excluded.image_url;
 
 -- Place Images (multiple images per place)
 delete from place_images;
-insert into place_images (place_id, image_url, caption, sort_order) values
-  (1, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/london.svg', 'Биг-Бен', 1),
-  (1, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/london-2.svg', 'Тауэрский мост', 2),
-  (2, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/paris.svg', 'Эйфелева башня', 1),
-  (2, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/paris-2.svg', 'Лувр', 2),
-  (3, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/cairo.svg', 'Пирамиды Гизы', 1),
-  (4, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/venice.svg', 'Гранд-канал', 1),
-  (5, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/tokyo.svg', 'Токийская башня', 1);
+insert into place_images (place_id, image_url, caption, caption_en, sort_order) values
+  (1, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/london.svg', 'Биг-Бен', 'Big Ben', 1),
+  (1, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/london-2.svg', 'Тауэрский мост', 'Tower Bridge', 2),
+  (2, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/paris.svg', 'Эйфелева башня', 'Eiffel Tower', 1),
+  (2, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/paris-2.svg', 'Лувр', 'The Louvre', 2),
+  (3, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/cairo.svg', 'Пирамиды Гизы', 'Pyramids of Giza', 1),
+  (4, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/venice.svg', 'Гранд-канал', 'Grand Canal', 1),
+  (5, 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/places/tokyo.svg', 'Токийская башня', 'Tokyo Tower', 1);
 
-insert into characters (id, name, short_description, full_bio, image_url) values
-  (1, 'Агата Мистери', 'Двенадцатилетняя гениальная сыщица с фотографической памятью.', 'Агата Мистери — двенадцатилетняя девочка с невероятными детективными способностями. Обладает фотографической памятью и острым умом. Мечтает стать лучшим детективом в мире. Всегда берет с собой верного кота Ватсона и своего двоюродного брата Ларри.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/agatha.svg'),
-  (2, 'Ларри Мистери', 'Двоюродный брат Агаты, начинающий писатель и её верный помощник.', 'Ларри — четырнадцатилетний двоюродный брат Агаты. Мечтает стать знаменитым писателем детективов. Всегда сопровождает Агату в её расследованиях, записывая все приключения. Иногда попадает в неловкие ситуации, но всегда готов помочь.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/larry.svg'),
-  (3, 'Ватсон (кот)', 'Сибирский кот Агаты, её верный спутник во всех приключениях.', 'Ватсон — пушистый сибирский кот с голубыми глазами. Удивительно умён для кота. Часто помогает Агате находить улики. Обожает лакомства и комфорт, но никогда не бросит свою хозяйку в беде.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/watson.svg'),
-  (4, 'Мистер Кент', 'Дворецкий семьи Мистери, всегда готов помочь детям.', 'Мистер Кент — верный дворецкий семьи Мистери. Безупречно вежлив и организован. Тайно гордится детективными успехами Агаты и всегда готов поддержать юных сыщиков полезным советом или чашкой горячего чая.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/kent.svg'),
-  (5, 'Чандлер Мистери', 'Отец Агаты, владелец детективной школы Eye International.', 'Чандлер Мистери — отец Агаты и владелец престижной детективной школы Eye International. Именно он привил дочери любовь к расследованиям. Поддерживает её стремление стать великим детективом.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/chandler.svg')
+insert into characters (id, name, name_en, short_description, short_description_en, full_bio, full_bio_en, image_url) values
+  (1, 'Агата Мистери', 'Agatha Mistery', 'Двенадцатилетняя гениальная сыщица с фотографической памятью.', 'A twelve-year-old genius detective with a photographic memory.', 'Агата Мистери — двенадцатилетняя девочка с невероятными детективными способностями. Обладает фотографической памятью и острым умом. Мечтает стать лучшим детективом в мире. Всегда берет с собой верного кота Ватсона и своего двоюродного брата Ларри.', 'Agatha Mistery is a twelve-year-old girl with incredible detective abilities. She has a photographic memory and a sharp mind. She dreams of becoming the best detective in the world. She always takes her faithful cat Watson and her cousin Larry with her.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/agatha.svg'),
+  (2, 'Ларри Мистери', 'Larry Mistery', 'Двоюродный брат Агаты, начинающий писатель и её верный помощник.', 'Agatha''s cousin, an aspiring writer and her faithful assistant.', 'Ларри — четырнадцатилетний двоюродный брат Агаты. Мечтает стать знаменитым писателем детективов. Всегда сопровождает Агату в её расследованиях, записывая все приключения. Иногда попадает в неловкие ситуации, но всегда готов помочь.', 'Larry is Agatha''s fourteen-year-old cousin. He dreams of becoming a famous detective writer. He always accompanies Agatha on her investigations, recording all their adventures. He sometimes gets into awkward situations, but is always ready to help.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/larry.svg'),
+  (3, 'Ватсон (кот)', 'Watson (cat)', 'Сибирский кот Агаты, её верный спутник во всех приключениях.', 'Agatha''s Siberian cat, her faithful companion in all adventures.', 'Ватсон — пушистый сибирский кот с голубыми глазами. Удивительно умён для кота. Часто помогает Агате находить улики. Обожает лакомства и комфорт, но никогда не бросит свою хозяйку в беде.', 'Watson is a fluffy Siberian cat with blue eyes. He is remarkably intelligent for a cat. He often helps Agatha find clues. He loves treats and comfort, but will never abandon his owner in trouble.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/watson.svg'),
+  (4, 'Мистер Кент', 'Mr. Kent', 'Дворецкий семьи Мистери, всегда готов помочь детям.', 'The Mistery family butler, always ready to help the children.', 'Мистер Кент — верный дворецкий семьи Мистери. Безупречно вежлив и организован. Тайно гордится детективными успехами Агаты и всегда готов поддержать юных сыщиков полезным советом или чашкой горячего чая.', 'Mr. Kent is the loyal butler of the Mistery family. He is impeccably polite and organized. He secretly takes pride in Agatha''s detective achievements and is always ready to support the young detectives with helpful advice or a cup of hot tea.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/kent.svg'),
+  (5, 'Чандлер Мистери', 'Chandler Mistery', 'Отец Агаты, владелец детективной школы Eye International.', 'Agatha''s father, owner of the Eye International detective school.', 'Чандлер Мистери — отец Агаты и владелец престижной детективной школы Eye International. Именно он привил дочери любовь к расследованиям. Поддерживает её стремление стать великим детективом.', 'Chandler Mistery is Agatha''s father and owner of the prestigious Eye International detective school. He instilled in his daughter a love of investigations. He supports her aspiration to become a great detective.', 'https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/chandler.svg')
 on conflict (id) do update set
   name = excluded.name,
+  name_en = excluded.name_en,
   short_description = excluded.short_description,
+  short_description_en = excluded.short_description_en,
   full_bio = excluded.full_bio,
+  full_bio_en = excluded.full_bio_en,
   image_url = excluded.image_url;
 
-insert into quizzes (id, title, description, questions_count, questions) values
-  (1, 'Насколько хорошо ты знаешь Агату?', 'Проверь свои знания о главной героине серии книг!', 5,
+insert into quizzes (id, title, title_en, description, description_en, questions_count, questions) values
+  (1, 'Насколько хорошо ты знаешь Агату?', 'How well do you know Agatha?', 'Проверь свои знания о главной героине серии книг!', 'Test your knowledge about the main heroine of the book series!', 5,
     '[
-      {"id":1,"text":"Как должна выглядеть ваша Аватарка?","type":"image","options":[{"id":"a","text":"Агата","image":"https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/agatha.svg","isCorrect":false},{"id":"b","text":"Ларри","image":"https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/larry.svg","isCorrect":false}]},
-      {"id":2,"text":"Какой особенностью обладает Агата?","type":"text","options":[{"id":"a","text":"Фотографическая память","isCorrect":true},{"id":"b","text":"Телепатия","isCorrect":false},{"id":"c","text":"Сверхсила","isCorrect":false},{"id":"d","text":"Невидимость","isCorrect":false}]},
-      {"id":3,"text":"Как зовут кота Агаты?","type":"text","options":[{"id":"a","text":"Шерлок","isCorrect":false},{"id":"b","text":"Ватсон","isCorrect":true},{"id":"c","text":"Холмс","isCorrect":false},{"id":"d","text":"Пуаро","isCorrect":false}]},
-      {"id":4,"text":"Кем работает отец Агаты?","type":"text","options":[{"id":"a","text":"Полицейский","isCorrect":false},{"id":"b","text":"Владелец детективной школы","isCorrect":true},{"id":"c","text":"Писатель","isCorrect":false},{"id":"d","text":"Учитель","isCorrect":false}]},
-      {"id":5,"text":"Кем приходится Ларри Агате?","type":"text","options":[{"id":"a","text":"Брат","isCorrect":false},{"id":"b","text":"Двоюродный брат","isCorrect":true},{"id":"c","text":"Друг","isCorrect":false},{"id":"d","text":"Одноклассник","isCorrect":false}]}
+      {"id":1,"text":"Как должна выглядеть ваша Аватарка?","text_en":"What should your Avatar look like?","type":"image","options":[{"id":"a","text":"Агата","text_en":"Agatha","image":"https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/agatha.svg","isCorrect":false},{"id":"b","text":"Ларри","text_en":"Larry","image":"https://eetgsrcitolkvdifltns.supabase.co/storage/v1/object/public/assets/images/characters/larry.svg","isCorrect":false}]},
+      {"id":2,"text":"Какой особенностью обладает Агата?","text_en":"What special ability does Agatha have?","type":"text","options":[{"id":"a","text":"Фотографическая память","text_en":"Photographic memory","isCorrect":true},{"id":"b","text":"Телепатия","text_en":"Telepathy","isCorrect":false},{"id":"c","text":"Сверхсила","text_en":"Super strength","isCorrect":false},{"id":"d","text":"Невидимость","text_en":"Invisibility","isCorrect":false}]},
+      {"id":3,"text":"Как зовут кота Агаты?","text_en":"What is the name of Agatha''s cat?","type":"text","options":[{"id":"a","text":"Шерлок","text_en":"Sherlock","isCorrect":false},{"id":"b","text":"Ватсон","text_en":"Watson","isCorrect":true},{"id":"c","text":"Холмс","text_en":"Holmes","isCorrect":false},{"id":"d","text":"Пуаро","text_en":"Poirot","isCorrect":false}]},
+      {"id":4,"text":"Кем работает отец Агаты?","text_en":"What does Agatha''s father do?","type":"text","options":[{"id":"a","text":"Полицейский","text_en":"Police officer","isCorrect":false},{"id":"b","text":"Владелец детективной школы","text_en":"Owner of a detective school","isCorrect":true},{"id":"c","text":"Писатель","text_en":"Writer","isCorrect":false},{"id":"d","text":"Учитель","text_en":"Teacher","isCorrect":false}]},
+      {"id":5,"text":"Кем приходится Ларри Агате?","text_en":"What is Larry to Agatha?","type":"text","options":[{"id":"a","text":"Брат","text_en":"Brother","isCorrect":false},{"id":"b","text":"Двоюродный брат","text_en":"Cousin","isCorrect":true},{"id":"c","text":"Друг","text_en":"Friend","isCorrect":false},{"id":"d","text":"Одноклассник","text_en":"Classmate","isCorrect":false}]}
     ]'::jsonb
   ),
-  (2, 'Приключения по всему миру', 'Помнишь ли ты все места, где побывала Агата?', 4,
+  (2, 'Приключения по всему миру', 'Adventures around the world', 'Помнишь ли ты все места, где побывала Агата?', 'Do you remember all the places Agatha visited?', 4,
     '[
-      {"id":1,"text":"В каком городе находится дом семьи Мистери?","type":"text","options":[{"id":"a","text":"Париж","isCorrect":false},{"id":"b","text":"Лондон","isCorrect":true},{"id":"c","text":"Нью-Йорк","isCorrect":false},{"id":"d","text":"Рим","isCorrect":false}]},
-      {"id":2,"text":"Где Агата расследовала тайну исчезнувшей картины?","type":"text","options":[{"id":"a","text":"В Лувре, Париж","isCorrect":true},{"id":"b","text":"В Эрмитаже, Санкт-Петербург","isCorrect":false},{"id":"c","text":"В Британском музее, Лондон","isCorrect":false},{"id":"d","text":"В Прадо, Мадрид","isCorrect":false}]},
-      {"id":3,"text":"В какой стране Агата разгадала проклятие фараона?","type":"text","options":[{"id":"a","text":"Греция","isCorrect":false},{"id":"b","text":"Египет","isCorrect":true},{"id":"c","text":"Мексика","isCorrect":false},{"id":"d","text":"Перу","isCorrect":false}]},
-      {"id":4,"text":"Где произошла история с похищенной маской на карнавале?","type":"text","options":[{"id":"a","text":"Рио-де-Жанейро","isCorrect":false},{"id":"b","text":"Венеция","isCorrect":true},{"id":"c","text":"Новый Орлеан","isCorrect":false},{"id":"d","text":"Барселона","isCorrect":false}]}
+      {"id":1,"text":"В каком городе находится дом семьи Мистери?","text_en":"In which city is the Mistery family home located?","type":"text","options":[{"id":"a","text":"Париж","text_en":"Paris","isCorrect":false},{"id":"b","text":"Лондон","text_en":"London","isCorrect":true},{"id":"c","text":"Нью-Йорк","text_en":"New York","isCorrect":false},{"id":"d","text":"Рим","text_en":"Rome","isCorrect":false}]},
+      {"id":2,"text":"Где Агата расследовала тайну исчезнувшей картины?","text_en":"Where did Agatha investigate the mystery of the missing painting?","type":"text","options":[{"id":"a","text":"В Лувре, Париж","text_en":"At the Louvre, Paris","isCorrect":true},{"id":"b","text":"В Эрмитаже, Санкт-Петербург","text_en":"At the Hermitage, St. Petersburg","isCorrect":false},{"id":"c","text":"В Британском музее, Лондон","text_en":"At the British Museum, London","isCorrect":false},{"id":"d","text":"В Прадо, Мадрид","text_en":"At the Prado, Madrid","isCorrect":false}]},
+      {"id":3,"text":"В какой стране Агата разгадала проклятие фараона?","text_en":"In which country did Agatha solve the pharaoh''s curse?","type":"text","options":[{"id":"a","text":"Греция","text_en":"Greece","isCorrect":false},{"id":"b","text":"Египет","text_en":"Egypt","isCorrect":true},{"id":"c","text":"Мексика","text_en":"Mexico","isCorrect":false},{"id":"d","text":"Перу","text_en":"Peru","isCorrect":false}]},
+      {"id":4,"text":"Где произошла история с похищенной маской на карнавале?","text_en":"Where did the story of the stolen carnival mask take place?","type":"text","options":[{"id":"a","text":"Рио-де-Жанейро","text_en":"Rio de Janeiro","isCorrect":false},{"id":"b","text":"Венеция","text_en":"Venice","isCorrect":true},{"id":"c","text":"Новый Орлеан","text_en":"New Orleans","isCorrect":false},{"id":"d","text":"Барселона","text_en":"Barcelona","isCorrect":false}]}
     ]'::jsonb
   )
 on conflict (id) do update set
   title = excluded.title,
+  title_en = excluded.title_en,
   description = excluded.description,
+  description_en = excluded.description_en,
   questions_count = excluded.questions_count,
   questions = excluded.questions;
 
