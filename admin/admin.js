@@ -592,8 +592,10 @@ const Admin = (() => {
                     <button type="button" class="question-remove" title="Удалить вопрос">&times;</button>
                 </div>
                 <div class="question-text-input">
-                    <input type="text" placeholder="Текст вопроса" data-field="text"
+                    <input type="text" placeholder="Текст вопроса (RU)" data-field="text"
                            value="${escapeHtml(questionData?.text || '')}">
+                    <input type="text" placeholder="Question text (EN)" data-field="text_en"
+                           value="${escapeHtml(questionData?.text_en || '')}" style="margin-top: 8px;">
                 </div>
                 <div class="options-list">
                     ${renderOptions(questionData)}
@@ -639,19 +641,22 @@ const Admin = (() => {
         // For text input type, show correct answer field
         if (type === 'input') {
             const correctAnswer = questionData?.correctAnswer || '';
+            const correctAnswerEn = questionData?.correctAnswer_en || '';
             return `
                 <div class="input-answer-field">
                     <label>Правильный ответ:</label>
-                    <input type="text" class="correct-answer-input" placeholder="Введите правильный ответ" 
+                    <input type="text" class="correct-answer-input" placeholder="Правильный ответ (RU)" 
                            value="${escapeHtml(correctAnswer)}" data-field="correctAnswer">
+                    <input type="text" class="correct-answer-input-en" placeholder="Correct answer (EN)" 
+                           value="${escapeHtml(correctAnswerEn)}" data-field="correctAnswer_en" style="margin-top: 8px;">
                 </div>
             `;
         }
 
         // For other types, show options
         const options = questionData?.options || [
-            { id: 'a', text: '', isCorrect: false },
-            { id: 'b', text: '', isCorrect: false }
+            { id: 'a', text: '', text_en: '', isCorrect: false },
+            { id: 'b', text: '', text_en: '', isCorrect: false }
         ];
         const inputType = type === 'checkbox' ? 'checkbox' : 'radio';
 
@@ -660,7 +665,10 @@ const Admin = (() => {
                 <input type="${inputType}" name="correct-${questionData?.id || 'new'}"
                        ${opt.isCorrect ? 'checked' : ''} title="Правильный ответ">
                 ${type === 'image' && opt.image ? `<img src="${opt.image}" class="option-image-preview">` : ''}
-                <input type="text" placeholder="Вариант ответа" value="${escapeHtml(opt.text || '')}" data-field="text">
+                <div class="option-texts">
+                    <input type="text" placeholder="Вариант (RU)" value="${escapeHtml(opt.text || '')}" data-field="text">
+                    <input type="text" placeholder="Option (EN)" value="${escapeHtml(opt.text_en || '')}" data-field="text_en">
+                </div>
                 ${type === 'image' ? `<input type="file" accept="image/*" class="option-image-input" hidden>
                     <button type="button" class="btn btn-small" onclick="this.previousElementSibling.click()">📷</button>` : ''}
                 <button type="button" class="option-remove">&times;</button>
@@ -677,7 +685,10 @@ const Admin = (() => {
         const optionHtml = `
             <div class="option-item" data-option-id="${optId}">
                 <input type="${inputType}" name="correct-${questionCard.dataset.questionId}">
-                <input type="text" placeholder="Вариант ответа" data-field="text">
+                <div class="option-texts">
+                    <input type="text" placeholder="Вариант (RU)" data-field="text">
+                    <input type="text" placeholder="Option (EN)" data-field="text_en">
+                </div>
                 ${type === 'image' ? `<input type="file" accept="image/*" class="option-image-input" hidden>
                     <button type="button" class="btn btn-small" onclick="this.previousElementSibling.click()">📷</button>` : ''}
                 <button type="button" class="option-remove">&times;</button>
@@ -711,13 +722,17 @@ const Admin = (() => {
         if (type === 'input') {
             // Get existing correct answer if any
             const existingAnswer = optionsList.querySelector('.correct-answer-input');
+            const existingAnswerEn = optionsList.querySelector('.correct-answer-input-en');
             const currentAnswer = existingAnswer ? existingAnswer.value : '';
+            const currentAnswerEn = existingAnswerEn ? existingAnswerEn.value : '';
 
             optionsList.innerHTML = `
                 <div class="input-answer-field">
                     <label>Правильный ответ:</label>
-                    <input type="text" class="correct-answer-input" placeholder="Введите правильный ответ" 
+                    <input type="text" class="correct-answer-input" placeholder="Правильный ответ (RU)" 
                            value="${escapeHtml(currentAnswer)}" data-field="correctAnswer">
+                    <input type="text" class="correct-answer-input-en" placeholder="Correct answer (EN)" 
+                           value="${escapeHtml(currentAnswerEn)}" data-field="correctAnswer_en" style="margin-top: 8px;">
                 </div>
             `;
             addOptionBtn.hidden = true;
@@ -731,10 +746,12 @@ const Admin = (() => {
         const currentOptions = [];
         optionsList.querySelectorAll('.option-item').forEach(optItem => {
             const textInput = optItem.querySelector('input[data-field="text"]');
+            const textEnInput = optItem.querySelector('input[data-field="text_en"]');
             const correctInput = optItem.querySelector('input[type="radio"], input[type="checkbox"]');
             currentOptions.push({
                 id: optItem.dataset.optionId,
                 text: textInput ? textInput.value : '',
+                text_en: textEnInput ? textEnInput.value : '',
                 isCorrect: correctInput ? correctInput.checked : false
             });
         });
@@ -742,8 +759,8 @@ const Admin = (() => {
         // If no options exist, create default ones
         if (currentOptions.length === 0) {
             currentOptions.push(
-                { id: 'a', text: '', isCorrect: false },
-                { id: 'b', text: '', isCorrect: false }
+                { id: 'a', text: '', text_en: '', isCorrect: false },
+                { id: 'b', text: '', text_en: '', isCorrect: false }
             );
         }
 
@@ -755,7 +772,10 @@ const Admin = (() => {
                 <div class="option-item" data-option-id="${opt.id}">
                     <input type="${inputType}" name="correct-${questionCard.dataset.questionId}" 
                            ${opt.isCorrect ? 'checked' : ''} title="Правильный ответ">
-                    <input type="text" placeholder="Вариант ответа" value="${escapeHtml(opt.text)}" data-field="text">
+                    <div class="option-texts">
+                        <input type="text" placeholder="Вариант (RU)" value="${escapeHtml(opt.text)}" data-field="text">
+                        <input type="text" placeholder="Option (EN)" value="${escapeHtml(opt.text_en)}" data-field="text_en">
+                    </div>
                     ${type === 'image' ? `<input type="file" accept="image/*" class="option-image-input" hidden>
                         <button type="button" class="btn btn-small" onclick="this.previousElementSibling.click()">📷</button>` : ''}
                     <button type="button" class="option-remove">&times;</button>
@@ -843,28 +863,34 @@ const Admin = (() => {
         document.querySelectorAll('.question-card').forEach((card, idx) => {
             const type = card.querySelector('.question-type-select').value;
             const text = card.querySelector('[data-field="text"]').value.trim();
+            const textEn = card.querySelector('[data-field="text_en"]')?.value.trim() || '';
 
             const questionData = {
                 id: idx + 1,
                 text: text,
+                text_en: textEn,
                 type: type
             };
 
             // For input type, get the correct answer
             if (type === 'input') {
                 const correctAnswerInput = card.querySelector('.correct-answer-input');
+                const correctAnswerEnInput = card.querySelector('.correct-answer-input-en');
                 questionData.correctAnswer = correctAnswerInput ? correctAnswerInput.value.trim() : '';
+                questionData.correctAnswer_en = correctAnswerEnInput ? correctAnswerEnInput.value.trim() : '';
             } else {
                 // For other types, collect options
                 const options = [];
                 card.querySelectorAll('.option-item').forEach(optItem => {
                     const optText = optItem.querySelector('input[data-field="text"]').value.trim();
+                    const optTextEn = optItem.querySelector('input[data-field="text_en"]')?.value.trim() || '';
                     const isCorrect = optItem.querySelector('input[type="radio"], input[type="checkbox"]').checked;
                     const imgPreview = optItem.querySelector('.option-image-preview');
 
                     options.push({
                         id: optItem.dataset.optionId,
                         text: optText,
+                        text_en: optTextEn,
                         isCorrect: isCorrect,
                         image: imgPreview ? imgPreview.src : undefined
                     });

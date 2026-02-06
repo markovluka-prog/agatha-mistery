@@ -1039,7 +1039,8 @@ body {
     font-size: 13px;
 }
 
-.input-answer-field input.correct-answer-input {
+.input-answer-field input.correct-answer-input,
+.input-answer-field input.correct-answer-input-en {
     width: 100%;
     padding: 10px 12px;
     border: 2px solid var(--border-color);
@@ -1048,9 +1049,42 @@ body {
     background: white;
 }
 
-.input-answer-field input.correct-answer-input:focus {
+.input-answer-field input.correct-answer-input:focus,
+.input-answer-field input.correct-answer-input-en:focus {
     outline: none;
     border-color: var(--primary-color);
+}
+
+/* Option texts for bilingual support */
+.option-texts {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.option-texts input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 13px;
+    background: var(--background-white);
+}
+
+.option-texts input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.option-texts input[type="text"]:nth-child(2) {
+    background: #f0f7ff;
+    border-color: #b3d4fc;
+}
+
+.question-text-input input[data-field="text_en"] {
+    background: #f0f7ff;
+    border-color: #b3d4fc;
 }
 
 /* Loading State */
