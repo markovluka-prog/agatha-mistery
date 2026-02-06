@@ -69,6 +69,10 @@
                     <span class="nav-text">Модерация</span>
                     <span id="moderation-badge" class="nav-badge" hidden>0</span>
                 </button>
+                <button class="nav-item" data-section="api">
+                    <span class="nav-icon">🔧</span>
+                    <span class="nav-text">API</span>
+                </button>
             </nav>
         </aside>
 
@@ -140,6 +144,49 @@
                 </div>
                 <div id="moderation-content" class="moderation-content">
                     <div class="loading-state">Загрузка...</div>
+                </div>
+            </section>
+
+            <!-- API Section -->
+            <section id="section-api" class="content-section">
+                <div class="section-header">
+                    <h2>API Запросы</h2>
+                </div>
+                <div class="api-section">
+                    <div class="form-group">
+                        <label for="api-endpoint">Endpoint (таблица)</label>
+                        <select id="api-endpoint" class="api-select">
+                            <option value="quizzes">quizzes</option>
+                            <option value="places">places</option>
+                            <option value="characters">characters</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="api-method">Метод</label>
+                        <select id="api-method" class="api-select">
+                            <option value="GET">GET (получить)</option>
+                            <option value="PATCH">PATCH (обновить)</option>
+                            <option value="POST">POST (создать)</option>
+                            <option value="DELETE">DELETE (удалить)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="api-filter">Фильтр (например: id=eq.1)</label>
+                        <input type="text" id="api-filter" placeholder="id=eq.1" class="api-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="api-body">Тело запроса (JSON для PATCH/POST)</label>
+                        <textarea id="api-body" rows="10" placeholder='{"title_en": "Quiz Title"}'
+                            class="api-textarea"></textarea>
+                    </div>
+                    <div class="api-buttons">
+                        <button id="api-execute-btn" class="btn btn-primary">Выполнить запрос</button>
+                        <button id="api-clear-btn" class="btn btn-secondary">Очистить</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Результат</label>
+                        <pre id="api-result" class="api-result">Результат появится здесь...</pre>
+                    </div>
                 </div>
             </section>
         </main>

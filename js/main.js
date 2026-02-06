@@ -537,25 +537,47 @@ const App = (() => {
                 </div>
                 <form id="quiz-form" class="grid" data-quiz-form>
                     ${quiz.questions.map((question, index) => {
-                const options = question.options.map((option) => {
-                    const image = resolveAsset(option.image);
-                    return `
-                                <label class="quiz-option">
-                                    <input type="radio" name="q${question.id}" value="${option.id}">
-                                    ${image ? `<img src="${image}" alt="${option.text}">` : ''}
-                                    <span>${option.text}</span>
-                                </label>
-                            `;
-                }).join('');
-                return `
-                            <div class="quiz-question">
-                                <h3>Вопрос ${index + 1}</h3>
-                                <p>${question.text}</p>
-                                <div class="quiz-options">${options}</div>
-                            </div>
+                // Определяем тип вопроса
+                const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
+
+                let questionContent = '';
+
+                if (isInputType) {
+                    // Вопрос с текстовым вводом
+                    const placeholder = t('quizzes.input.placeholder', 'Введите ваш ответ...');
+                    questionContent = `
+                        <div class="quiz-input-wrapper">
+                            <input type="text" 
+                                   name="q${question.id}" 
+                                   class="quiz-text-input" 
+                                   placeholder="${placeholder}"
+                                   autocomplete="off">
+                        </div>
+                    `;
+                } else {
+                    // Вопрос с вариантами ответов
+                    questionContent = question.options.map((option) => {
+                        const image = resolveAsset(option.image);
+                        return `
+                            <label class="quiz-option">
+                                <input type="radio" name="q${question.id}" value="${option.id}">
+                                ${image ? `<img src="${image}" alt="${option.text}">` : ''}
+                                <span>${option.text}</span>
+                            </label>
                         `;
+                    }).join('');
+                }
+
+                const questionLabel = t('quizzes.question', 'Вопрос');
+                return `
+                    <div class="quiz-question" data-question-type="${isInputType ? 'input' : 'options'}">
+                        <h3>${questionLabel} ${index + 1}</h3>
+                        <p>${question.text}</p>
+                        <div class="quiz-options">${questionContent}</div>
+                    </div>
+                `;
             }).join('')}
-                    <button type="button" class="btn btn-primary" id="quiz-submit">Проверить ответы</button>
+                    <button type="button" class="btn btn-primary" id="quiz-submit">${t('quizzes.btn.check', 'Проверить ответы')}</button>
                     <div id="quiz-result" class="result-box" style="display: none;"></div>
                 </form>
             `;
@@ -567,26 +589,49 @@ const App = (() => {
             submit.addEventListener('click', () => {
                 let correct = 0;
                 let answered = 0;
+
                 quiz.questions.forEach((question) => {
-                    const selected = form.querySelector(`input[name="q${question.id}"]:checked`);
-                    if (selected) {
-                        answered += 1;
-                        const option = question.options.find((item) => item.id === selected.value);
-                        if (option && option.isCorrect) {
-                            correct += 1;
+                    const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
+
+                    if (isInputType) {
+                        // Проверка текстового ввода
+                        const input = form.querySelector(`input[name="q${question.id}"]`);
+                        if (input && input.value.trim()) {
+                            answered += 1;
+                            const userAnswer = input.value.trim().toLowerCase();
+                            const correctAnswer = (question.correctAnswer || '').toLowerCase();
+                            if (userAnswer === correctAnswer) {
+                                correct += 1;
+                                input.classList.add('correct');
+                                input.classList.remove('incorrect');
+                            } else {
+                                input.classList.add('incorrect');
+                                input.classList.remove('correct');
+                            }
+                        }
+                    } else {
+                        // Проверка выбора из вариантов
+                        const selected = form.querySelector(`input[name="q${question.id}"]:checked`);
+                        if (selected) {
+                            answered += 1;
+                            const option = question.options.find((item) => item.id === selected.value);
+                            if (option && option.isCorrect) {
+                                correct += 1;
+                            }
                         }
                     }
                 });
 
                 if (answered < quiz.questions.length) {
                     resultBox.style.display = 'block';
-                    resultBox.textContent = 'Ответьте на все вопросы, чтобы узнать результат.';
+                    resultBox.textContent = t('quizzes.answer.all', 'Ответьте на все вопросы, чтобы узнать результат.');
                     return;
                 }
 
                 const percent = Math.round((correct / quiz.questions.length) * 100);
                 resultBox.style.display = 'block';
-                resultBox.textContent = `Ваш результат: ${correct} из ${quiz.questions.length} (${percent}%).`;
+                const resultText = t('quizzes.result', 'Ваш результат');
+                resultBox.textContent = `${resultText}: ${correct} ${t('quizzes.of', 'из')} ${quiz.questions.length} (${percent}%).`;
             });
         } catch (error) {
             container.innerHTML = '<div class="empty-state">Не удалось загрузить викторину.</div>';

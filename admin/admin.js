@@ -1739,6 +1739,88 @@ const Admin = (() => {
 
         // Modals
         setupModalCloseButtons();
+
+        // API Section
+        const apiExecuteBtn = document.getElementById('api-execute-btn');
+        const apiClearBtn = document.getElementById('api-clear-btn');
+
+        if (apiExecuteBtn) {
+            apiExecuteBtn.addEventListener('click', executeApiRequest);
+        }
+        if (apiClearBtn) {
+            apiClearBtn.addEventListener('click', () => {
+                document.getElementById('api-body').value = '';
+                document.getElementById('api-filter').value = '';
+                document.getElementById('api-result').textContent = 'Результат появится здесь...';
+                document.getElementById('api-result').className = 'api-result';
+            });
+        }
+    }
+
+    // ===========================================
+    // API Requests
+    // ===========================================
+
+    async function executeApiRequest() {
+        const endpoint = document.getElementById('api-endpoint').value;
+        const method = document.getElementById('api-method').value;
+        const filter = document.getElementById('api-filter').value.trim();
+        const bodyText = document.getElementById('api-body').value.trim();
+        const resultEl = document.getElementById('api-result');
+
+        resultEl.textContent = 'Выполняется запрос...';
+        resultEl.className = 'api-result';
+
+        try {
+            // Build URL
+            let url = `${window.SUPABASE_CONFIG.url}/rest/v1/${endpoint}`;
+            if (filter) {
+                url += `?${filter}`;
+            } else if (method === 'GET') {
+                url += '?select=*';
+            }
+
+            // Build request options
+            const options = {
+                method: method,
+                headers: {
+                    'apikey': window.SUPABASE_CONFIG.anonKey,
+                    'Authorization': `Bearer ${window.SUPABASE_CONFIG.anonKey}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                }
+            };
+
+            // Add body for PATCH/POST
+            if ((method === 'PATCH' || method === 'POST') && bodyText) {
+                try {
+                    // Validate JSON
+                    JSON.parse(bodyText);
+                    options.body = bodyText;
+                } catch (jsonError) {
+                    throw new Error('Неверный JSON: ' + jsonError.message);
+                }
+            }
+
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || `HTTP ${response.status}`);
+            }
+
+            resultEl.textContent = JSON.stringify(data, null, 2);
+            resultEl.className = 'api-result success';
+
+            // Reload data if changes were made
+            if (method !== 'GET') {
+                await loadAllData();
+                showSaveIndicator();
+            }
+        } catch (error) {
+            resultEl.textContent = 'Ошибка: ' + error.message;
+            resultEl.className = 'api-result error';
+        }
     }
 
     // ===========================================
