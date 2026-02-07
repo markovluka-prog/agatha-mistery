@@ -1156,7 +1156,7 @@ const Admin = (() => {
         }
     }
 
-    async function savePlace() {
+    async function savePlace(isAutosave = false) {
         const placeId = document.getElementById('place-id').value;
         const name = document.getElementById('place-name').value.trim();
         const nameEn = document.getElementById('place-name-en').value.trim();
@@ -1166,12 +1166,12 @@ const Admin = (() => {
         const lng = parseFloat(document.getElementById('place-lng').value);
 
         if (!name) {
-            showToast('Введите название локации');
+            if (!isAutosave) showToast('Введите название локации');
             return;
         }
 
         if (isNaN(lat) || isNaN(lng)) {
-            showToast('Введите координаты или кликните на карту');
+            if (!isAutosave) showToast('Введите координаты или кликните на карту');
             return;
         }
 
@@ -1203,8 +1203,10 @@ const Admin = (() => {
                 if (error) throw error;
             }
 
-            closeModal('place-editor-modal');
-            state.editingPlace = null;
+            if (!isAutosave) {
+                closeModal('place-editor-modal');
+                state.editingPlace = null;
+            }
             await loadPlaces();
             showSaveIndicator();
         } catch (error) {
@@ -1718,9 +1720,13 @@ const Admin = (() => {
 
         // Places
         document.getElementById('add-place-btn').addEventListener('click', () => openPlaceEditor());
-        document.getElementById('save-place-btn').addEventListener('click', savePlace);
+        document.getElementById('save-place-btn').addEventListener('click', () => savePlace());
         document.getElementById('delete-place-btn').addEventListener('click', deletePlace);
         document.getElementById('place-image-upload').addEventListener('change', handlePlaceImageUpload);
+
+        // Autosave for places
+        const debouncedPlaceSave = debounce(() => savePlace(true), CONFIG.AUTOSAVE_DELAY);
+        document.getElementById('place-form').addEventListener('input', debouncedPlaceSave);
 
         // Characters
         document.getElementById('add-character-btn').addEventListener('click', () => openCharacterEditor());
