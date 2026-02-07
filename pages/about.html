@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="О фанатском сообществе Агаты Мистери.">
+    <title>О нас | Агата Мистери</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/navigation.css">
+    <style>
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .accordion-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            padding: 0 20px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+            padding: 0 20px 20px 20px;
+            transition: max-height 0.4s ease-in;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1 data-i18n="site.title">Агата Мистери</h1>
+            </div>
+            <button class="burger-menu" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
+                <li><a href="about.html" class="active" data-i18n="nav.about">О нас</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h2 class="section-title" data-i18n="about.title" style="font-size: 3rem; margin-bottom: 20px;">О нас</h2>
+            <p data-i18n="about.subtitle">Узнайте больше о нашем сообществе и миссии.</p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <div id="about-content-container" class="accordion">
+                <div class="loading-state" data-i18n="loading">Загрузка...</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('about-content-container');
+
+            try {
+                const sections = await Supa.getAbout();
+
+                if (sections && sections.length > 0) {
+                    container.innerHTML = sections.map(section => `
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+                                <span>${section.title}</span>
+                                <span class="accordion-icon">▼</span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>${section.content.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="text-align: center;">Информация скоро появится.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading about data:', error);
+                container.innerHTML = '<p style="text-align: center;">Ошибка загрузки данных.</p>';
+            }
+
+            // Re-translate page for base elements
+            if (typeof App !== 'undefined' && App.translatePage) {
+                // App.translatePage(); // This is normally called in main.js DomContentLoaded
+            }
+        });
+    </script>
+</body>
+
+</html>

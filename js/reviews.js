@@ -20,7 +20,7 @@
 
     const formatDate = (isoString) => {
         const date = new Date(isoString);
-        return date.toLocaleDateString('ru-RU', {
+        return date.toLocaleDateString(I18n.getLang() === 'ru' ? 'ru-RU' : 'en-US', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
@@ -31,7 +31,7 @@
         if (!reviews.length) {
             reviewsList.innerHTML = `
                 <div class="reviews-empty">
-                    <p>Пока нет отзывов. Станьте первым!</p>
+                    <p>${t('reviews.empty', 'No reviews yet. Be the first!')}</p>
                 </div>
             `;
             return;
@@ -72,7 +72,7 @@
         reviewsList.innerHTML = `
             <div class="loading-container">
                 <div class="loading-spinner"></div>
-                <p class="loading-text">Загрузка отзывов...</p>
+                <p class="loading-text">${t('reviews.loading', 'Loading reviews...')}</p>
             </div>
         `;
     };
@@ -88,8 +88,8 @@
             } catch (error) {
                 reviewsList.innerHTML = `
                     <div class="error-container">
-                        <p>Не удалось загрузить отзывы</p>
-                        <button class="btn btn-retry" id="retry-reviews">Попробовать снова</button>
+                        <p>${t('reviews.error', 'Failed to load reviews')}</p>
+                        <button class="btn btn-retry" id="retry-reviews">${t('error.retry', 'Try Again')}</button>
                     </div>
                 `;
                 document.getElementById('retry-reviews')?.addEventListener('click', loadReviews);
@@ -106,7 +106,7 @@
         const text = textInput.value.trim();
 
         if (!name || !text) {
-            addMessage('error', 'Заполните имя и текст отзыва.');
+            addMessage('error', t('error.review_fields', 'Fill in your name and review text.'));
             return;
         }
 
@@ -115,16 +115,16 @@
                 const result = await Supa.submitReview({ name, text });
                 if (result && result.approved) {
                     await loadReviews();
-                    addMessage('success', 'Спасибо за отзыв!');
+                    addMessage('success', t('reviews.success', 'Thank you for your review!'));
                     form.reset();
                     updateCounter();
                     return;
                 }
-                const scoreLabel = result && typeof result.score === 'number' ? `Оценка: ${result.score}/10. ` : '';
-                addMessage('error', `${scoreLabel}Отзыв не прошёл проверку.`);
+                const scoreLabel = result && typeof result.score === 'number' ? t('review.score', { score: result.score }) : '';
+                addMessage('error', `${scoreLabel}${t('error.review_check', 'Review did not pass moderation.')}`);
                 return;
             } catch (error) {
-                addMessage('error', 'Не удалось отправить отзыв. Попробуйте позже.');
+                addMessage('error', t('error.review_generic', 'Failed to submit review. Try later.'));
                 return;
             }
         }
@@ -138,7 +138,7 @@
 
         const reviews = Storage.push(STORAGE_KEY, review);
         renderReviews(reviews);
-        addMessage('success', 'Спасибо за отзыв! (Сохранено локально)');
+        addMessage('success', `${t('reviews.success', 'Thank you for your review!')} ${t('review.local', '(Saved locally)')}`);
         form.reset();
         updateCounter();
     };

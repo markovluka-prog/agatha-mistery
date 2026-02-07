@@ -20,7 +20,7 @@ const App = (() => {
     };
 
     const showLoading = (container, text) => {
-        const loadingText = text || t('loading', 'Загрузка...');
+        const loadingText = text || t('loading', 'Loading...');
         container.innerHTML = `
             <div class="loading-container">
                 <div class="loading-spinner"></div>
@@ -30,7 +30,7 @@ const App = (() => {
     };
 
     const showError = (container, message, retryFn) => {
-        const retryText = t('error.retry', 'Попробовать снова');
+        const retryText = t('error.retry', 'Try Again');
         container.innerHTML = `
             <div class="error-container">
                 <p>${message}</p>
@@ -79,7 +79,7 @@ const App = (() => {
     const fetchJson = async (url) => {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('Не удалось загрузить данные');
+            throw new Error(t('error.load_data', 'Failed to load data'));
         }
         return response.json();
     };
@@ -113,7 +113,7 @@ const App = (() => {
             state.places = places;
             return places;
         }
-        throw new Error('Supabase не настроен');
+        throw new Error(t('error.no_supabase', 'Supabase not configured'));
     };
 
     const loadCharacters = async () => {
@@ -172,7 +172,7 @@ const App = (() => {
 
     const renderImageGallery = (images, placeName) => {
         if (!images || images.length === 0) {
-            return '<div class="gallery-empty">Нет изображений</div>';
+            return `<div class="gallery-empty">${t('noimage', 'No image')}</div>`;
         }
 
         const mainImage = resolveAsset(images[0].url);
@@ -211,9 +211,9 @@ const App = (() => {
                     ${thumbnails}
                 </div>
                 <div class="gallery-nav">
-                    <button class="gallery-prev" aria-label="Предыдущее">‹</button>
+                    <button class="gallery-prev" aria-label="${t('gallery.prev', 'Previous')}">‹</button>
                     <span class="gallery-counter">1 / ${images.length}</span>
-                    <button class="gallery-next" aria-label="Следующее">›</button>
+                    <button class="gallery-next" aria-label="${t('gallery.next', 'Next')}">›</button>
                 </div>
             </div>
         `;
@@ -280,12 +280,12 @@ const App = (() => {
         const container = document.getElementById('places-grid');
         if (!container) return;
 
-        showLoading(container, t('map.loading', 'Загрузка локаций...'));
+        showLoading(container, t('map.loading', 'Loading locations...'));
 
         const doRender = async () => {
             try {
                 const places = await loadPlaces();
-                const coordsText = t('map.coords', 'Координаты');
+                const coordsText = t('map.coords', 'Coordinates');
                 container.innerHTML = places.map((place) => {
                     const galleryHtml = renderImageGallery(place.images, place.name);
                     return `
@@ -305,7 +305,7 @@ const App = (() => {
                 initGalleryInteractions(container);
                 return places;
             } catch (error) {
-                showError(container, t('map.error', 'Не удалось загрузить локации'), () => {
+                showError(container, t('map.error', 'Failed to load locations'), () => {
                     state.places = null;
                     renderPlaces();
                 });
@@ -320,7 +320,7 @@ const App = (() => {
         const mapContainer = document.getElementById('places-map');
         if (!mapContainer) return;
         if (!window.L) {
-            mapContainer.innerHTML = '<div class="empty-state">Карта не загрузилась. Проверьте подключение к интернету.</div>';
+            mapContainer.innerHTML = `<div class="empty-state">${t('error.map_load', 'Map failed to load. Check your internet connection.')}</div>`;
             return;
         }
 
@@ -414,12 +414,12 @@ const App = (() => {
         const container = document.getElementById('characters-grid');
         if (!container) return;
 
-        showLoading(container, t('characters.loading', 'Загрузка персонажей...'));
+        showLoading(container, t('characters.loading', 'Loading characters...'));
 
         try {
             const characters = await loadCharacters();
-            const noImageText = t('noimage', 'Нет изображения');
-            const detailsText = t('characters.btn.details', 'Подробнее');
+            const noImageText = t('noimage', 'No image');
+            const detailsText = t('characters.btn.details', 'Learn More');
             container.innerHTML = characters.map((character) => {
                 const image = resolveAsset(character.image);
                 return `
@@ -436,7 +436,7 @@ const App = (() => {
                 `;
             }).join('');
         } catch (error) {
-            showError(container, t('characters.error', 'Не удалось загрузить персонажей'), () => {
+            showError(container, t('characters.error', 'Failed to load characters'), () => {
                 state.characters = null;
                 renderCharacters();
             });
@@ -450,7 +450,7 @@ const App = (() => {
         const params = new URLSearchParams(window.location.search);
         const id = Number(params.get('id'));
         if (!id) {
-            container.innerHTML = '<div class="empty-state">Персонаж не найден.</div>';
+            container.innerHTML = `<div class="empty-state">${t('error.char_not_found', 'Character not found.')}</div>`;
             return;
         }
 
@@ -458,24 +458,24 @@ const App = (() => {
             const characters = await loadCharacters();
             const character = characters.find((item) => item.id === id);
             if (!character) {
-                container.innerHTML = '<div class="empty-state">Персонаж не найден.</div>';
+                container.innerHTML = `<div class="empty-state">${t('error.char_not_found', 'Character not found.')}</div>`;
                 return;
             }
             const image = resolveAsset(character.image);
             container.innerHTML = `
                 <article class="card">
                     <div class="card-image" style="height: 400px;" onclick="App.openLightbox('${image}', '${character.name}')">
-                        ${image ? `<img src="${image}" alt="${character.name}">` : 'Нет изображения'}
+                        ${image ? `<img src="${image}" alt="${character.name}">` : `<div class="no-image">${t('noimage', 'No image')}</div>`}
                     </div>
                     <div class="card-body">
                         <h2 class="card-title">${character.name}</h2>
                         <p class="card-text">${character.fullBio}</p>
-                        <a class="btn btn-secondary" href="${state.basePath}pages/characters.html">Назад к персонажам</a>
+                        <a class="btn btn-secondary" href="${state.basePath}pages/characters.html" data-i18n="characters.btn.back">${t('characters.btn.back', 'Back to Characters')}</a>
                     </div>
                 </article>
             `;
         } catch (error) {
-            container.innerHTML = '<div class="empty-state">Не удалось загрузить данные персонажа.</div>';
+            container.innerHTML = `<div class="empty-state">${t('error.load_data', 'Failed to load data')}</div>`;
         }
     };
 
@@ -483,12 +483,12 @@ const App = (() => {
         const container = document.getElementById('quizzes-grid');
         if (!container) return;
 
-        showLoading(container, t('quizzes.loading', 'Загрузка викторин...'));
+        showLoading(container, t('quizzes.loading', 'Loading quizzes...'));
 
         try {
             const quizzes = await loadQuizzes();
-            const questionsText = t('quizzes.questions', 'Вопросов');
-            const startText = t('quizzes.btn.start', 'Начать');
+            const questionsText = t('quizzes.questions', 'Questions');
+            const startText = t('quizzes.btn.start', 'Start');
             container.innerHTML = quizzes.map((quiz) => {
                 return `
                     <article class="card">
@@ -502,7 +502,7 @@ const App = (() => {
                 `;
             }).join('');
         } catch (error) {
-            showError(container, t('quizzes.error', 'Не удалось загрузить викторины'), () => {
+            showError(container, t('quizzes.error', 'Failed to load quizzes'), () => {
                 state.quizzes = null;
                 renderQuizzes();
             });
@@ -516,7 +516,7 @@ const App = (() => {
         const params = new URLSearchParams(window.location.search);
         const id = Number(params.get('quiz'));
         if (!id) {
-            container.innerHTML = '<div class="empty-state">Викторина не найдена.</div>';
+            container.innerHTML = `<div class="empty-state">${t('error.quiz_not_found', 'Quiz not found.')}</div>`;
             return;
         }
 
@@ -524,7 +524,7 @@ const App = (() => {
             const quizzes = await loadQuizzes();
             const quiz = quizzes.find((item) => item.id === id);
             if (!quiz) {
-                container.innerHTML = '<div class="empty-state">Викторина не найдена.</div>';
+                container.innerHTML = `<div class="empty-state">${t('error.quiz_not_found', 'Quiz not found.')}</div>`;
                 return;
             }
 
@@ -546,7 +546,7 @@ const App = (() => {
 
                 if (isInputType) {
                     // Вопрос с текстовым вводом
-                    const placeholder = t('quizzes.input.placeholder', 'Введите ваш ответ...');
+                    const placeholder = t('quizzes.input.placeholder', 'Enter your answer...');
                     questionContent = `
                         <div class="quiz-input-wrapper">
                             <input type="text" 
@@ -571,7 +571,7 @@ const App = (() => {
                     }).join('');
                 }
 
-                const questionLabel = t('quizzes.question', 'Вопрос');
+                const questionLabel = t('quizzes.question', 'Question');
                 return `
                     <div class="quiz-question" data-question-type="${isInputType ? 'input' : (isMultiple ? 'multiple' : 'options')}">
                         <h3>${questionLabel} ${index + 1}</h3>
@@ -580,7 +580,7 @@ const App = (() => {
                     </div>
                 `;
             }).join('')}
-                    <button type="button" class="btn btn-primary" id="quiz-submit">${t('quizzes.btn.check', 'Проверить ответы')}</button>
+                    <button type="button" class="btn btn-primary" id="quiz-submit">${t('quizzes.btn.check', 'Check Answers')}</button>
                     <div id="quiz-result" class="result-box" style="display: none;"></div>
                 </form>
             `;
@@ -634,17 +634,17 @@ const App = (() => {
 
                 if (answered < quiz.questions.length) {
                     resultBox.style.display = 'block';
-                    resultBox.textContent = t('quizzes.answer.all', 'Ответьте на все вопросы, чтобы узнать результат.');
+                    resultBox.textContent = t('quizzes.answer.all', 'Answer all questions to see your result.');
                     return;
                 }
 
                 const percent = Math.round((correct / quiz.questions.length) * 100);
                 resultBox.style.display = 'block';
-                const resultText = t('quizzes.result', 'Ваш результат');
-                resultBox.textContent = `${resultText}: ${correct} ${t('quizzes.of', 'из')} ${quiz.questions.length} (${percent}%).`;
+                const resultText = t('quizzes.result', 'Your result');
+                resultBox.textContent = `${resultText}: ${correct} ${t('quizzes.of', 'of')} ${quiz.questions.length} (${percent}%).`;
             });
         } catch (error) {
-            container.innerHTML = '<div class="empty-state">Не удалось загрузить викторину.</div>';
+            container.innerHTML = `<div class="empty-state">${t('error.quiz_not_found', 'Quiz not found.')}</div>`;
         }
     };
 
@@ -703,12 +703,12 @@ const App = (() => {
                 if (Supa.isReady()) {
                     try {
                         await submitToSupabase(storageKey, data, file);
-                        setMessage('Спасибо! Ваша работа отправлена в архив фанатов.', 'success');
+                        setMessage(t('form.success', 'Thank you! Your work has been submitted.'), 'success');
                         form.reset();
                         if (submitButton) submitButton.disabled = false;
                         return;
                     } catch (error) {
-                        setMessage('Не удалось отправить данные в Supabase.', 'error');
+                        setMessage(t('form.error.supabase', 'Failed to submit data to Supabase.'), 'error');
                         if (submitButton) submitButton.disabled = false;
                         return;
                     }
@@ -716,7 +716,7 @@ const App = (() => {
 
                 data.createdAt = new Date().toISOString();
                 Storage.push(storageKey, data);
-                setMessage('Сохранено локально. Подключите Supabase, чтобы хранить в интернете.', 'error');
+                setMessage(t('form.error.local', 'Saved locally. Connect Supabase to store on the internet.'), 'error');
                 form.reset();
                 if (submitButton) submitButton.disabled = false;
             });
@@ -728,20 +728,20 @@ const App = (() => {
         if (!container) return;
 
         if (!Supa.isReady()) {
-            container.innerHTML = '<div class="empty-state">Подключите Supabase для просмотра фанфиков.</div>';
+            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Connect Supabase to view.')}</div>`;
             return;
         }
 
-        showLoading(container, 'Загрузка фанфиков...');
+        showLoading(container, t('fanfics.loading', 'Loading fanfics...'));
 
         try {
             const fanfics = await Supa.getFanfics();
             if (fanfics.length === 0) {
-                container.innerHTML = `<div class="empty-state">${t('fanfics.empty', 'Пока нет фанфиков. Будь первым!')}</div>`;
+                container.innerHTML = `<div class="empty-state">${t('fanfics.empty', 'No fanfics yet. Be the first!')}</div>`;
                 return;
             }
-            const authorText = t('fanfics.author', 'Автор');
-            const characterText = t('fanfics.character', 'Персонаж');
+            const authorText = t('fanfics.author', 'Author');
+            const characterText = t('fanfics.character', 'Character');
             container.innerHTML = fanfics.map((fanfic) => `
                 <article class="card fanfic-card">
                     <div class="card-body">
@@ -764,19 +764,19 @@ const App = (() => {
         if (!container) return;
 
         if (!Supa.isReady()) {
-            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Подключите Supabase для просмотра иллюстраций.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Connect Supabase to view.')}</div>`;
             return;
         }
 
-        showLoading(container, t('illustrations.loading', 'Загрузка иллюстраций...'));
+        showLoading(container, t('illustrations.loading', 'Loading illustrations...'));
 
         try {
             const illustrations = await Supa.getIllustrations();
             if (illustrations.length === 0) {
-                container.innerHTML = `<div class="empty-state">${t('illustrations.empty', 'Пока нет иллюстраций. Будь первым!')}</div>`;
+                container.innerHTML = `<div class="empty-state">${t('illustrations.empty', 'No illustrations yet. Be the first!')}</div>`;
                 return;
             }
-            const authorText = t('fanfics.author', 'Автор');
+            const authorText = t('fanfics.author', 'Author');
             container.innerHTML = `<div class="grid grid-3">${illustrations.map((ill) => `
                 <article class="card illustration-card">
                     ${ill.file_url ? `<div class="card-image" style="height: 300px;" onclick="App.openLightbox('${ill.file_url}', '${ill.title}')"><img src="${ill.file_url}" alt="${ill.title}"></div>` : ''}
@@ -788,7 +788,40 @@ const App = (() => {
                 </article>
             `).join('')}</div>`;
         } catch (error) {
-            container.innerHTML = `<div class="empty-state">${t('illustrations.error', 'Не удалось загрузить иллюстрации.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${t('illustrations.error', 'Failed to load illustrations.')}</div>`;
+        }
+    };
+
+    const renderAbout = async () => {
+        const container = document.getElementById('about-content-container');
+        if (!container) return;
+
+        if (!Supa.isReady()) {
+            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Connect Supabase to view.')}</div>`;
+            return;
+        }
+
+        showLoading(container, t('about.loading', 'Loading history...'));
+
+        try {
+            const sections = await Supa.getAbout();
+            if (sections.length === 0) {
+                container.innerHTML = `<div class="empty-state">${t('about.empty', 'History hasn\'t been written yet. Tell us about yourself!')}</div>`;
+                return;
+            }
+            container.innerHTML = sections.map(section => `
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+                        <span>${section.title}</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>${section.content.replace(/\n/g, '<br>')}</p>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            container.innerHTML = `<div class="empty-state">${t('about.error', 'Failed to load information.')}</div>`;
         }
     };
 
@@ -797,6 +830,7 @@ const App = (() => {
         state.places = null;
         state.characters = null;
         state.quizzes = null;
+        state.about = null;
 
         // Перезагружаем контент
         await renderPlaces();
@@ -807,6 +841,7 @@ const App = (() => {
         await renderQuizDetail();
         await renderFanfics();
         await renderIllustrations();
+        await renderAbout();
     };
 
     const init = async () => {
@@ -827,6 +862,7 @@ const App = (() => {
         renderQuizDetail();
         renderFanfics();
         renderIllustrations();
+        renderAbout();
         setupForms();
 
         // Слушаем смену языка

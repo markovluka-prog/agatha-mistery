@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Карта приключений Агаты Мистери по всему миру.">
-    <title>Карта мира | Агата Мистери</title>
+    <title data-i18n-title="nav.map">Карта мира | Агата Мистери</title>
 
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/navigation.css">
@@ -16,9 +16,9 @@
     <nav class="main-nav">
         <div class="nav-container">
             <div class="logo">
-                <h1>Агата Мистери</h1>
+                <h1 data-i18n="site.title">Агата Мистери</h1>
             </div>
-            <button class="burger-menu" aria-label="Меню">
+            <button class="burger-menu" aria-label="Меню" data-i18n-aria-label="nav.menu.label">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -28,6 +28,7 @@
                 <li><a href="map.html" class="active" data-i18n="nav.map">Карта мира</a></li>
                 <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
                 <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
+                <li><a href="about.html" data-i18n="nav.about">О нас</a></li>
                 <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
             </ul>
         </div>

@@ -27,6 +27,7 @@
                 <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
                 <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
                 <li><a href="characters.html" class="active" data-i18n="nav.characters">Персонажи</a></li>
+                <li><a href="about.html" data-i18n="nav.about">О нас</a></li>
                 <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
             </ul>
         </div>
@@ -55,12 +56,14 @@
                             <label for="illustration-title" data-i18n="form.illustration.art.title">Название
                                 работы</label>
                             <input type="text" id="illustration-title" name="title"
-                                placeholder="Например: Тайна в Лондоне" required maxlength="80">
+                                placeholder="Например: Тайна в Лондоне" required maxlength="80"
+                                data-i18n-placeholder="form.placeholder.art_title">
                         </div>
                         <div class="form-group">
                             <label for="illustration-desc" data-i18n="form.illustration.description">Описание</label>
                             <textarea id="illustration-desc" name="description" rows="4"
-                                placeholder="Что вдохновило тебя?" maxlength="500"></textarea>
+                                placeholder="Что вдохновило тебя?" maxlength="500"
+                                data-i18n-placeholder="form.placeholder.description"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="illustration-file" data-i18n="form.illustration.file">Файл иллюстрации</label>

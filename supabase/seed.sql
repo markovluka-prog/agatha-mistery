@@ -43,14 +43,33 @@ create table if not exists quizzes (
   questions jsonb
 );
 
+-- About Us Sections
+create table if not exists about_sections (
+  id bigserial primary key,
+  title text not null,
+  title_en text,
+  content text not null,
+  content_en text,
+  sort_order integer default 0
+);
+
 alter table places enable row level security;
 alter table place_images enable row level security;
 alter table characters enable row level security;
 alter table quizzes enable row level security;
+alter table about_sections enable row level security;
 
 drop policy if exists "public read places" on places;
 create policy "public read places" on places
   for select to anon, authenticated using (true);
+
+drop policy if exists "public read about_sections" on about_sections;
+create policy "public read about_sections" on about_sections
+  for select to anon, authenticated using (true);
+
+drop policy if exists "admin write about_sections" on about_sections;
+create policy "admin write about_sections" on about_sections
+  for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "public read place_images" on place_images;
 create policy "public read place_images" on place_images
@@ -261,6 +280,17 @@ insert into reviews (name, text, status, created_at) values
   ('Алексей', 'Агата Мистери — лучший детектив! Жду новых книг с нетерпением.', 'approved', now() - interval '3 days'),
   ('Анна', 'Мой сын в восторге от приключений Агаты и Ларри. Спасибо авторам!', 'approved', now() - interval '1 day')
 on conflict do nothing;
+
+-- Sample about sections
+insert into about_sections (id, title, title_en, content, content_en, sort_order) values
+  (1, 'Кто мы такие?', 'Who are we?', 'Мы — сообщество преданных фанатов серии книг Стива Стивенсона про Агату Мистери. Наша цель — собрать в одном месте всю информацию о любимых героях и их приключениях.', 'We are a community of dedicated fans of Steve Stevenson''s Agatha Mistery book series. Our goal is to gather all information about our favorite characters and their adventures in one place.', 1),
+  (2, 'Наша миссия', 'Our Mission', 'Мы хотим, чтобы каждый читатель мог окунуться в мир тайн и загадок вместе с Агатой, Ларри и Ватсоном. Мы создаем карту приключений, проводим викторины и делимся творчеством фанатов.', 'We want every reader to be able to dive into the world of mysteries together with Agatha, Larry, and Watson. We create adventure maps, hold quizzes, and share fan creations.', 2)
+on conflict (id) do update set
+  title = excluded.title,
+  title_en = excluded.title_en,
+  content = excluded.content,
+  content_en = excluded.content_en,
+  sort_order = excluded.sort_order;
 
 -- Sample approved fanfics
 insert into fanfics (name, title, character, story, status, created_at) values

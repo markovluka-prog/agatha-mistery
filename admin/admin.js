@@ -27,6 +27,7 @@ const Admin = (() => {
         places: [],
         placeImages: [],
         characters: [],
+        aboutSections: [],
         pendingReviews: [],
         pendingFanfics: [],
         pendingIllustrations: [],
@@ -430,6 +431,7 @@ const Admin = (() => {
                 loadQuizzes(),
                 loadPlaces(),
                 loadCharacters(),
+                loadAboutSections(),
                 loadModerationData()
             ]);
         } catch (error) {
@@ -521,19 +523,19 @@ const Admin = (() => {
         const container = document.getElementById('quizzes-list');
 
         if (state.quizzes.length === 0) {
-            container.innerHTML = '<div class="empty-state">Нет квизов. Создайте первый!</div>';
+            container.innerHTML = '<div class="empty-state">Архив пуст. Напишите новое дело!</div>';
             return;
         }
 
         container.innerHTML = state.quizzes.map(quiz => `
             <div class="item-card" data-id="${quiz.id}">
                 <div class="item-card-image">
-                    <span style="font-size: 48px;">📝</span>
+                    <span style="font-size: 40px;">📂</span>
                 </div>
                 <div class="item-card-body">
                     <h3 class="item-card-title">${escapeHtml(quiz.title)}</h3>
                     <p class="item-card-meta">
-                        ${quiz.questions_count || (quiz.questions ? quiz.questions.length : 0)} вопросов
+                        ${quiz.questions_count || (quiz.questions ? quiz.questions.length : 0)} улик/вопросов
                     </p>
                 </div>
             </div>
@@ -591,11 +593,17 @@ const Admin = (() => {
                     </select>
                     <button type="button" class="question-remove" title="Удалить вопрос">&times;</button>
                 </div>
-                <div class="question-text-input">
-                    <input type="text" placeholder="Текст вопроса (RU)" data-field="text"
-                           value="${escapeHtml(questionData?.text || '')}">
-                    <input type="text" placeholder="Question text (EN)" data-field="text_en"
-                           value="${escapeHtml(questionData?.text_en || '')}" style="margin-top: 8px;">
+                <div class="question-text-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 10px; opacity: 0.7;">Вопрос (RU)</label>
+                        <input type="text" placeholder="Текст вопроса" data-field="text"
+                               value="${escapeHtml(questionData?.text || '')}">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 10px; opacity: 0.7;">Question (EN)</label>
+                        <input type="text" placeholder="Question text" data-field="text_en"
+                               value="${escapeHtml(questionData?.text_en || '')}">
+                    </div>
                 </div>
                 <div class="options-list">
                     ${renderOptions(questionData)}
@@ -643,12 +651,17 @@ const Admin = (() => {
             const correctAnswer = questionData?.correctAnswer || '';
             const correctAnswerEn = questionData?.correctAnswer_en || '';
             return `
-                <div class="input-answer-field">
-                    <label>Правильный ответ:</label>
-                    <input type="text" class="correct-answer-input" placeholder="Правильный ответ (RU)" 
-                           value="${escapeHtml(correctAnswer)}" data-field="correctAnswer">
-                    <input type="text" class="correct-answer-input-en" placeholder="Correct answer (EN)" 
-                           value="${escapeHtml(correctAnswerEn)}" data-field="correctAnswer_en" style="margin-top: 8px;">
+                <div class="input-answer-field" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 10px; opacity: 0.7;">Ответ (RU)</label>
+                        <input type="text" class="correct-answer-input" placeholder="Правильный ответ" 
+                               value="${escapeHtml(correctAnswer)}" data-field="correctAnswer">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 10px; opacity: 0.7;">Answer (EN)</label>
+                        <input type="text" class="correct-answer-input-en" placeholder="Correct answer" 
+                               value="${escapeHtml(correctAnswerEn)}" data-field="correctAnswer_en">
+                    </div>
                 </div>
             `;
         }
@@ -661,17 +674,17 @@ const Admin = (() => {
         const inputType = type === 'checkbox' ? 'checkbox' : 'radio';
 
         return options.map(opt => `
-            <div class="option-item" data-option-id="${opt.id}">
+            <div class="option-item" data-option-id="${opt.id}" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <input type="${inputType}" name="correct-${questionData?.id || 'new'}"
-                       ${opt.isCorrect ? 'checked' : ''} title="Правильный ответ">
-                ${type === 'image' && opt.image ? `<img src="${opt.image}" class="option-image-preview">` : ''}
-                <div class="option-texts">
+                       ${opt.isCorrect ? 'checked' : ''} title="Правильный ответ" style="width: auto; margin: 0;">
+                ${type === 'image' && opt.image ? `<img src="${opt.image}" class="option-image-preview" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">` : ''}
+                <div class="option-texts" style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <input type="text" placeholder="Вариант (RU)" value="${escapeHtml(opt.text || '')}" data-field="text">
                     <input type="text" placeholder="Option (EN)" value="${escapeHtml(opt.text_en || '')}" data-field="text_en">
                 </div>
                 ${type === 'image' ? `<input type="file" accept="image/*" class="option-image-input" hidden>
-                    <button type="button" class="btn btn-small" onclick="this.previousElementSibling.click()">📷</button>` : ''}
-                <button type="button" class="option-remove">&times;</button>
+                    <button type="button" class="btn btn-outline btn-small" onclick="this.previousElementSibling.click()">📷</button>` : ''}
+                <button type="button" class="option-remove" style="background: none; border: none; font-size: 20px; color: var(--danger); cursor: pointer; padding: 0 5px;">&times;</button>
             </div>
         `).join('');
     }
@@ -1012,7 +1025,7 @@ const Admin = (() => {
         const container = document.getElementById('places-list');
 
         if (state.places.length === 0) {
-            container.innerHTML = '<div class="empty-state">Нет маркеров. Создайте первый!</div>';
+            container.innerHTML = '<div class="empty-state">Карта чиста. Куда отправимся дальше?</div>';
             return;
         }
 
@@ -1248,7 +1261,7 @@ const Admin = (() => {
         const container = document.getElementById('characters-list');
 
         if (state.characters.length === 0) {
-            container.innerHTML = '<div class="empty-state">Нет персонажей. Создайте первого!</div>';
+            container.innerHTML = '<div class="empty-state">Архив пуст. Кто эти люди?</div>';
             return;
         }
 
@@ -1279,7 +1292,7 @@ const Admin = (() => {
 
         form.reset();
         document.getElementById('character-id').value = '';
-        preview.innerHTML = '<span class="placeholder">Нет изображения</span>';
+        preview.innerHTML = '<span class="placeholder">Досье без портрета</span>';
 
         if (characterId) {
             const char = state.characters.find(c => c.id === characterId);
@@ -1405,6 +1418,133 @@ const Admin = (() => {
     }
 
     // ===========================================
+    // About Us
+    // ===========================================
+
+    async function loadAboutSections() {
+        if (!supabase) return;
+        try {
+            const { data, error } = await supabase
+                .from('about_sections')
+                .select('*')
+                .order('sort_order', { ascending: true });
+            if (error) throw error;
+            state.aboutSections = data || [];
+            renderAboutSections();
+        } catch (error) {
+            console.error('Error loading about sections:', error);
+        }
+    }
+
+    function renderAboutSections() {
+        const container = document.getElementById('about-list');
+        if (!container) return;
+        if (state.aboutSections.length === 0) {
+            container.innerHTML = '<div class="empty-state">История еще не написана. Расскажите о себе!</div>';
+            return;
+        }
+        container.innerHTML = state.aboutSections.map(section => `
+            <div class="item-card about-card" data-id="${section.id}">
+                <div class="item-card-image">
+                    <span style="font-size: 32px;">ℹ️</span>
+                </div>
+                <div class="item-card-body">
+                    <h3 class="item-card-title">${escapeHtml(section.title)}</h3>
+                    <p class="item-card-meta">Порядок: ${section.sort_order}</p>
+                </div>
+            </div>
+        `).join('');
+        container.querySelectorAll('.item-card').forEach(card => {
+            card.addEventListener('click', () => openAboutEditor(parseInt(card.dataset.id)));
+        });
+    }
+
+    function openAboutEditor(aboutId = null) {
+        const modal = document.getElementById('about-editor-modal');
+        const form = document.getElementById('about-form');
+        form.reset();
+        document.getElementById('about-id').value = '';
+        if (aboutId) {
+            const section = state.aboutSections.find(s => s.id === aboutId);
+            if (section) {
+                document.getElementById('about-id').value = section.id;
+                document.getElementById('about-title').value = section.title || '';
+                document.getElementById('about-title-en').value = section.title_en || '';
+                document.getElementById('about-content').value = section.content || '';
+                document.getElementById('about-content-en').value = section.content_en || '';
+                document.getElementById('about-sort').value = section.sort_order || 0;
+                document.getElementById('delete-about-btn').hidden = false;
+            }
+        } else {
+            document.getElementById('delete-about-btn').hidden = true;
+            document.getElementById('about-sort').value = state.aboutSections.length > 0
+                ? Math.max(...state.aboutSections.map(s => s.sort_order)) + 1
+                : 1;
+        }
+        modal.hidden = false;
+    }
+
+    async function saveAboutSection() {
+        const aboutId = document.getElementById('about-id').value;
+        const title = document.getElementById('about-title').value.trim();
+        const titleEn = document.getElementById('about-title-en').value.trim();
+        const content = document.getElementById('about-content').value.trim();
+        const contentEn = document.getElementById('about-content-en').value.trim();
+        const sortOrder = parseInt(document.getElementById('about-sort').value) || 0;
+
+        if (!title || !content) {
+            showToast('Заполните заголовок и контент');
+            return;
+        }
+
+        const sectionData = {
+            title, title_en: titleEn,
+            content, content_en: contentEn,
+            sort_order: sortOrder
+        };
+
+        try {
+            if (aboutId) {
+                const { error } = await supabase
+                    .from('about_sections')
+                    .update(sectionData)
+                    .eq('id', parseInt(aboutId));
+                if (error) throw error;
+            } else {
+                const { error } = await supabase
+                    .from('about_sections')
+                    .insert(sectionData);
+                if (error) throw error;
+            }
+            closeModal('about-editor-modal');
+            await loadAboutSections();
+            showSaveIndicator();
+        } catch (error) {
+            console.error('Error saving about section:', error);
+            showToast('Ошибка сохранения: ' + error.message);
+        }
+    }
+
+    async function deleteAboutSection() {
+        const aboutId = document.getElementById('about-id').value;
+        if (!aboutId) return;
+        if (!confirm('Удалить этот блок?')) return;
+        try {
+            const { error } = await supabase
+                .from('about_sections')
+                .delete()
+                .eq('id', parseInt(aboutId));
+            if (error) throw error;
+            closeModal('about-editor-modal');
+            await loadAboutSections();
+            showSaveIndicator();
+        } catch (error) {
+            console.error('Error deleting about section:', error);
+            showToast('Ошибка удаления: ' + error.message);
+        }
+    }
+
+    // ===========================================
     // Moderation
     // ===========================================
 
@@ -1441,7 +1581,7 @@ const Admin = (() => {
         }
 
         if (items.length === 0) {
-            container.innerHTML = '<div class="empty-state">Нет материалов на модерации</div>';
+            container.innerHTML = '<div class="empty-state">Все дела закрыты. Новых улик нет.</div>';
             return;
         }
 
@@ -1734,6 +1874,11 @@ const Admin = (() => {
         document.getElementById('delete-character-btn').addEventListener('click', deleteCharacter);
         document.getElementById('character-image-upload').addEventListener('change', handleCharacterImagePreview);
 
+        // About
+        document.getElementById('add-about-btn').addEventListener('click', () => openAboutEditor());
+        document.getElementById('save-about-btn').addEventListener('click', saveAboutSection);
+        document.getElementById('delete-about-btn').addEventListener('click', deleteAboutSection);
+
         // Moderation tabs
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1745,89 +1890,13 @@ const Admin = (() => {
 
         // Modals
         setupModalCloseButtons();
-
-        // API Section
-        const apiExecuteBtn = document.getElementById('api-execute-btn');
-        const apiClearBtn = document.getElementById('api-clear-btn');
-
-        if (apiExecuteBtn) {
-            apiExecuteBtn.addEventListener('click', executeApiRequest);
-        }
-        if (apiClearBtn) {
-            apiClearBtn.addEventListener('click', () => {
-                document.getElementById('api-body').value = '';
-                document.getElementById('api-filter').value = '';
-                document.getElementById('api-result').textContent = 'Результат появится здесь...';
-                document.getElementById('api-result').className = 'api-result';
-            });
-        }
     }
 
     // ===========================================
     // API Requests
     // ===========================================
 
-    async function executeApiRequest() {
-        const endpoint = document.getElementById('api-endpoint').value;
-        const method = document.getElementById('api-method').value;
-        const filter = document.getElementById('api-filter').value.trim();
-        const bodyText = document.getElementById('api-body').value.trim();
-        const resultEl = document.getElementById('api-result');
-
-        resultEl.textContent = 'Выполняется запрос...';
-        resultEl.className = 'api-result';
-
-        try {
-            // Build URL
-            let url = `${window.SUPABASE_CONFIG.url}/rest/v1/${endpoint}`;
-            if (filter) {
-                url += `?${filter}`;
-            } else if (method === 'GET') {
-                url += '?select=*';
-            }
-
-            // Build request options
-            const options = {
-                method: method,
-                headers: {
-                    'apikey': window.SUPABASE_CONFIG.anonKey,
-                    'Authorization': `Bearer ${window.SUPABASE_CONFIG.anonKey}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=representation'
-                }
-            };
-
-            // Add body for PATCH/POST
-            if ((method === 'PATCH' || method === 'POST') && bodyText) {
-                try {
-                    // Validate JSON
-                    JSON.parse(bodyText);
-                    options.body = bodyText;
-                } catch (jsonError) {
-                    throw new Error('Неверный JSON: ' + jsonError.message);
-                }
-            }
-
-            const response = await fetch(url, options);
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || data.error || `HTTP ${response.status}`);
-            }
-
-            resultEl.textContent = JSON.stringify(data, null, 2);
-            resultEl.className = 'api-result success';
-
-            // Reload data if changes were made
-            if (method !== 'GET') {
-                await loadAllData();
-                showSaveIndicator();
-            }
-        } catch (error) {
-            resultEl.textContent = 'Ошибка: ' + error.message;
-            resultEl.className = 'api-result error';
-        }
-    }
+    // API Request section removed for redesign.
 
     // ===========================================
     // Initialization

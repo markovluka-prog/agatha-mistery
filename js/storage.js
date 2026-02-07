@@ -250,6 +250,28 @@ const Supa = (() => {
         return data || [];
     };
 
+    const getAbout = async () => {
+        if (!client) throw new Error('Supabase не настроен');
+        try {
+            const { data, error } = await client
+                .from('about_sections')
+                .select('*')
+                .order('sort_order', { ascending: true });
+            if (error) throw error;
+
+            const lang = (typeof I18n !== 'undefined' && I18n.getLang) ? I18n.getLang() : 'ru';
+
+            return (data || []).map(section => ({
+                id: section.id,
+                title: lang === 'en' && section.title_en ? section.title_en : section.title,
+                content: lang === 'en' && section.content_en ? section.content_en : section.content
+            }));
+        } catch (error) {
+            console.error('Error fetching about data:', error);
+            return [];
+        }
+    };
+
     return {
         isReady,
         getReviews,
@@ -260,6 +282,7 @@ const Supa = (() => {
         getCharacters,
         getQuizzes,
         getFanfics,
-        getIllustrations
+        getIllustrations,
+        getAbout
     };
 })();

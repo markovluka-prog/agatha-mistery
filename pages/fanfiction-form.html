@@ -27,6 +27,7 @@
                 <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
                 <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
                 <li><a href="characters.html" class="active" data-i18n="nav.characters">Персонажи</a></li>
+                <li><a href="about.html" data-i18n="nav.about">О нас</a></li>
                 <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
             </ul>
         </div>
@@ -53,24 +54,24 @@
                         <div class="form-group">
                             <label for="fanfic-title" data-i18n="form.fanfic.story.title">Название фанфика</label>
                             <input type="text" id="fanfic-title" name="title" placeholder="Название истории" required
-                                maxlength="100">
+                                maxlength="100" data-i18n-placeholder="form.placeholder.fanfic_title">
                         </div>
                         <div class="form-group">
                             <label for="fanfic-character" data-i18n="form.fanfic.character">Главный персонаж</label>
                             <select id="fanfic-character" name="character" required>
                                 <option value="" data-i18n="form.fanfic.select_character">Выберите персонажа</option>
-                                <option value="Агата Мистери">Агата Мистери</option>
-                                <option value="Ларри Мистери">Ларри Мистери</option>
-                                <option value="Ватсон (кот)">Ватсон (кот)</option>
-                                <option value="Мистер Кент">Мистер Кент</option>
-                                <option value="Чандлер Мистери">Чандлер Мистери</option>
+                                <option value="Агата Мистери" data-i18n="char.agatha">Агата Мистери</option>
+                                <option value="Ларри Мистери" data-i18n="char.larry">Ларри Мистери</option>
+                                <option value="Ватсон (кот)" data-i18n="char.watson">Ватсон (кот)</option>
+                                <option value="Мистер Кент" data-i18n="char.kent">Мистер Кент</option>
+                                <option value="Чандлер Мистери" data-i18n="char.chandler">Чандлер Мистери</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="fanfic-text" data-i18n="form.fanfic.story">Текст истории</label>
                             <textarea id="fanfic-text" name="story" rows="8"
-                                placeholder="Напишите короткий сюжет или начало истории" required
-                                maxlength="2000"></textarea>
+                                placeholder="Напишите короткий сюжет или начало истории" required maxlength="2000"
+                                data-i18n-placeholder="form.placeholder.fanfic_text"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary" data-i18n="form.fanfic.submit">Отправить</button>
                     </form>

@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+*.log
+.env
+peek_data.js
+check_content.js
+dump_db.js
+fix_content_db.js
+sync_translations.js
+check_translations_db.js
+translate/find_broken.js
+check_translations_db.js
+translate_characters_db.js
+ Ingle

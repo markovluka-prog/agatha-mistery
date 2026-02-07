@@ -9,6 +9,7 @@ const I18n = (() => {
             'nav.map': 'Карта мира',
             'nav.quizzes': 'Викторины',
             'nav.characters': 'Персонажи',
+            'nav.about': 'О нас',
             'nav.lang': 'EN',
 
             // Hero
@@ -61,6 +62,8 @@ const I18n = (() => {
             'quizzes.answer.all': 'Ответьте на все вопросы, чтобы узнать результат.',
             'quizzes.result': 'Ваш результат: {correct} из {total} ({percent}%).',
             'quizzes.notfound': 'Викторина не найдена.',
+            'quizzes.of': 'из',
+            'quizzes.input.placeholder': 'Введите ваш ответ...',
 
             // Forms
             'form.fanfic.title': 'Написать фанфик',
@@ -82,6 +85,9 @@ const I18n = (() => {
 
             'form.success': 'Спасибо! Ваша работа отправлена в архив фанатов.',
             'form.error': 'Не удалось отправить данные.',
+            'form.error.supabase': 'Не удалось отправить данные в Supabase.',
+            'form.error.local': 'Сохранено локально. Подключите Supabase, чтобы хранить в интернете.',
+            'form.validation': 'Заполните обязательные поля.',
 
             // Illustrations
             'illustrations.title': 'Иллюстрации фанатов',
@@ -100,6 +106,13 @@ const I18n = (() => {
             'fanfics.author': 'Автор',
             'fanfics.character': 'Персонаж',
 
+            // About Us
+            'about.title': 'О нас',
+            'about.subtitle': 'Узнайте больше о нашем сообществе и миссии.',
+            'about.loading': 'Загрузка истории...',
+            'about.error': 'Не удалось загрузить информацию.',
+            'about.empty': 'История еще не написана. Расскажите о себе!',
+
             // Workshop
             'workshop.title': 'Творческая мастерская',
             'workshop.subtitle': 'Создай иллюстрацию или напиши фанфик, чтобы поделиться своим видением мира Агаты Мистери.',
@@ -107,9 +120,47 @@ const I18n = (() => {
             // Common
             'loading': 'Загрузка...',
             'error.retry': 'Попробовать снова',
+            'error.no_supabase': 'Supabase не настроен',
+            'error.load_data': 'Не удалось загрузить данные',
+            'error.map_load': 'Карта не загрузилась. Проверьте подключение к интернету.',
+            'error.char_not_found': 'Персонаж не найден.',
+            'error.quiz_not_found': 'Викторина не найдена.',
+            'error.review_check': 'Отзыв не прошёл проверку.',
+            'error.review_fields': 'Заполните имя и текст отзыва.',
+            'error.review_generic': 'Не удалось отправить отзыв. Попробуйте позже.',
             'noimage': 'Нет изображения',
             'footer': '© 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.',
-            'site.title': 'Агата Мистери'
+            'site.title': 'Агата Мистери',
+            'supabase.connect': 'Подключите Supabase для просмотра.',
+            'gallery.prev': 'Предыдущее',
+            'gallery.next': 'Следующее',
+            'review.local': '(Сохранено локально)',
+            'review.score': 'Оценка: {score}/10.',
+
+            // Character Names
+            'char.agatha': 'Агата Мистери',
+            'char.larry': 'Ларри Мистери',
+            'char.watson': 'Ватсон (кот)',
+            'char.kent': 'Мистер Кент',
+            'char.chandler': 'Чандлер Мистери',
+
+            // Placeholders
+            'form.placeholder.art_title': 'Например: Тайна в Лондоне',
+            'form.placeholder.description': 'Что вдохновило тебя?',
+            'form.placeholder.fanfic_title': 'Название истории',
+            'form.placeholder.fanfic_text': 'Напишите короткий сюжет или начало истории',
+
+            // Meta & Aria
+            'meta.description.home': 'Добро пожаловать на фан-сайт Агаты Мистери. Здесь вы найдете карту приключений, викторины и информацию о персонажах.',
+            'meta.description.map': 'Карта приключений Агаты Мистери по всему миру.',
+            'meta.description.quiz': 'Викторины по книгам Агаты Мистери.',
+            'meta.description.quiz-detail': 'Детали викторины по книгам Агаты Мистери.',
+            'meta.description.characters': 'Персонажи серии книг про Агату Мистери.',
+            'meta.description.character-detail': 'Подробности о персонажах Агаты Мистери.',
+            'meta.description.fanfiction-form': 'Форма отправки фанфиков по Агате Мистери.',
+            'meta.description.illustration-form': 'Форма отправки иллюстраций по книгам Агаты Мистери.',
+            'meta.description.about': 'О фанатском сообществе Агаты Мистери и нашей миссии.',
+            'nav.menu.label': 'Меню'
         },
 
         en: {
@@ -118,6 +169,7 @@ const I18n = (() => {
             'nav.map': 'World Map',
             'nav.quizzes': 'Quizzes',
             'nav.characters': 'Characters',
+            'nav.about': 'About Us',
             'nav.lang': 'RU',
 
             // Hero
@@ -170,6 +222,8 @@ const I18n = (() => {
             'quizzes.answer.all': 'Answer all questions to see your result.',
             'quizzes.result': 'Your result: {correct} out of {total} ({percent}%).',
             'quizzes.notfound': 'Quiz not found.',
+            'quizzes.of': 'of',
+            'quizzes.input.placeholder': 'Enter your answer...',
 
             // Forms
             'form.fanfic.title': 'Write a Fanfic',
@@ -191,6 +245,9 @@ const I18n = (() => {
 
             'form.success': 'Thank you! Your work has been submitted to the fan archive.',
             'form.error': 'Failed to submit data.',
+            'form.error.supabase': 'Failed to submit data to Supabase.',
+            'form.error.local': 'Saved locally. Connect Supabase to store on the internet.',
+            'form.validation': 'Please fill in required fields.',
 
             // Illustrations
             'illustrations.title': 'Fan Illustrations',
@@ -209,6 +266,13 @@ const I18n = (() => {
             'fanfics.author': 'Author',
             'fanfics.character': 'Character',
 
+            // About Us
+            'about.title': 'About Us',
+            'about.subtitle': 'Learn more about our community and mission.',
+            'about.loading': 'Loading history...',
+            'about.error': 'Failed to load information.',
+            'about.empty': 'History hasn\'t been written yet. Tell us about yourself!',
+
             // Workshop
             'workshop.title': 'Creative Workshop',
             'workshop.subtitle': 'Create an illustration or write a fanfic to share your vision of Agatha Mistery\'s world.',
@@ -216,9 +280,47 @@ const I18n = (() => {
             // Common
             'loading': 'Loading...',
             'error.retry': 'Try Again',
+            'error.no_supabase': 'Supabase not configured',
+            'error.load_data': 'Failed to load data',
+            'error.map_load': 'Map failed to load. Check your internet connection.',
+            'error.char_not_found': 'Character not found.',
+            'error.quiz_not_found': 'Quiz not found.',
+            'error.review_check': 'Review did not pass moderation.',
+            'error.review_fields': 'Fill in your name and review text.',
+            'error.review_generic': 'Failed to submit review. Try later.',
             'noimage': 'No image',
             'footer': '© 2024 Agatha Mystery Fans. Fan site for Steve Stevenson\'s books.',
-            'site.title': 'Agatha Mystery'
+            'site.title': 'Agatha Mystery',
+            'supabase.connect': 'Connect Supabase to view.',
+            'gallery.prev': 'Previous',
+            'gallery.next': 'Next',
+            'review.local': '(Saved locally)',
+            'review.score': 'Score: {score}/10.',
+
+            // Character Names
+            'char.agatha': 'Agatha Mystery',
+            'char.larry': 'Larry Mystery',
+            'char.watson': 'Watson (cat)',
+            'char.kent': 'Mr. Kent',
+            'char.chandler': 'Chandler Mystery',
+
+            // Placeholders
+            'form.placeholder.art_title': 'Example: Mystery in London',
+            'form.placeholder.description': 'What inspired you?',
+            'form.placeholder.fanfic_title': 'Story title',
+            'form.placeholder.fanfic_text': 'Write a short plot or the beginning of the story',
+
+            // Meta & Aria
+            'meta.description.home': 'Welcome to the Agatha Mystery fan site. Here you will find an adventure map, quizzes, and character information.',
+            'meta.description.map': 'Map of Agatha Mystery adventures around the world.',
+            'meta.description.quiz': 'Quizzes based on the Agatha Mystery books.',
+            'meta.description.quiz-detail': 'Quiz details for Agatha Mystery books.',
+            'meta.description.characters': 'Characters from the Agatha Mystery book series.',
+            'meta.description.character-detail': 'Details about Agatha Mystery characters.',
+            'meta.description.fanfiction-form': 'Fanfic submission form for Agatha Mystery.',
+            'meta.description.illustration-form': 'Illustration submission form for Agatha Mystery books.',
+            'meta.description.about': 'About the Agatha Mystery fan community and our mission.',
+            'nav.menu.label': 'Menu'
         }
     };
 
@@ -318,6 +420,23 @@ const I18n = (() => {
         document.querySelectorAll('[data-i18n-title]').forEach((el) => {
             const key = el.dataset.i18nTitle;
             document.title = t(key) + ' | ' + t('site.title');
+        });
+
+        // Translate meta description
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+            const pageName = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
+            const descKey = `meta.description.${pageName}`;
+            const translatedDesc = t(descKey);
+            if (translatedDesc !== descKey) {
+                metaDesc.setAttribute('content', translatedDesc);
+            }
+        }
+
+        // Translate aria-labels
+        document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
+            const key = el.dataset.i18nAriaLabel;
+            el.setAttribute('aria-label', t(key));
         });
 
         const langBtn = document.querySelector('[data-lang-toggle]');
