@@ -322,7 +322,7 @@ h4,
 }
 
 .form-group label {
-    display: block;
+    display: block !important;
     font-size: 12px;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -463,4 +463,13 @@ h4,
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Section visibility */
+.content-section {
+    display: none !important;
+}
+
+.content-section.active {
+    display: block !important;
 }
