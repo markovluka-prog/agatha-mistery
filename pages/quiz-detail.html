@@ -1,54 +1,56 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Детали викторины по книгам Агаты Мистери.">
-    <title>Викторина | Агата Мистери</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Детали викторины по книгам Агаты Мистери.">
+  <title>Викторина | Агата Мистери</title>
 
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/navigation.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/navigation.css">
 </head>
+
 <body>
-    <nav class="main-nav">
-        <div class="nav-container">
-            <div class="logo">
-                <h1>Агата Мистери</h1>
-            </div>
-            <button class="burger-menu" aria-label="Меню">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-menu">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="map.html">Карта мира</a></li>
-                <li><a href="quiz.html" class="active">Викторины</a></li>
-                <li><a href="characters.html">Персонажи</a></li>
-            </ul>
-        </div>
-    </nav>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <div class="logo">
+        <h1>Агата Мистери</h1>
+      </div>
+      <button class="burger-menu" aria-label="Меню">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="map.html">Карта мира</a></li>
+        <li><a href="quiz.html" class="active">Викторины</a></li>
+        <li><a href="characters.html">Персонажи</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <header class="page-header">
-        <div class="container">
-            <h2 class="section-title">Викторина</h2>
-            <p>Ответь на вопросы и узнай свой результат.</p>
-        </div>
-    </header>
+  <header class="page-header">
+    <div class="container">
+      <h2 class="section-title">Викторина</h2>
+      <p>Ответь на вопросы и узнай свой результат.</p>
+    </div>
+  </header>
 
-    <section class="section">
-        <div class="container">
-            <div id="quiz-detail" class="grid"></div>
-        </div>
-    </section>
+  <section class="section">
+    <div class="container">
+      <div id="quiz-detail" class="grid"></div>
+    </div>
+  </section>
 
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
-        </div>
-    </footer>
+  <footer class="main-footer">
+    <div class="container">
+      <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+    </div>
+  </footer>
 
-    <script id="quizzes-data" type="application/json">
+  <script id="quizzes-data" type="application/json">
 [
   {
     "id": 1,
@@ -175,9 +177,19 @@
   }
 ]
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase-config.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Инициализируем I18n перед загрузкой контента
+    (async () => {
+      await I18n.init();
+      I18n.translatePage();
+      App.init();
+    })();
+  </script>
 </body>
+
 </html>
