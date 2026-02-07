@@ -47,7 +47,8 @@ body {
     font-size: 16px;
     line-height: 1.6;
     color: var(--text-dark);
-    background-color: var(--background-light);
+    background: linear-gradient(135deg, #F1E2C2 0%, #FFF9EA 100%);
+    min-height: 100vh;
 }
 
 h1,
@@ -112,9 +113,10 @@ img {
 
 .page-header {
     padding: 120px 0 var(--spacing-xlarge);
-    background: var(--secondary-color);
+    background: linear-gradient(120deg, #F6D400 0%, #FFEB3B 100%);
     border-bottom: 2px solid var(--primary-color);
     border-top: 2px solid var(--primary-color);
+    box-shadow: 0 4px 12px rgba(246, 212, 0, 0.2);
 }
 
 .page-header p {
