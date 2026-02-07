@@ -441,7 +441,7 @@ const I18n = (() => {
 
         const langBtn = document.querySelector('[data-lang-toggle]');
         if (langBtn) {
-            langBtn.textContent = currentLang === 'ru' ? 'EN' : 'RU';
+            langBtn.textContent = currentLang === 'ru' ? 'RU' : 'EN';
         }
     };
 
