@@ -45,7 +45,7 @@
         <div class="container">
             <div class="card">
                 <div class="card-body">
-                    <form class="review-form" data-storage-key="agatha_illustrations">
+                     <form id="illustration-form" class="review-form" data-storage-key="agatha_illustrations">
                         <div class="form-message"></div>
                         <div class="form-group">
                             <label for="illustration-name" data-i18n="form.illustration.name">Ваше имя</label>
@@ -58,6 +58,14 @@
                             <input type="text" id="illustration-title" name="title"
                                 placeholder="Например: Тайна в Лондоне" required maxlength="80"
                                 data-i18n-placeholder="form.placeholder.art_title">
+                        </div>
+                        <div class="form-group">
+                            <label for="illustration-subject" data-i18n="form.illustration.subject">Персонаж или
+                                Место</label>
+                            <select id="illustration-subject" name="subject">
+                                <option value="" data-i18n="form.illustration.select_subject">Выберите, кто или что на
+                                    изображении</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="illustration-desc" data-i18n="form.illustration.description">Описание</label>

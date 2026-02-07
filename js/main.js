@@ -46,6 +46,88 @@ const App = (() => {
     const setupNav = () => {
         const burger = document.querySelector('.burger-menu');
         const menu = document.querySelector('.nav-menu');
+
+        // Breadcrumbs
+        const renderBreadcrumbs = () => {
+            const header = document.querySelector('.page-header .container');
+            if (!header) return;
+
+            // Check if breadcrumbs already exist
+            if (header.querySelector('.breadcrumbs')) return;
+
+            const path = window.location.pathname.split('/').pop() || 'index.html';
+            const routes = {
+                'index.html': { name: t('nav.home', 'Главная'), url: state.basePath + 'index.html' },
+                'map.html': { name: t('nav.map', 'Карта мира'), url: state.basePath + 'pages/map.html' },
+                'quiz.html': { name: t('nav.quizzes', 'Викторины'), url: state.basePath + 'pages/quiz.html' },
+                'quiz-detail.html': { name: t('nav.quizzes', 'Викторины'), parent: 'quiz.html', url: state.basePath + 'pages/quiz.html' },
+                'characters.html': { name: t('nav.characters', 'Персонажи'), url: state.basePath + 'pages/characters.html' },
+                'character-detail.html': { name: t('nav.characters', 'Персонажи'), parent: 'characters.html', url: state.basePath + 'pages/characters.html' },
+                'about.html': { name: t('nav.about', 'О нас'), url: state.basePath + 'pages/about.html' },
+                'illustration-form.html': { name: t('form.illustration.title', 'Отправить иллюстрацию'), parent: 'map.html', url: state.basePath + 'pages/map.html' },
+                'fanfiction-form.html': { name: t('form.fanfic.title', 'Отправить фанфик'), parent: 'characters.html', url: state.basePath + 'pages/characters.html' }
+            };
+
+            const currentRoute = routes[path];
+            if (!currentRoute || path === 'index.html') return;
+
+            const nav = document.createElement('nav');
+            nav.className = 'breadcrumbs';
+            nav.setAttribute('aria-label', 'Breadcrumb');
+
+            let html = `<a href="${state.basePath}index.html">${t('nav.home', 'Главная')}</a>`;
+
+            if (currentRoute.parent && routes[currentRoute.parent]) {
+                const parent = routes[currentRoute.parent];
+                html += ` <span class="separator">/</span> <a href="${parent.url}">${parent.name}</a>`;
+            }
+
+            // Current page (if it has a specific name override or just use page title)
+            // For detail pages, we might want to just show the parent active
+            if (!currentRoute.parent) {
+                html += ` <span class="separator">/</span> <span aria-current="page">${currentRoute.name}</span>`;
+            } else {
+                // For sub-pages like forms
+                html += ` <span class="separator">/</span> <span aria-current="page">${currentRoute.name}</span>`;
+            }
+
+            nav.innerHTML = html;
+            header.insertBefore(nav, header.firstChild);
+        };
+
+        renderBreadcrumbs();
+
+        // Random Quote in Footer
+        const renderRandomQuote = () => {
+            const footer = document.querySelector('.main-footer .container');
+            if (!footer) return;
+
+            // Check if quote already exists
+            if (footer.querySelector('.footer-quote')) return;
+
+            const quotes = [
+                { text: "Настоящий детектив никогда не игнорирует улики.", author: "Агата Мистери" },
+                { text: "Интуиция — это то, что отличает хорошего сыщика от великого.", author: "Агата Мистери" },
+                { text: "Ларри, хватит думать о еде! У нас дело!", author: "Агата Мистери" },
+                { text: "Даже у самого запутанного преступления есть простая разгадка.", author: "Агата Мистери" },
+                { text: "Путешествия развивают ум и наблюдательность.", author: "Мистер Кент" }
+            ];
+
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+            const quoteDiv = document.createElement('div');
+            quoteDiv.className = 'footer-quote';
+            quoteDiv.style.marginTop = '20px';
+            quoteDiv.style.fontStyle = 'italic';
+            quoteDiv.style.opacity = '0.8';
+            quoteDiv.style.borderTop = '1px solid rgba(0,0,0,0.1)';
+            quoteDiv.style.paddingTop = '10px';
+            quoteDiv.innerHTML = `"${randomQuote.text}" — <strong>${randomQuote.author}</strong>`;
+
+            footer.appendChild(quoteDiv);
+        };
+        renderRandomQuote();
+
         if (!burger || !menu) return;
 
         burger.addEventListener('click', () => {
@@ -106,40 +188,71 @@ const App = (() => {
         }
     };
 
+    const DEFAULT_CHARACTERS = [
+        { name: "Агата Мистери" },
+        { name: "Ларри Мистери" },
+        { name: "Ватсон (кот)" },
+        { name: "Мистер Кент" },
+        { name: "Чандлер Мистери" }
+    ];
+
+    const DEFAULT_PLACES = [
+        { name: "Лондон, Англия" },
+        { name: "Париж, Франция" },
+        { name: "Египет, Каир" },
+        { name: "Венеция, Италия" },
+        { name: "Токио, Япония" }
+    ];
+
     const loadPlaces = async () => {
         if (state.places) return state.places;
         if (typeof Supa !== 'undefined' && Supa.isReady()) {
-            const places = await Supa.getPlaces();
-            state.places = places;
-            return places;
+            try {
+                const places = await Supa.getPlaces();
+                if (places && places.length > 0) {
+                    state.places = places;
+                    return places;
+                }
+            } catch (e) { console.warn('Supabase places load failed', e); }
         }
-        throw new Error(t('error.no_supabase', 'Supabase not configured'));
+
+        // Fallback to defaults if Supabase fails or is empty
+        state.places = DEFAULT_PLACES;
+        return DEFAULT_PLACES;
     };
 
     const loadCharacters = async () => {
         if (state.characters) return state.characters;
+
+        // Try Supabase
         if (typeof Supa !== 'undefined' && Supa.isReady()) {
             try {
                 const characters = await Supa.getCharacters();
-                if (characters.length) {
+                if (characters && characters.length) {
                     state.characters = characters;
                     return characters;
                 }
             } catch (_error) {
-                // Fallback to local JSON
+                // Fallback to local JSON/Inline
             }
         }
+
+        // Try JSON
         try {
             const characters = await fetchJson(`${state.basePath}assets/data/characters.json`);
             state.characters = characters;
             return characters;
         } catch (error) {
+            // Try Inline
             const inline = readInlineCharacters();
             if (inline) {
                 state.characters = inline;
                 return inline;
             }
-            throw error;
+
+            // Final Fallback
+            state.characters = DEFAULT_CHARACTERS;
+            return DEFAULT_CHARACTERS;
         }
     };
 
@@ -660,6 +773,46 @@ const App = (() => {
                 message.classList.add('message', type === 'success' ? 'message-success' : 'message-error');
             };
 
+            // Init Autosave
+            const initAutosave = () => {
+                const formId = form.id; // Ensure forms have IDs
+                if (!formId) return;
+
+                const storageKey = `autosave_${formId}`;
+
+                // Load saved data
+                const saved = localStorage.getItem(storageKey);
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        Object.keys(data).forEach(key => {
+                            const input = form.elements[key];
+                            if (input && input.type !== 'file' && input.type !== 'submit') {
+                                input.value = data[key];
+                            }
+                        });
+                    } catch (e) {
+                        console.error('Error loading autosave', e);
+                    }
+                }
+
+                // Save on input
+                form.addEventListener('input', () => {
+                    const data = {};
+                    const formData = new FormData(form);
+                    for (const [key, value] of formData.entries()) {
+                        if (!(value instanceof File)) {
+                            data[key] = value;
+                        }
+                    }
+                    localStorage.setItem(storageKey, JSON.stringify(data));
+                });
+
+                // Clear on submit handled in submit listener
+            };
+
+            initAutosave();
+
             const buildPayload = () => {
                 const data = {};
                 let file = null;
@@ -685,10 +838,17 @@ const App = (() => {
                     return;
                 }
                 if (storageKey === 'agatha_illustrations') {
+                    // Append subject to description if present
+                    let description = data.description || '';
+                    if (data.subject) {
+                        const subjectText = t('form.illustration.subject_label', 'Тема:');
+                        description = `${subjectText} ${data.subject}\n\n${description}`;
+                    }
+
                     await Supa.addIllustration({
                         name: data.name,
                         title: data.title,
-                        description: data.description
+                        description: description
                     }, file);
                 }
             };
@@ -705,6 +865,7 @@ const App = (() => {
                         await submitToSupabase(storageKey, data, file);
                         setMessage(t('form.success', 'Thank you! Your work has been submitted.'), 'success');
                         form.reset();
+                        localStorage.removeItem(`autosave_${form.id}`); // Clear autosave
                         if (submitButton) submitButton.disabled = false;
                         return;
                     } catch (error) {
@@ -721,10 +882,95 @@ const App = (() => {
                 if (submitButton) submitButton.disabled = false;
             });
         });
+
+
+        // Dynamic Options Population
+        const populateFormOptions = async () => {
+            const charSelect = document.getElementById('fanfic-character');
+            const subjectSelect = document.getElementById('illustration-subject');
+
+            if (!charSelect && !subjectSelect) return;
+
+            try {
+                let characters = await loadCharacters();
+                let places = [];
+                try { places = await loadPlaces(); } catch (e) { }
+
+                // Populate Fanfic Character Select
+                if (charSelect) {
+                    // Keep default option
+                    const defaultOpt = charSelect.firstElementChild;
+                    charSelect.innerHTML = '';
+                    charSelect.appendChild(defaultOpt);
+
+                    characters.forEach(char => {
+                        const opt = document.createElement('option');
+                        opt.value = char.name;
+                        opt.textContent = char.name;
+                        charSelect.appendChild(opt);
+                    });
+
+                    // Restore autosaved value if any
+                    const saved = localStorage.getItem('autosave_' + charSelect.form.id);
+                    if (saved) {
+                        try {
+                            const data = JSON.parse(saved);
+                            if (data.character) charSelect.value = data.character;
+                        } catch (e) { }
+                    }
+                }
+
+                // Populate Illustration Subject Select
+                if (subjectSelect) {
+                    const defaultOpt = subjectSelect.firstElementChild;
+                    subjectSelect.innerHTML = '';
+                    subjectSelect.appendChild(defaultOpt);
+
+                    // Group Characters
+                    const charGroup = document.createElement('optgroup');
+                    charGroup.label = t('nav.characters', 'Персонажи');
+                    characters.forEach(char => {
+                        const opt = document.createElement('option');
+                        opt.value = char.name;
+                        opt.textContent = char.name;
+                        charGroup.appendChild(opt);
+                    });
+                    subjectSelect.appendChild(charGroup);
+
+                    // Group Places
+                    if (places.length > 0) {
+                        const placeGroup = document.createElement('optgroup');
+                        placeGroup.label = t('nav.map', 'Локации');
+                        places.forEach(place => {
+                            const opt = document.createElement('option');
+                            opt.value = place.name;
+                            opt.textContent = place.name;
+                            placeGroup.appendChild(opt);
+                        });
+                        subjectSelect.appendChild(placeGroup);
+                    }
+
+                    // Restore autosaved value
+                    const saved = localStorage.getItem('autosave_' + subjectSelect.form.id);
+                    if (saved) {
+                        try {
+                            const data = JSON.parse(saved);
+                            if (data.subject) subjectSelect.value = data.subject;
+                        } catch (e) { }
+                    }
+                }
+
+            } catch (error) {
+                console.warn('Failed to populate form options', error);
+            }
+        };
+
+        populateFormOptions();
     };
 
     const renderFanfics = async () => {
         const container = document.getElementById('fanfics-list');
+        const searchInput = document.getElementById('fanfics-search');
         if (!container) return;
 
         if (!Supa.isReady()) {
@@ -742,18 +988,39 @@ const App = (() => {
             }
             const authorText = t('fanfics.author', 'Author');
             const characterText = t('fanfics.character', 'Character');
-            container.innerHTML = fanfics.map((fanfic) => `
-                <article class="card fanfic-card">
-                    <div class="card-body">
-                        <h4 class="card-title">${fanfic.title}</h4>
-                        <div class="card-meta">
-                            <span>${authorText}: ${fanfic.name}</span>
-                            ${fanfic.character ? `<span>${characterText}: ${fanfic.character}</span>` : ''}
+
+            const renderList = (items) => {
+                if (items.length === 0) {
+                    container.innerHTML = `<div class="empty-state">${t('search.no_results', 'Ничего не найдено')}</div>`;
+                    return;
+                }
+                container.innerHTML = items.map((fanfic) => `
+                    <article class="card fanfic-card">
+                        <div class="card-body">
+                            <h4 class="card-title">${fanfic.title}</h4>
+                            <div class="card-meta">
+                                <span>${authorText}: ${fanfic.name}</span>
+                                ${fanfic.character ? `<span>${characterText}: ${fanfic.character}</span>` : ''}
+                            </div>
+                            <p class="card-text fanfic-story">${fanfic.story}</p>
                         </div>
-                        <p class="card-text fanfic-story">${fanfic.story}</p>
-                    </div>
-                </article>
-            `).join('');
+                    </article>
+                `).join('');
+            };
+
+            renderList(fanfics);
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const filtered = fanfics.filter(item =>
+                        item.title.toLowerCase().includes(query) ||
+                        item.name.toLowerCase().includes(query) ||
+                        (item.character && item.character.toLowerCase().includes(query))
+                    );
+                    renderList(filtered);
+                });
+            }
         } catch (error) {
             container.innerHTML = `<div class="empty-state">${t('fanfics.error', 'Не удалось загрузить фанфики.')}</div>`;
         }
@@ -761,6 +1028,7 @@ const App = (() => {
 
     const renderIllustrations = async () => {
         const container = document.getElementById('illustrations-list');
+        const searchInput = document.getElementById('illustrations-search');
         if (!container) return;
 
         if (!Supa.isReady()) {
@@ -777,16 +1045,37 @@ const App = (() => {
                 return;
             }
             const authorText = t('fanfics.author', 'Author');
-            container.innerHTML = `<div class="grid grid-3">${illustrations.map((ill) => `
-                <article class="card illustration-card">
-                    ${ill.file_url ? `<div class="card-image" style="height: 300px;" onclick="App.openLightbox('${ill.file_url}', '${ill.title}')"><img src="${ill.file_url}" alt="${ill.title}"></div>` : ''}
-                    <div class="card-body">
-                        <h4 class="card-title">${ill.title}</h4>
-                        <div class="card-meta">${authorText}: ${ill.name}</div>
-                        ${ill.description ? `<p class="card-text">${ill.description}</p>` : ''}
-                    </div>
-                </article>
-            `).join('')}</div>`;
+
+            const renderList = (items) => {
+                if (items.length === 0) {
+                    container.innerHTML = `<div class="empty-state">${t('search.no_results', 'Ничего не найдено')}</div>`;
+                    return;
+                }
+                container.innerHTML = `<div class="grid grid-3">${items.map((ill) => `
+                    <article class="card illustration-card">
+                        ${ill.file_url ? `<div class="card-image" style="height: 300px;" onclick="App.openLightbox('${ill.file_url}', '${ill.title}')"><img src="${ill.file_url}" alt="${ill.title}"></div>` : ''}
+                        <div class="card-body">
+                            <h4 class="card-title">${ill.title}</h4>
+                            <div class="card-meta">${authorText}: ${ill.name}</div>
+                            ${ill.description ? `<p class="card-text">${ill.description}</p>` : ''}
+                        </div>
+                    </article>
+                `).join('')}</div>`;
+            };
+
+            renderList(illustrations);
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const filtered = illustrations.filter(item =>
+                        item.title.toLowerCase().includes(query) ||
+                        item.name.toLowerCase().includes(query) ||
+                        (item.description && item.description.toLowerCase().includes(query))
+                    );
+                    renderList(filtered);
+                });
+            }
         } catch (error) {
             container.innerHTML = `<div class="empty-state">${t('illustrations.error', 'Failed to load illustrations.')}</div>`;
         }

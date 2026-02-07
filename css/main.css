@@ -124,6 +124,38 @@ img {
     color: var(--text-dark);
 }
 
+.breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+    margin-bottom: var(--spacing-medium);
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.breadcrumbs a {
+    color: var(--text-dark);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.breadcrumbs a:hover {
+    border-color: var(--text-dark);
+}
+
+.breadcrumbs .separator {
+    color: var(--text-light);
+    opacity: 0.5;
+}
+
+.breadcrumbs [aria-current="page"] {
+    color: var(--text-light);
+    cursor: default;
+}
+
 .grid {
     display: grid;
     gap: var(--spacing-large);
