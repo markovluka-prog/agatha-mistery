@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,12 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/navigation.css">
 </head>
+
 <body>
     <nav class="main-nav">
         <div class="nav-container">
             <div class="logo">
-                <h1>Агата Мистери</h1>
+                <h1 data-i18n="site.title">Агата Мистери</h1>
             </div>
             <button class="burger-menu" aria-label="Меню">
                 <span></span>
@@ -21,18 +23,19 @@
                 <span></span>
             </button>
             <ul class="nav-menu">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="map.html">Карта мира</a></li>
-                <li><a href="quiz.html">Викторины</a></li>
-                <li><a href="characters.html" class="active">Персонажи</a></li>
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" class="active" data-i18n="nav.characters">Персонажи</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
             </ul>
         </div>
     </nav>
 
     <header class="page-header">
         <div class="container">
-            <h2 class="section-title">Отправить фанфик</h2>
-            <p>Напиши свою историю про Агату и её друзей — мы сохраним её в архиве.</p>
+            <h2 class="section-title" data-i18n="form.fanfic.title">Отправить фанфик</h2>
+            <p data-i18n="form.fanfic.subtitle">Напиши свою историю про Агату и её друзей — мы сохраним её в архиве.</p>
         </div>
     </header>
 
@@ -43,17 +46,19 @@
                     <form class="review-form" data-storage-key="agatha_fanfics">
                         <div class="form-message"></div>
                         <div class="form-group">
-                            <label for="fanfic-name">Ваше имя</label>
-                            <input type="text" id="fanfic-name" name="name" placeholder="Имя автора" required maxlength="60">
+                            <label for="fanfic-name" data-i18n="form.fanfic.name">Ваше имя</label>
+                            <input type="text" id="fanfic-name" name="name" placeholder="Имя автора" required
+                                maxlength="60" data-i18n-placeholder="reviews.form.name.placeholder">
                         </div>
                         <div class="form-group">
-                            <label for="fanfic-title">Название фанфика</label>
-                            <input type="text" id="fanfic-title" name="title" placeholder="Название истории" required maxlength="100">
+                            <label for="fanfic-title" data-i18n="form.fanfic.story.title">Название фанфика</label>
+                            <input type="text" id="fanfic-title" name="title" placeholder="Название истории" required
+                                maxlength="100">
                         </div>
                         <div class="form-group">
-                            <label for="fanfic-character">Главный персонаж</label>
+                            <label for="fanfic-character" data-i18n="form.fanfic.character">Главный персонаж</label>
                             <select id="fanfic-character" name="character" required>
-                                <option value="">Выберите персонажа</option>
+                                <option value="" data-i18n="form.fanfic.select_character">Выберите персонажа</option>
                                 <option value="Агата Мистери">Агата Мистери</option>
                                 <option value="Ларри Мистери">Ларри Мистери</option>
                                 <option value="Ватсон (кот)">Ватсон (кот)</option>
@@ -62,10 +67,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="fanfic-text">Текст истории</label>
-                            <textarea id="fanfic-text" name="story" rows="8" placeholder="Напишите короткий сюжет или начало истории" required maxlength="2000"></textarea>
+                            <label for="fanfic-text" data-i18n="form.fanfic.story">Текст истории</label>
+                            <textarea id="fanfic-text" name="story" rows="8"
+                                placeholder="Напишите короткий сюжет или начало истории" required
+                                maxlength="2000"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Отправить</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="form.fanfic.submit">Отправить</button>
                     </form>
                 </div>
             </div>
@@ -74,15 +81,16 @@
 
     <footer class="main-footer">
         <div class="container">
-            <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
         </div>
     </footer>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-config.js"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/main.js"></script>
 </body>
+
 </html>

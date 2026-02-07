@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,12 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/navigation.css">
 </head>
+
 <body>
     <nav class="main-nav">
         <div class="nav-container">
             <div class="logo">
-                <h1>Агата Мистери</h1>
+                <h1 data-i18n="site.title">Агата Мистери</h1>
             </div>
             <button class="burger-menu" aria-label="Меню">
                 <span></span>
@@ -21,18 +23,20 @@
                 <span></span>
             </button>
             <ul class="nav-menu">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="map.html">Карта мира</a></li>
-                <li><a href="quiz.html">Викторины</a></li>
-                <li><a href="characters.html" class="active">Персонажи</a></li>
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" class="active" data-i18n="nav.characters">Персонажи</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
             </ul>
         </div>
     </nav>
 
     <header class="page-header">
         <div class="container">
-            <h2 class="section-title">Отправить иллюстрацию</h2>
-            <p>Поделись своим рисунком или коллажем по мотивам приключений Агаты.</p>
+            <h2 class="section-title" data-i18n="form.illustration.title">Отправить иллюстрацию</h2>
+            <p data-i18n="form.illustration.subtitle">Поделись своим рисунком или коллажем по мотивам приключений Агаты.
+            </p>
         </div>
     </header>
 
@@ -43,23 +47,27 @@
                     <form class="review-form" data-storage-key="agatha_illustrations">
                         <div class="form-message"></div>
                         <div class="form-group">
-                            <label for="illustration-name">Ваше имя</label>
-                            <input type="text" id="illustration-name" name="name" placeholder="Имя автора" required maxlength="60">
+                            <label for="illustration-name" data-i18n="form.illustration.name">Ваше имя</label>
+                            <input type="text" id="illustration-name" name="name" placeholder="Имя автора" required
+                                maxlength="60" data-i18n-placeholder="reviews.form.name.placeholder">
                         </div>
                         <div class="form-group">
-                            <label for="illustration-title">Название работы</label>
-                            <input type="text" id="illustration-title" name="title" placeholder="Например: Тайна в Лондоне" required maxlength="80">
+                            <label for="illustration-title" data-i18n="form.illustration.art.title">Название
+                                работы</label>
+                            <input type="text" id="illustration-title" name="title"
+                                placeholder="Например: Тайна в Лондоне" required maxlength="80">
                         </div>
                         <div class="form-group">
-                            <label for="illustration-desc">Описание</label>
-                            <textarea id="illustration-desc" name="description" rows="4" placeholder="Что вдохновило тебя?" maxlength="500"></textarea>
+                            <label for="illustration-desc" data-i18n="form.illustration.description">Описание</label>
+                            <textarea id="illustration-desc" name="description" rows="4"
+                                placeholder="Что вдохновило тебя?" maxlength="500"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="illustration-file">Файл иллюстрации</label>
+                            <label for="illustration-file" data-i18n="form.illustration.file">Файл иллюстрации</label>
                             <input type="file" id="illustration-file" name="file">
-                            <small>Мы сохраняем информацию о работе в архиве фанатов.</small>
                         </div>
-                        <button type="submit" class="btn btn-primary">Отправить</button>
+                        <button type="submit" class="btn btn-primary"
+                            data-i18n="form.illustration.submit">Отправить</button>
                     </form>
                 </div>
             </div>
@@ -68,15 +76,16 @@
 
     <footer class="main-footer">
         <div class="container">
-            <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
         </div>
     </footer>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-config.js"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/main.js"></script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,12 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/navigation.css">
 </head>
+
 <body>
     <nav class="main-nav">
         <div class="nav-container">
             <div class="logo">
-                <h1>Агата Мистери</h1>
+                <h1 data-i18n="site.title">Агата Мистери</h1>
             </div>
             <button class="burger-menu" aria-label="Меню">
                 <span></span>
@@ -21,18 +23,19 @@
                 <span></span>
             </button>
             <ul class="nav-menu">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="map.html">Карта мира</a></li>
-                <li><a href="quiz.html">Викторины</a></li>
-                <li><a href="characters.html" class="active">Персонажи</a></li>
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" class="active" data-i18n="nav.characters">Персонажи</a></li>
+                <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
             </ul>
         </div>
     </nav>
 
     <header class="page-header">
         <div class="container">
-            <h2 class="section-title">Досье персонажа</h2>
-            <p>Подробная информация о героях серии.</p>
+            <h2 class="section-title" data-i18n="characters.title">Досье персонажа</h2>
+            <p data-i18n="characters.subtitle">Подробная информация о героях серии.</p>
         </div>
     </header>
 
@@ -44,7 +47,7 @@
 
     <footer class="main-footer">
         <div class="container">
-            <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
         </div>
     </footer>
 
@@ -93,4 +96,5 @@
     <script src="../js/storage.js"></script>
     <script src="../js/main.js"></script>
 </body>
+
 </html>

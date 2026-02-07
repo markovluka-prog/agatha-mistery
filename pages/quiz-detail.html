@@ -15,7 +15,7 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="logo">
-        <h1>Агата Мистери</h1>
+        <h1 data-i18n="site.title">Агата Мистери</h1>
       </div>
       <button class="burger-menu" aria-label="Меню">
         <span></span>
@@ -23,18 +23,19 @@
         <span></span>
       </button>
       <ul class="nav-menu">
-        <li><a href="../index.html">Главная</a></li>
-        <li><a href="map.html">Карта мира</a></li>
-        <li><a href="quiz.html" class="active">Викторины</a></li>
-        <li><a href="characters.html">Персонажи</a></li>
+        <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+        <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+        <li><a href="quiz.html" class="active" data-i18n="nav.quizzes">Викторины</a></li>
+        <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
+        <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">EN</button></li>
       </ul>
     </div>
   </nav>
 
   <header class="page-header">
     <div class="container">
-      <h2 class="section-title">Викторина</h2>
-      <p>Ответь на вопросы и узнай свой результат.</p>
+      <h2 class="section-title" data-i18n="quizzes.title">Викторина</h2>
+      <p data-i18n="quizzes.subtitle">Ответь на вопросы и узнай свой результат.</p>
     </div>
   </header>
 
@@ -46,7 +47,7 @@
 
   <footer class="main-footer">
     <div class="container">
-      <p>&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+      <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
     </div>
   </footer>
 
@@ -182,14 +183,7 @@
   <script src="../js/i18n.js"></script>
   <script src="../js/storage.js"></script>
   <script src="../js/main.js"></script>
-  <script>
-    // Инициализируем I18n перед загрузкой контента
-    (async () => {
-      await I18n.init();
-      I18n.translatePage();
-      App.init();
-    })();
-  </script>
+
 </body>
 
 </html>

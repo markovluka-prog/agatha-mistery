@@ -69,6 +69,7 @@ const I18n = (() => {
             'form.fanfic.story.title': 'Название истории:',
             'form.fanfic.character': 'Главный персонаж:',
             'form.fanfic.story': 'Ваша история:',
+            'form.fanfic.select_character': 'Выберите персонажа',
             'form.fanfic.submit': 'Отправить историю',
 
             'form.illustration.title': 'Загрузить иллюстрацию',
@@ -177,6 +178,7 @@ const I18n = (() => {
             'form.fanfic.story.title': 'Story title:',
             'form.fanfic.character': 'Main character:',
             'form.fanfic.story': 'Your story:',
+            'form.fanfic.select_character': 'Select a character',
             'form.fanfic.submit': 'Submit Story',
 
             'form.illustration.title': 'Upload Illustration',
@@ -266,8 +268,14 @@ const I18n = (() => {
         }
         document.documentElement.lang = currentLang;
 
+        // Переводим страницу сразу тем, что есть в локальных переводах
+        translatePage();
+
         // Пробуем загрузить переводы из Supabase
         await loadFromSupabase();
+
+        // Переводим ещё раз, если приехали удалённые переводы
+        translatePage();
 
         return currentLang;
     };
