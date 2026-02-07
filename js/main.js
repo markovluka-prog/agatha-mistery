@@ -539,6 +539,8 @@ const App = (() => {
                     ${quiz.questions.map((question, index) => {
                 // Определяем тип вопроса
                 const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
+                const correctOptionsCount = (question.options || []).filter(opt => opt.isCorrect).length;
+                const isMultiple = correctOptionsCount > 1;
 
                 let questionContent = '';
 
@@ -555,12 +557,13 @@ const App = (() => {
                         </div>
                     `;
                 } else {
-                    // Вопрос с вариантами ответов
+                    // Вопрос с вариантами ответов (радиокнопки или чекбоксы)
+                    const inputType = isMultiple ? 'checkbox' : 'radio';
                     questionContent = question.options.map((option) => {
                         const image = resolveAsset(option.image);
                         return `
                             <label class="quiz-option">
-                                <input type="radio" name="q${question.id}" value="${option.id}">
+                                <input type="${inputType}" name="q${question.id}" value="${option.id}">
                                 ${image ? `<img src="${image}" alt="${option.text}">` : ''}
                                 <span>${option.text}</span>
                             </label>
@@ -570,7 +573,7 @@ const App = (() => {
 
                 const questionLabel = t('quizzes.question', 'Вопрос');
                 return `
-                    <div class="quiz-question" data-question-type="${isInputType ? 'input' : 'options'}">
+                    <div class="quiz-question" data-question-type="${isInputType ? 'input' : (isMultiple ? 'multiple' : 'options')}">
                         <h3>${questionLabel} ${index + 1}</h3>
                         <p>${question.text}</p>
                         <div class="quiz-options">${questionContent}</div>
@@ -610,12 +613,19 @@ const App = (() => {
                             }
                         }
                     } else {
-                        // Проверка выбора из вариантов
-                        const selected = form.querySelector(`input[name="q${question.id}"]:checked`);
-                        if (selected) {
+                        // Проверка выбора из вариантов (один или несколько)
+                        const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${question.id}"]:checked`));
+                        if (selectedInputs.length > 0) {
                             answered += 1;
-                            const option = question.options.find((item) => item.id === selected.value);
-                            if (option && option.isCorrect) {
+
+                            const selectedIds = selectedInputs.map(input => input.value);
+                            const correctIds = question.options.filter(opt => opt.isCorrect).map(opt => opt.id);
+
+                            // Проверяем, что выбраны все правильные и нет лишних
+                            const isCorrect = correctIds.length === selectedIds.length &&
+                                correctIds.every(id => selectedIds.includes(id));
+
+                            if (isCorrect) {
                                 correct += 1;
                             }
                         }
