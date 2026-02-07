@@ -375,9 +375,12 @@ const Admin = (() => {
     }
 
     function checkAuth() {
-        // Password disabled - auto-login
-        state.isAuthenticated = true;
-        showAdminPanel();
+        if (sessionStorage.getItem('admin_auth') === 'true') {
+            state.isAuthenticated = true;
+            showAdminPanel();
+        } else {
+            document.getElementById('login-screen').hidden = false;
+        }
     }
 
     function togglePasswordVisibility() {
@@ -1462,7 +1465,7 @@ const Admin = (() => {
     function addAboutBlock(data = { subtitle: '', subtitle_en: '', content: '', content_en: '' }) {
         const container = document.getElementById('about-blocks-container');
         const blockId = 'block-' + Date.now() + Math.random().toString(16).slice(2);
-        
+
         const blockHtml = `
             <div class="about-block-item" id="${blockId}">
                 <span class="remove-block" onclick="document.getElementById('${blockId}').remove()">&times;</span>
@@ -1495,11 +1498,11 @@ const Admin = (() => {
         const modal = document.getElementById('about-editor-modal');
         const form = document.getElementById('about-form');
         const blocksContainer = document.getElementById('about-blocks-container');
-        
+
         form.reset();
         blocksContainer.innerHTML = '';
         document.getElementById('about-id').value = '';
-        
+
         if (aboutId) {
             const section = state.aboutSections.find(s => s.id === aboutId);
             if (section) {
@@ -1507,14 +1510,14 @@ const Admin = (() => {
                 document.getElementById('about-title').value = section.title || '';
                 document.getElementById('about-title-en').value = section.title_en || '';
                 document.getElementById('about-sort').value = section.sort_order || 0;
-                
+
                 const blocks = section.blocks || [];
                 if (blocks.length > 0) {
                     blocks.forEach(block => addAboutBlock(block));
                 } else {
                     addAboutBlock(); // Add one empty block if none
                 }
-                
+
                 document.getElementById('delete-about-btn').hidden = false;
             }
         } else {
@@ -1532,11 +1535,11 @@ const Admin = (() => {
         const title = document.getElementById('about-title').value.trim();
         const titleEn = document.getElementById('about-title-en').value.trim();
         const sortOrder = parseInt(document.getElementById('about-sort').value) || 0;
-        
+
         const blocksContainer = document.getElementById('about-blocks-container');
         const blockItems = blocksContainer.querySelectorAll('.about-block-item');
         const blocks = [];
-        
+
         blockItems.forEach(item => {
             blocks.push({
                 subtitle: item.querySelector('.block-subtitle').value.trim(),
@@ -1552,7 +1555,7 @@ const Admin = (() => {
         }
 
         const sectionData = {
-            title, 
+            title,
             title_en: titleEn,
             blocks,
             sort_order: sortOrder
@@ -1578,7 +1581,6 @@ const Admin = (() => {
             console.error('Error saving about section:', error);
             showToast('Ошибка сохранения: ' + error.message);
         }
-    }
     }
 
     async function deleteAboutSection() {
