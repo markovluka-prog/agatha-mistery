@@ -47,8 +47,9 @@ body {
     font-size: 16px;
     line-height: 1.6;
     color: var(--text-dark);
-    /* Более заметный градиент для фона: от теплого песочного к светлому */
-    background: linear-gradient(135deg, #E6D0A1 0%, #FFF5D6 50%, #FFF9EA 100%);
+    /* High contrast gradient to be 100% sure it is visible */
+    background: linear-gradient(135deg, #E6D0A1 0%, #FFF5D6 50%, #FFF9EA 100%) !important;
+    background-attachment: fixed !important;
     min-height: 100vh;
 }
 
@@ -114,11 +115,11 @@ img {
 
 .page-header {
     padding: 120px 0 var(--spacing-xlarge);
-    /* Более яркий и насыщенный градиент для заголовка */
-    background: linear-gradient(135deg, #FFC107 0%, #F6D400 50%, #FFF176 100%);
+    /* Vivid yellow gradient */
+    background: linear-gradient(135deg, #FFC107 0%, #F6D400 40%, #FFF59D 100%) !important;
     border-bottom: 2px solid var(--primary-color);
     border-top: 2px solid var(--primary-color);
-    box-shadow: 0 4px 12px rgba(246, 212, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(246, 212, 0, 0.25);
 }
 
 .page-header p {
@@ -173,6 +174,42 @@ img {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .card {
     background-color: var(--background-white);
     border-radius: var(--border-radius);
@@ -182,6 +219,42 @@ img {
     flex-direction: column;
     min-height: 100%;
     border: 1px solid rgba(20, 20, 20, 0.12);
+    /* Animation base styles */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    /* Ensures it's invisible before animation starts */
+}
+
+/* Staggered animation delay for grid items */
+.card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.card:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--secondary-color);
 }
 
 .card-image {
@@ -194,12 +267,18 @@ img {
     font-weight: 600;
     position: relative;
     cursor: zoom-in;
+    overflow: hidden;
 }
 
 .card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.card:hover .card-image img {
+    transform: scale(1.1);
 }
 
 .card-body {
@@ -277,16 +356,16 @@ img {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.quiz-option input {
-    margin: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background-color: var(--background-white);
+    animation: fadeInUp 0.5s ease backwards;
 }
 
 .quiz-option:hover {
     border-color: var(--primary-color);
-    box-shadow: var(--shadow-small);
+    box-shadow: 0 4px 12px rgba(246, 212, 0, 0.3);
+    transform: translateX(5px);
+    background-color: #FFFDE7;
 }
 
 .quiz-option img {
