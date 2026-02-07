@@ -372,35 +372,26 @@
                     <input type="hidden" id="about-id">
                     <div class="field-pair">
                         <div class="form-group">
-                            <label>Заголовок (RU)</label>
+                            <label>Заголовок раздела (RU)</label>
                             <input type="text" id="about-title" required>
                         </div>
                         <div class="form-group">
-                            <label>Title (EN)</label>
+                            <label>Section Title (EN)</label>
                             <input type="text" id="about-title-en">
                         </div>
                     </div>
-                    <div class="field-pair">
-                        <div class="form-group">
-                            <label>Подзаголовок (RU)</label>
-                            <input type="text" id="about-subtitle">
-                        </div>
-                        <div class="form-group">
-                            <label>Subtitle (EN)</label>
-                            <input type="text" id="about-subtitle-en">
-                        </div>
-                    </div>
-                    <div class="field-pair">
-                        <div class="form-group">
-                            <label>Контент (RU)</label>
-                            <textarea id="about-content" rows="6"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Content (EN)</label>
-                            <textarea id="about-content-en" rows="6"></textarea>
-                        </div>
-                    </div>
+
                     <div class="form-group">
+                        <label>Блоки контента (можно несколько)</label>
+                        <div id="about-blocks-container" class="about-blocks-container">
+                            <!-- Blocks will be added here dynamically -->
+                        </div>
+                        <button type="button" id="add-about-block-btn" class="btn btn-outline btn-full add-block-btn">
+                            <span>+ Добавить блок (подзаголовок + текст)</span>
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
                         <label>Порядок сортировки</label>
                         <input type="number" id="about-sort" value="0">
                     </div>

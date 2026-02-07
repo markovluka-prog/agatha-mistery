@@ -1459,25 +1459,66 @@ const Admin = (() => {
         });
     }
 
+    function addAboutBlock(data = { subtitle: '', subtitle_en: '', content: '', content_en: '' }) {
+        const container = document.getElementById('about-blocks-container');
+        const blockId = 'block-' + Date.now() + Math.random().toString(16).slice(2);
+        
+        const blockHtml = `
+            <div class="about-block-item" id="${blockId}">
+                <span class="remove-block" onclick="document.getElementById('${blockId}').remove()">&times;</span>
+                <div class="field-pair">
+                    <div class="form-group">
+                        <label>Подзаголовок (RU)</label>
+                        <input type="text" class="block-subtitle" value="${escapeHtml(data.subtitle)}">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle (EN)</label>
+                        <input type="text" class="block-subtitle-en" value="${escapeHtml(data.subtitle_en)}">
+                    </div>
+                </div>
+                <div class="field-pair">
+                    <div class="form-group">
+                        <label>Текст блока (RU)</label>
+                        <textarea class="block-content" rows="4">${escapeHtml(data.content)}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Block Text (EN)</label>
+                        <textarea class="block-content-en" rows="4">${escapeHtml(data.content_en)}</textarea>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', blockHtml);
+    }
+
     function openAboutEditor(aboutId = null) {
         const modal = document.getElementById('about-editor-modal');
         const form = document.getElementById('about-form');
+        const blocksContainer = document.getElementById('about-blocks-container');
+        
         form.reset();
+        blocksContainer.innerHTML = '';
         document.getElementById('about-id').value = '';
+        
         if (aboutId) {
             const section = state.aboutSections.find(s => s.id === aboutId);
             if (section) {
                 document.getElementById('about-id').value = section.id;
                 document.getElementById('about-title').value = section.title || '';
                 document.getElementById('about-title-en').value = section.title_en || '';
-                document.getElementById('about-subtitle').value = section.subtitle || '';
-                document.getElementById('about-subtitle-en').value = section.subtitle_en || '';
-                document.getElementById('about-content').value = section.content || '';
-                document.getElementById('about-content-en').value = section.content_en || '';
                 document.getElementById('about-sort').value = section.sort_order || 0;
+                
+                const blocks = section.blocks || [];
+                if (blocks.length > 0) {
+                    blocks.forEach(block => addAboutBlock(block));
+                } else {
+                    addAboutBlock(); // Add one empty block if none
+                }
+                
                 document.getElementById('delete-about-btn').hidden = false;
             }
         } else {
+            addAboutBlock(); // Start with one empty block
             document.getElementById('delete-about-btn').hidden = true;
             document.getElementById('about-sort').value = state.aboutSections.length > 0
                 ? Math.max(...state.aboutSections.map(s => s.sort_order)) + 1
@@ -1488,23 +1529,32 @@ const Admin = (() => {
 
     async function saveAboutSection() {
         const aboutId = document.getElementById('about-id').value;
-        const subtitle = document.getElementById('about-subtitle').value.trim();
-        const subtitleEn = document.getElementById('about-subtitle-en').value.trim();
         const title = document.getElementById('about-title').value.trim();
         const titleEn = document.getElementById('about-title-en').value.trim();
-        const content = document.getElementById('about-content').value.trim();
-        const contentEn = document.getElementById('about-content-en').value.trim();
         const sortOrder = parseInt(document.getElementById('about-sort').value) || 0;
+        
+        const blocksContainer = document.getElementById('about-blocks-container');
+        const blockItems = blocksContainer.querySelectorAll('.about-block-item');
+        const blocks = [];
+        
+        blockItems.forEach(item => {
+            blocks.push({
+                subtitle: item.querySelector('.block-subtitle').value.trim(),
+                subtitle_en: item.querySelector('.block-subtitle-en').value.trim(),
+                content: item.querySelector('.block-content').value.trim(),
+                content_en: item.querySelector('.block-content-en').value.trim()
+            });
+        });
 
-        if (!title || !content) {
-            showToast('Заполните заголовок и контент');
+        if (!title) {
+            showToast('Заполните заголовок раздела');
             return;
         }
 
         const sectionData = {
-            title, title_en: titleEn,
-            subtitle, subtitle_en: subtitleEn,
-            content, content_en: contentEn,
+            title, 
+            title_en: titleEn,
+            blocks,
             sort_order: sortOrder
         };
 
@@ -1528,6 +1578,7 @@ const Admin = (() => {
             console.error('Error saving about section:', error);
             showToast('Ошибка сохранения: ' + error.message);
         }
+    }
     }
 
     async function deleteAboutSection() {
@@ -1902,6 +1953,8 @@ const Admin = (() => {
     // ===========================================
 
     // API Request section removed for redesign.
+
+    document.getElementById("add-about-block-btn").addEventListener("click", () => addAboutBlock());
 
     // ===========================================
     // Initialization

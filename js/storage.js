@@ -264,8 +264,10 @@ const Supa = (() => {
             return (data || []).map(section => ({
                 id: section.id,
                 title: lang === 'en' && section.title_en ? section.title_en : section.title,
-                subtitle: lang === 'en' && section.subtitle_en ? section.subtitle_en : section.subtitle,
-                content: lang === 'en' && section.content_en ? section.content_en : section.content
+                blocks: (section.blocks || []).map(block => ({
+                    subtitle: lang === 'en' && block.subtitle_en ? block.subtitle_en : block.subtitle,
+                    content: lang === 'en' && block.content_en ? block.content_en : block.content
+                }))
             }));
         } catch (error) {
             console.error('Error fetching about data:', error);

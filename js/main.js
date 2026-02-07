@@ -814,12 +814,16 @@ const App = (() => {
                     <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
                         <div class="accordion-header-text">
                             <h3 class="accordion-title">${section.title}</h3>
-                            ${section.subtitle ? `<p class="accordion-subtitle">${section.subtitle}</p>` : ''}
                         </div>
                         <span class="accordion-icon">▼</span>
                     </div>
                     <div class="accordion-content">
-                        <p>${section.content.replace(/\n/g, '<br>')}</p>
+                        ${(section.blocks || []).map(block => `
+                            <div class="about-content-block">
+                                ${block.subtitle ? `<h4 class="about-block-subtitle">${block.subtitle}</h4>` : ''}
+                                <p class="about-block-content">${block.content.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `).join('');
