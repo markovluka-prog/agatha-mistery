@@ -149,6 +149,8 @@ const I18n = (() => {
             'form.placeholder.description': 'Что вдохновило тебя?',
             'form.placeholder.fanfic_title': 'Название истории',
             'form.placeholder.fanfic_text': 'Напишите короткий сюжет или начало истории',
+            'search.illustrations.placeholder': 'Найти по названию, автору или описанию...',
+            'search.fanfics.placeholder': 'Найти по названию, автору или персонажу...',
 
             // Meta & Aria
             'meta.description.home': 'Добро пожаловать на фан-сайт Агаты Мистери. Здесь вы найдете карту приключений, викторины и информацию о персонажах.',
@@ -309,6 +311,8 @@ const I18n = (() => {
             'form.placeholder.description': 'What inspired you?',
             'form.placeholder.fanfic_title': 'Story title',
             'form.placeholder.fanfic_text': 'Write a short plot or the beginning of the story',
+            'search.illustrations.placeholder': 'Search by title, author, or description...',
+            'search.fanfics.placeholder': 'Search by title, author, or character...',
 
             // Meta & Aria
             'meta.description.home': 'Welcome to the Agatha Mystery fan site. Here you will find an adventure map, quizzes, and character information.',
