@@ -432,7 +432,9 @@ const App = (() => {
     const initPlacesMap = async () => {
         const mapContainer = document.getElementById('places-map');
         if (!mapContainer) return;
-        if (!window.L) {
+
+        // Check for OpenLayers
+        if (!window.ol) {
             mapContainer.innerHTML = `<div class="empty-state">${t('error.map_load', 'Map failed to load. Check your internet connection.')}</div>`;
             return;
         }
@@ -444,80 +446,214 @@ const App = (() => {
             return;
         }
 
-        const map = window.L.map(mapContainer, { scrollWheelZoom: false });
-        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        // Popup elements
+        const container = document.getElementById('popup');
+        const content = document.getElementById('popup-content');
+        const closer = document.getElementById('popup-closer');
 
-        const markers = new Map();
-        places.forEach((place) => {
-            const marker = window.L.marker([place.lat, place.lng]).addTo(map);
+        if (!container || !content || !closer) return;
 
-            // Создаём галерею для попапа
-            let popupGallery = '';
-            if (place.images && place.images.length > 0) {
-                const firstImg = resolveAsset(place.images[0].url);
-                if (place.images.length === 1) {
-                    popupGallery = `<img src="${firstImg}" alt="${place.name}" class="popup-image">`;
-                } else {
-                    const popupThumbs = place.images.slice(0, 4).map((img, i) => {
-                        const url = resolveAsset(img.url);
-                        return `<img src="${url}" alt="${img.caption || ''}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${url}">`;
-                    }).join('');
-                    popupGallery = `
-                        <div class="popup-gallery">
-                            <img src="${firstImg}" alt="${place.name}" class="popup-main-image">
-                            <div class="popup-thumbs">${popupThumbs}</div>
-                        </div>
-                    `;
-                }
-            }
-
-            marker.bindPopup(`
-                <div class="popup-content" onclick="App.openLightboxFromPopup(this, '${place.name}')">
-                    ${popupGallery}
-                    <strong>${place.name}</strong><br>${place.description}
-                </div>
-            `, { maxWidth: 320 });
-
-            // Инициализируем галерею в попапе при открытии
-            marker.on('popupopen', () => {
-                const popup = marker.getPopup().getElement();
-                if (!popup) return;
-                const thumbs = popup.querySelectorAll('.popup-thumb');
-                const mainImg = popup.querySelector('.popup-main-image');
-                if (!mainImg || thumbs.length === 0) return;
-
-                thumbs.forEach((thumb) => {
-                    thumb.addEventListener('click', () => {
-                        mainImg.src = thumb.dataset.url;
-                        thumbs.forEach((t) => t.classList.remove('active'));
-                        thumb.classList.add('active');
-                    });
-                });
-            });
-
-            markers.set(place.id, marker);
+        // Create Overlay for Popup
+        const overlay = new window.ol.Overlay({
+            element: container,
+            autoPan: {
+                animation: {
+                    duration: 250,
+                },
+            },
         });
 
-        if (places.length > 1) {
-            const bounds = window.L.latLngBounds(places.map((place) => [place.lat, place.lng]));
-            map.fitBounds(bounds, { padding: [40, 40] });
-        } else if (places.length === 1) {
-            map.setView([places[0].lat, places[0].lng], 5);
-        } else {
-            map.setView([20, 0], 2);
+        // Close popup handler
+        closer.onclick = function () {
+            overlay.setPosition(undefined);
+            closer.blur();
+            return false;
+        };
+
+        // Create vector source to hold markers
+        const vectorSource = new window.ol.source.Vector();
+
+        const markers = new Map();
+
+        places.forEach((place) => {
+            // Create Feature (Marker)
+            const feature = new window.ol.Feature({
+                geometry: new window.ol.geom.Point(window.ol.proj.fromLonLat([place.lng, place.lat])),
+                name: place.name,
+                place: place
+            });
+
+            // Style for the marker (simple red circle with white border to mimic a pin head)
+            feature.setStyle(new window.ol.style.Style({
+                image: new window.ol.style.Circle({
+                    radius: 8,
+                    fill: new window.ol.style.Fill({ color: '#e74c3c' }),
+                    stroke: new window.ol.style.Stroke({ color: '#fff', width: 2 })
+                })
+            }));
+
+            vectorSource.addFeature(feature);
+            markers.set(place.id, feature);
+        });
+
+        // Initialize Map
+        const map = new window.ol.Map({
+            target: mapContainer,
+            layers: [
+                new window.ol.layer.Tile({
+                    source: new window.ol.source.OSM()
+                }),
+                new window.ol.layer.Vector({
+                    source: vectorSource
+                })
+            ],
+            overlays: [overlay],
+            controls: window.ol.control.defaults.defaults().extend([
+                new window.ol.control.FullScreen()
+            ]),
+            view: new window.ol.View({
+                center: window.ol.proj.fromLonLat([0, 20]),
+                zoom: 2
+            })
+        });
+
+        // Handle clicks on map features (markers)
+        map.on('singleclick', function (evt) {
+            const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+                return feature;
+            });
+
+            if (feature) {
+                const place = feature.get('place');
+                const coordinates = feature.getGeometry().getCoordinates();
+
+                // Zoom to the marker
+                map.getView().animate({
+                    center: coordinates,
+                    zoom: 15,
+                    duration: 1000
+                });
+
+                // Prepare popup content
+                let popupGallery = '';
+                if (place.images && place.images.length > 0) {
+                    const firstImg = resolveAsset(place.images[0].url);
+                    if (place.images.length === 1) {
+                        popupGallery = `<img src="${firstImg}" alt="${place.name}" class="popup-image">`;
+                    } else {
+                        const popupThumbs = place.images.slice(0, 4).map((img, i) => {
+                            const url = resolveAsset(img.url);
+                            return `<img src="${url}" alt="${img.caption || ''}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${url}">`;
+                        }).join('');
+                        popupGallery = `
+                            <div class="popup-gallery">
+                                <img src="${firstImg}" alt="${place.name}" class="popup-main-image">
+                                <div class="popup-thumbs">${popupThumbs}</div>
+                            </div>
+                        `;
+                    }
+                }
+
+                content.innerHTML = `
+                    <div class="popup-content">
+                        ${popupGallery}
+                        <strong>${place.name}</strong><br>${place.description}
+                    </div>
+                `;
+
+                // Re-attach gallery listeners for popup
+                const thumbs = content.querySelectorAll('.popup-thumb');
+                const mainImg = content.querySelector('.popup-main-image');
+                if (mainImg && thumbs.length > 0) {
+                    thumbs.forEach((thumb) => {
+                        thumb.addEventListener('click', (e) => {
+                            e.stopPropagation(); // prevent map click
+                            mainImg.src = thumb.dataset.url;
+                            thumbs.forEach((t) => t.classList.remove('active'));
+                            thumb.classList.add('active');
+                        });
+                    });
+                }
+
+                overlay.setPosition(coordinates);
+            } else {
+                overlay.setPosition(undefined); // Hide popup if clicked on map background
+            }
+        });
+
+        // Fit bounds if multiple places
+        if (places.length > 0) {
+            const extent = vectorSource.getExtent();
+            // Adding padding is a bit more complex in OL, direct fit is easier
+            if (!window.ol.extent.isEmpty(extent)) {
+                map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 5 });
+            }
         }
 
+        // Link external cards to map
         const cards = document.querySelectorAll('.place-card');
         cards.forEach((card) => {
             card.addEventListener('click', () => {
                 const id = Number(card.dataset.placeId);
-                const marker = markers.get(id);
-                const place = places.find((item) => item.id === id);
-                if (marker && place) {
-                    map.flyTo([place.lat, place.lng], 6, { duration: 0.6 });
-                    marker.openPopup();
+                const feature = markers.get(id);
+
+                if (feature) {
+                    const coordinates = feature.getGeometry().getCoordinates();
+                    const view = map.getView();
+
+                    // FlyTo animation
+                    view.animate({
+                        center: coordinates,
+                        zoom: 15,
+                        duration: 1000
+                    });
+
+                    // Simulate click to show popup after animation
+                    setTimeout(() => {
+                        const place = feature.get('place');
+
+                        let popupGallery = '';
+                        if (place.images && place.images.length > 0) {
+                            const firstImg = resolveAsset(place.images[0].url);
+                            if (place.images.length === 1) {
+                                popupGallery = `<img src="${firstImg}" alt="${place.name}" class="popup-image">`;
+                            } else {
+                                const popupThumbs = place.images.slice(0, 4).map((img, i) => {
+                                    const url = resolveAsset(img.url);
+                                    return `<img src="${url}" alt="${img.caption || ''}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${url}">`;
+                                }).join('');
+                                popupGallery = `
+                                    <div class="popup-gallery">
+                                        <img src="${firstImg}" alt="${place.name}" class="popup-main-image">
+                                        <div class="popup-thumbs">${popupThumbs}</div>
+                                    </div>
+                                `;
+                            }
+                        }
+
+                        content.innerHTML = `
+                            <div class="popup-content">
+                                ${popupGallery}
+                                <strong>${place.name}</strong><br>${place.description}
+                            </div>
+                        `;
+
+                        const thumbs = content.querySelectorAll('.popup-thumb');
+                        const mainImg = content.querySelector('.popup-main-image');
+                        if (mainImg && thumbs.length > 0) {
+                            thumbs.forEach((thumb) => {
+                                thumb.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    mainImg.src = thumb.dataset.url;
+                                    thumbs.forEach((t) => t.classList.remove('active'));
+                                    thumb.classList.add('active');
+                                });
+                            });
+                        }
+
+                        overlay.setPosition(coordinates);
+
+                    }, 1000);
                 }
             });
         });
