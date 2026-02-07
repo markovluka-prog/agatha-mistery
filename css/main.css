@@ -47,7 +47,8 @@ body {
     font-size: 16px;
     line-height: 1.6;
     color: var(--text-dark);
-    background: linear-gradient(135deg, #F1E2C2 0%, #FFF9EA 100%);
+    /* Более заметный градиент для фона: от теплого песочного к светлому */
+    background: linear-gradient(135deg, #E6D0A1 0%, #FFF5D6 50%, #FFF9EA 100%);
     min-height: 100vh;
 }
 
@@ -113,7 +114,8 @@ img {
 
 .page-header {
     padding: 120px 0 var(--spacing-xlarge);
-    background: linear-gradient(120deg, #F6D400 0%, #FFEB3B 100%);
+    /* Более яркий и насыщенный градиент для заголовка */
+    background: linear-gradient(135deg, #FFC107 0%, #F6D400 50%, #FFF176 100%);
     border-bottom: 2px solid var(--primary-color);
     border-top: 2px solid var(--primary-color);
     box-shadow: 0 4px 12px rgba(246, 212, 0, 0.2);
