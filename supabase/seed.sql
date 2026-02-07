@@ -48,10 +48,7 @@ create table if not exists about_sections (
   id bigserial primary key,
   title text not null,
   title_en text,
-  subtitle text,
-  subtitle_en text,
-  content text not null,
-  content_en text,
+  blocks jsonb default '[]'::jsonb,
   sort_order integer default 0
 );
 

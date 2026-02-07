@@ -508,3 +508,150 @@ h4,
 .add-block-btn {
     margin-top: 10px;
 }
+
+
+/* Moderation Section Styles */
+.moderation-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-family: inherit;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.tab-btn.active {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent-gold);
+}
+
+.tab-count {
+    background: var(--accent-gold);
+    color: black;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.moderation-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.moderation-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    display: flex;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.moderation-item:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.moderation-preview {
+    flex: 1;
+    padding: 20px;
+}
+
+.moderation-preview-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+.moderation-author {
+    color: var(--accent-gold);
+    font-weight: 600;
+}
+
+.moderation-date {
+    color: var(--text-muted);
+}
+
+.moderation-preview-content h4 {
+    margin-bottom: 8px;
+    color: white;
+}
+
+.moderation-preview-content p {
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.moderation-preview-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.moderation-actions {
+    display: flex;
+    flex-direction: column;
+    width: 80px;
+    border-left: 1px solid var(--border-color);
+}
+
+.moderation-actions .btn {
+    flex: 1;
+    border-radius: 0;
+    padding: 0;
+}
+
+.btn-approve {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--success);
+}
+
+.btn-approve:hover {
+    background: var(--success);
+    color: white;
+}
+
+.btn-reject {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.btn-reject:hover {
+    background: var(--danger);
+    color: white;
+}
+
+.nav-badge {
+    background: var(--danger);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: auto;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
