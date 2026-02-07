@@ -812,7 +812,10 @@ const App = (() => {
             container.innerHTML = sections.map(section => `
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
-                        <span>${section.title}</span>
+                        <div class="accordion-header-text">
+                            <h3 class="accordion-title">${section.title}</h3>
+                            ${section.subtitle ? `<p class="accordion-subtitle">${section.subtitle}</p>` : ''}
+                        </div>
                         <span class="accordion-icon">▼</span>
                     </div>
                     <div class="accordion-content">

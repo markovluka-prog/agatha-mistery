@@ -12,3 +12,7 @@ translate/find_broken.js
 check_translations_db.js
 translate_characters_db.js
  Ingle
+migrate_about.js
+patch_admin.js
+patch_main.js
+cleanup_admin.js

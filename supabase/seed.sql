@@ -48,6 +48,8 @@ create table if not exists about_sections (
   id bigserial primary key,
   title text not null,
   title_en text,
+  subtitle text,
+  subtitle_en text,
   content text not null,
   content_en text,
   sort_order integer default 0
@@ -282,12 +284,14 @@ insert into reviews (name, text, status, created_at) values
 on conflict do nothing;
 
 -- Sample about sections
-insert into about_sections (id, title, title_en, content, content_en, sort_order) values
-  (1, 'Кто мы такие?', 'Who are we?', 'Мы — сообщество преданных фанатов серии книг Стива Стивенсона про Агату Мистери. Наша цель — собрать в одном месте всю информацию о любимых героях и их приключениях.', 'We are a community of dedicated fans of Steve Stevenson''s Agatha Mistery book series. Our goal is to gather all information about our favorite characters and their adventures in one place.', 1),
-  (2, 'Наша миссия', 'Our Mission', 'Мы хотим, чтобы каждый читатель мог окунуться в мир тайн и загадок вместе с Агатой, Ларри и Ватсоном. Мы создаем карту приключений, проводим викторины и делимся творчеством фанатов.', 'We want every reader to be able to dive into the world of mysteries together with Agatha, Larry, and Watson. We create adventure maps, hold quizzes, and share fan creations.', 2)
+insert into about_sections (id, title, title_en, subtitle, subtitle_en, content, content_en, sort_order) values
+  (1, 'Кто мы такие?', 'Who are we?', 'Сообщество детективов', 'Detectives Community', 'Мы — сообщество преданных фанатов серии книг Стива Стивенсона про Агату Мистери. Наша цель — собрать в одном месте всю информацию о любимых героях и их приключениях.', 'We are a community of dedicated fans of Steve Stevenson''s Agatha Mistery book series. Our goal is to gather all information about our favorite characters and their adventures in one place.', 1),
+  (2, 'Наша миссия', 'Our Mission', 'Тайны и загадки', 'Mysteries and Riddles', 'Мы хотим, чтобы каждый читатель мог окунуться в мир тайн и загадок вместе с Агатой, Ларри и Ватсоном. Мы создаем карту приключений, проводим викторины и делимся творчеством фанатов.', 'We want every reader to be able to dive into the world of mysteries together with Agatha, Larry, and Watson. We create adventure maps, hold quizzes, and share fan creations.', 2)
 on conflict (id) do update set
   title = excluded.title,
   title_en = excluded.title_en,
+  subtitle = excluded.subtitle,
+  subtitle_en = excluded.subtitle_en,
   content = excluded.content,
   content_en = excluded.content_en,
   sort_order = excluded.sort_order;

@@ -1470,6 +1470,8 @@ const Admin = (() => {
                 document.getElementById('about-id').value = section.id;
                 document.getElementById('about-title').value = section.title || '';
                 document.getElementById('about-title-en').value = section.title_en || '';
+                document.getElementById('about-subtitle').value = section.subtitle || '';
+                document.getElementById('about-subtitle-en').value = section.subtitle_en || '';
                 document.getElementById('about-content').value = section.content || '';
                 document.getElementById('about-content-en').value = section.content_en || '';
                 document.getElementById('about-sort').value = section.sort_order || 0;
@@ -1486,6 +1488,8 @@ const Admin = (() => {
 
     async function saveAboutSection() {
         const aboutId = document.getElementById('about-id').value;
+        const subtitle = document.getElementById('about-subtitle').value.trim();
+        const subtitleEn = document.getElementById('about-subtitle-en').value.trim();
         const title = document.getElementById('about-title').value.trim();
         const titleEn = document.getElementById('about-title-en').value.trim();
         const content = document.getElementById('about-content').value.trim();
@@ -1499,6 +1503,7 @@ const Admin = (() => {
 
         const sectionData = {
             title, title_en: titleEn,
+            subtitle, subtitle_en: subtitleEn,
             content, content_en: contentEn,
             sort_order: sortOrder
         };

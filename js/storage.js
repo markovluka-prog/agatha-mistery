@@ -264,6 +264,7 @@ const Supa = (() => {
             return (data || []).map(section => ({
                 id: section.id,
                 title: lang === 'en' && section.title_en ? section.title_en : section.title,
+                subtitle: lang === 'en' && section.subtitle_en ? section.subtitle_en : section.subtitle,
                 content: lang === 'en' && section.content_en ? section.content_en : section.content
             }));
         } catch (error) {
