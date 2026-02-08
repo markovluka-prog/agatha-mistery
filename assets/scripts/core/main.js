@@ -52,8 +52,9 @@ const App = (() => {
             const header = document.querySelector('.page-header .container');
             if (!header) return;
 
-            // Check if breadcrumbs already exist
-            if (header.querySelector('.breadcrumbs')) return;
+            // Remove existing breadcrumbs if any to re-render on language change
+            const existingNav = header.querySelector('.breadcrumbs');
+            if (existingNav) existingNav.remove();
 
             const path = window.location.pathname.split('/').pop() || 'index.html';
             const routes = {
@@ -96,6 +97,11 @@ const App = (() => {
         };
 
         renderBreadcrumbs();
+
+        // Update breadcrumbs on language change
+        window.addEventListener('langchange', () => {
+            renderBreadcrumbs();
+        });
 
         // Random Quote in Footer
         const renderRandomQuote = () => {
