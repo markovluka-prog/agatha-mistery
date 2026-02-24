@@ -1,4 +1,3 @@
-
 function sha256Pure(str) {
     function rightRotate(value, amount) {
         return (value >>> amount) | (value << (32 - amount));
@@ -70,5 +69,10 @@ function sha256Pure(str) {
     return result;
 }
 
-console.log(sha256Pure("themarluk8"));
-Ingle
+const input = process.argv[2] || process.env.HASH_INPUT || '';
+if (!input) {
+    console.error('Provide input via argv[2] or HASH_INPUT env variable');
+    process.exit(1);
+}
+
+console.log(sha256Pure(input));

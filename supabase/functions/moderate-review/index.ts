@@ -5,6 +5,7 @@ const OPENAI_MODEL = Deno.env.get("OPENAI_MODEL") || "gpt-4o-mini";
 const MODERATION_THRESHOLD = Number(Deno.env.get("MODERATION_THRESHOLD") || "7");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+const REQUIRE_AUTHENTICATED_USER = (Deno.env.get("REQUIRE_AUTHENTICATED_USER") || "false").toLowerCase() === "true";
 const SITE_ORIGIN = Deno.env.get("SITE_ORIGIN") || "";
 const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || SITE_ORIGIN)
     .split(",")
@@ -20,9 +21,51 @@ const rateLimitStore = new Map<string, { count: number; expiresAt: number }>();
 const getClientIp = (req: Request): string => {
     const forwarded = req.headers.get("x-forwarded-for");
     if (forwarded) {
-        return forwarded.split(",")[0].trim();
+        const firstIp = forwarded
+            .split(",")
+            .map((item) => item.trim())
+            .find(Boolean);
+        if (firstIp) return firstIp;
     }
     return req.headers.get("cf-connecting-ip") || "unknown";
+};
+
+const hasAllowedRequestContext = (req: Request, origin: string): boolean => {
+    const referer = req.headers.get("referer");
+    if (referer) {
+        try {
+            const refererUrl = new URL(referer);
+            if (refererUrl.origin !== origin) return false;
+        } catch (_error) {
+            return false;
+        }
+    }
+
+    const secFetchSite = (req.headers.get("sec-fetch-site") || "").toLowerCase();
+    if (secFetchSite && !["same-origin", "same-site", "none"].includes(secFetchSite)) {
+        return false;
+    }
+
+    return true;
+};
+
+const validateAuthenticatedUser = async (authorization: string | null): Promise<boolean> => {
+    if (!authorization || !authorization.toLowerCase().startsWith("bearer ")) {
+        return false;
+    }
+
+    try {
+        const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+            method: "GET",
+            headers: {
+                Authorization: authorization,
+                apikey: SUPABASE_SERVICE_ROLE_KEY
+            }
+        });
+        return response.ok;
+    } catch (_error) {
+        return false;
+    }
 };
 
 const checkRateLimit = (key: string) => {
@@ -160,12 +203,24 @@ serve(async (req) => {
         return jsonResponse(origin, 403, { error: "Origin not allowed" });
     }
 
+    if (!hasAllowedRequestContext(req, origin)) {
+        return jsonResponse(origin, 403, { error: "Request context not allowed" });
+    }
+
     if (req.method !== "POST") {
         return jsonResponse(origin, 405, { error: "Method not allowed" });
     }
 
     if (!OPENAI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
         return jsonResponse(origin, 500, { error: "Missing server configuration" });
+    }
+
+    if (REQUIRE_AUTHENTICATED_USER) {
+        const authHeader = req.headers.get("authorization");
+        const isValidUser = await validateAuthenticatedUser(authHeader);
+        if (!isValidUser) {
+            return jsonResponse(origin, 401, { error: "Authentication required" });
+        }
     }
 
     const rateLimit = checkRateLimit(`${origin}|${getClientIp(req)}`);

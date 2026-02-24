@@ -66,9 +66,9 @@ drop policy if exists "public read about_sections" on about_sections;
 create policy "public read about_sections" on about_sections
   for select to anon, authenticated using (true);
 
+-- No direct client-side write policy for about_sections.
+-- Content writes must happen via service role (which bypasses RLS).
 drop policy if exists "admin write about_sections" on about_sections;
-create policy "admin write about_sections" on about_sections
-  for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "public read place_images" on place_images;
 create policy "public read place_images" on place_images
@@ -200,74 +200,58 @@ alter table reviews enable row level security;
 alter table fanfics enable row level security;
 alter table illustrations enable row level security;
 
--- Admin settings: only service role can read/write (checked on client via password hash comparison)
+-- Admin settings must not be readable by anon/authenticated clients.
+-- Service role bypasses RLS and can still manage this table from trusted backend code.
 drop policy if exists "admin read settings" on admin_settings;
-create policy "admin read settings" on admin_settings
-  for select to anon, authenticated using (true);
 
 -- Reviews: public can insert (pending), read only approved
 drop policy if exists "public insert reviews" on reviews;
 create policy "public insert reviews" on reviews
-  for insert to anon, authenticated with check (true);
+  for insert to anon, authenticated with check (status = 'pending');
 
 drop policy if exists "public read approved reviews" on reviews;
 create policy "public read approved reviews" on reviews
-  for select to anon, authenticated using (true);
+  for select to anon, authenticated using (status = 'approved');
 
+-- No direct client-side update policy for reviews.
+-- Moderation updates must happen via service role backend.
 drop policy if exists "admin update reviews" on reviews;
-create policy "admin update reviews" on reviews
-  for update to anon, authenticated using (true);
 
 -- Fanfics: public can insert (pending), read only approved
 drop policy if exists "public insert fanfics" on fanfics;
 create policy "public insert fanfics" on fanfics
-  for insert to anon, authenticated with check (true);
+  for insert to anon, authenticated with check (status = 'pending');
 
 drop policy if exists "public read approved fanfics" on fanfics;
 create policy "public read approved fanfics" on fanfics
-  for select to anon, authenticated using (true);
+  for select to anon, authenticated using (status = 'approved');
 
+-- No direct client-side update policy for fanfics.
+-- Moderation updates must happen via service role backend.
 drop policy if exists "admin update fanfics" on fanfics;
-create policy "admin update fanfics" on fanfics
-  for update to anon, authenticated using (true);
 
 -- Illustrations: public can insert (pending), read only approved
 drop policy if exists "public insert illustrations" on illustrations;
 create policy "public insert illustrations" on illustrations
-  for insert to anon, authenticated with check (true);
+  for insert to anon, authenticated with check (status = 'pending');
 
 drop policy if exists "public read approved illustrations" on illustrations;
 create policy "public read approved illustrations" on illustrations
-  for select to anon, authenticated using (true);
+  for select to anon, authenticated using (status = 'approved');
 
+-- No direct client-side update policy for illustrations.
+-- Moderation updates must happen via service role backend.
 drop policy if exists "admin update illustrations" on illustrations;
-create policy "admin update illustrations" on illustrations
-  for update to anon, authenticated using (true);
 
--- Admin write policies for content management
+-- No direct client-side write policies for core content tables.
+-- Content writes must happen via service role backend.
 drop policy if exists "admin write places" on places;
-create policy "admin write places" on places
-  for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "admin write place_images" on place_images;
-create policy "admin write place_images" on place_images
-  for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "admin write characters" on characters;
-create policy "admin write characters" on characters
-  for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "admin write quizzes" on quizzes;
-create policy "admin write quizzes" on quizzes
-  for all to anon, authenticated using (true) with check (true);
-
--- Insert default admin password hash
--- Password: themarluk8
--- SHA-256 hash of this password (will be verified on client side)
-insert into admin_settings (id, password_hash) values
-  (1, '129f3b174ec668580fbb4463d69078a11cc598190223825cb578ed3999f39991')
-on conflict (id) do update set
-  password_hash = excluded.password_hash;
 
 -- =====================================================
 -- SAMPLE DATA WITH APPROVED STATUS
