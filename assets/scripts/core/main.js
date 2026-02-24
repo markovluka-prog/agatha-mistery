@@ -19,8 +19,31 @@ const App = (() => {
         return (typeof I18n !== 'undefined' && I18n.t) ? I18n.t(key) : fallback;
     };
 
+    const escapeHtml = (value) => String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    const safeText = (value) => escapeHtml(value);
+
+    const safeAttr = (value) => escapeHtml(value);
+
+    const safeUrl = (value) => {
+        if (!value) return '';
+        const url = String(value).trim();
+        if (!url) return '';
+        if (url.startsWith('data:image/')) return url;
+        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
+        if (!url.includes(':')) return url;
+        return '';
+    };
+
+    const safeMultilineHtml = (value) => safeText(value).replace(/\r?\n/g, '<br>');
+
     const showLoading = (container, text) => {
-        const loadingText = text || t('loading', 'Loading...');
+        const loadingText = safeText(text || t('loading', 'Loading...'));
         container.innerHTML = `
             <div class="loading-container">
                 <div class="loading-spinner"></div>
@@ -30,10 +53,11 @@ const App = (() => {
     };
 
     const showError = (container, message, retryFn) => {
-        const retryText = t('error.retry', 'Try Again');
+        const retryText = safeText(t('error.retry', 'Try Again'));
+        const safeMessage = safeText(message);
         container.innerHTML = `
             <div class="error-container">
-                <p>${message}</p>
+                <p>${safeMessage}</p>
                 <button class="btn btn-retry" data-retry>${retryText}</button>
             </div>
         `;
@@ -76,20 +100,20 @@ const App = (() => {
             nav.className = 'breadcrumbs';
             nav.setAttribute('aria-label', 'Breadcrumb');
 
-            let html = `<a href="${state.basePath}index.html">${t('nav.home', 'Главная')}</a>`;
+            let html = `<a href="${safeAttr(state.basePath)}index.html">${safeText(t('nav.home', 'Главная'))}</a>`;
 
             if (currentRoute.parent && routes[currentRoute.parent]) {
                 const parent = routes[currentRoute.parent];
-                html += ` <span class="separator">/</span> <a href="${parent.url}">${parent.name}</a>`;
+                html += ` <span class="separator">/</span> <a href="${safeAttr(parent.url)}">${safeText(parent.name)}</a>`;
             }
 
             // Current page (if it has a specific name override or just use page title)
             // For detail pages, we might want to just show the parent active
             if (!currentRoute.parent) {
-                html += ` <span class="separator">/</span> <span aria-current="page">${currentRoute.name}</span>`;
+                html += ` <span class="separator">/</span> <span aria-current="page">${safeText(currentRoute.name)}</span>`;
             } else {
                 // For sub-pages like forms
-                html += ` <span class="separator">/</span> <span aria-current="page">${currentRoute.name}</span>`;
+                html += ` <span class="separator">/</span> <span aria-current="page">${safeText(currentRoute.name)}</span>`;
             }
 
             nav.innerHTML = html;
@@ -326,17 +350,18 @@ const App = (() => {
 
     const renderImageGallery = (images, placeName) => {
         if (!images || images.length === 0) {
-            return `<div class="gallery-empty">${t('noimage', 'No image')}</div>`;
+            return `<div class="gallery-empty">${safeText(t('noimage', 'No image'))}</div>`;
         }
 
-        const mainImage = resolveAsset(images[0].url);
-        const caption = images[0].caption || '';
+        const mainImage = safeUrl(resolveAsset(images[0].url));
+        const caption = safeText(images[0].caption || '');
+        const safePlaceName = safeText(placeName);
 
         if (images.length === 1) {
             return `
                 <div class="image-gallery">
-                    <div class="gallery-main" onclick="App.openLightbox('${mainImage}', '${placeName}')">
-                        <img src="${mainImage}" alt="${placeName}" class="gallery-main-img">
+                    <div class="gallery-main" data-lightbox-url="${safeAttr(mainImage)}" data-lightbox-caption="${safeAttr(placeName)}">
+                        <img src="${safeAttr(mainImage)}" alt="${safePlaceName}" class="gallery-main-img">
                         ${caption ? `<div class="gallery-caption">${caption}</div>` : ''}
                     </div>
                 </div>
@@ -344,30 +369,31 @@ const App = (() => {
         }
 
         const thumbnails = images.map((img, index) => {
-            const thumbUrl = resolveAsset(img.url);
+            const thumbUrl = safeUrl(resolveAsset(img.url));
+            const thumbCaption = safeText(img.caption || '');
             return `
                 <button class="gallery-thumb ${index === 0 ? 'active' : ''}" 
-                        data-index="${index}" 
-                        data-url="${thumbUrl}" 
-                        data-caption="${img.caption || ''}">
-                    <img src="${thumbUrl}" alt="${img.caption || placeName}">
+                        data-index="${index}"
+                        data-url="${safeAttr(thumbUrl)}"
+                        data-caption="${safeAttr(img.caption || '')}">
+                    <img src="${safeAttr(thumbUrl)}" alt="${thumbCaption || safePlaceName}">
                 </button>
             `;
         }).join('');
 
         return `
             <div class="image-gallery" data-gallery>
-                <div class="gallery-main" onclick="App.openLightboxWithGallery(this, '${placeName}')">
-                    <img src="${mainImage}" alt="${placeName}" class="gallery-main-img">
+                <div class="gallery-main" data-gallery-open data-gallery-name="${safeAttr(placeName)}">
+                    <img src="${safeAttr(mainImage)}" alt="${safePlaceName}" class="gallery-main-img">
                     ${caption ? `<div class="gallery-caption">${caption}</div>` : ''}
                 </div>
                 <div class="gallery-thumbnails">
                     ${thumbnails}
                 </div>
                 <div class="gallery-nav">
-                    <button class="gallery-prev" aria-label="${t('gallery.prev', 'Previous')}">‹</button>
+                    <button class="gallery-prev" aria-label="${safeAttr(t('gallery.prev', 'Previous'))}">‹</button>
                     <span class="gallery-counter">1 / ${images.length}</span>
-                    <button class="gallery-next" aria-label="${t('gallery.next', 'Next')}">›</button>
+                    <button class="gallery-next" aria-label="${safeAttr(t('gallery.next', 'Next'))}">›</button>
                 </div>
             </div>
         `;
@@ -439,18 +465,22 @@ const App = (() => {
         const doRender = async () => {
             try {
                 const places = await loadPlaces();
-                const coordsText = t('map.coords', 'Coordinates');
+                const coordsText = safeText(t('map.coords', 'Coordinates'));
                 container.innerHTML = places.map((place) => {
                     const galleryHtml = renderImageGallery(place.images, place.name);
+                    const placeName = safeText(place.name);
+                    const placeDescription = safeText(place.description);
+                    const lat = Number(place.lat);
+                    const lng = Number(place.lng);
                     return `
-                        <article class="card place-card" data-place-id="${place.id}">
+                        <article class="card place-card" data-place-id="${Number(place.id) || 0}">
                             <div class="card-image">
                                 ${galleryHtml}
                             </div>
                             <div class="card-body">
-                                <h3 class="card-title">${place.name}</h3>
-                                <p class="card-text">${place.description}</p>
-                                <div class="card-meta">${coordsText}: ${place.lat}, ${place.lng}</div>
+                                <h3 class="card-title">${placeName}</h3>
+                                <p class="card-text">${placeDescription}</p>
+                                <div class="card-meta">${coordsText}: ${Number.isFinite(lat) ? lat : '-'}, ${Number.isFinite(lng) ? lng : '-'}</div>
                             </div>
                         </article>
                     `;
@@ -476,7 +506,7 @@ const App = (() => {
 
         // Check for OpenLayers
         if (!window.ol) {
-            mapContainer.innerHTML = `<div class="empty-state">${t('error.map_load', 'Map failed to load. Check your internet connection.')}</div>`;
+            mapContainer.innerHTML = `<div class="empty-state">${safeText(t('error.map_load', 'Map failed to load. Check your internet connection.'))}</div>`;
             return;
         }
 
@@ -580,15 +610,16 @@ const App = (() => {
                 if (place.images && place.images.length > 0) {
                     const firstImg = resolveAsset(place.images[0].url);
                     if (place.images.length === 1) {
-                        popupGallery = `<img src="${firstImg}" alt="${place.name}" class="popup-image">`;
+                        popupGallery = `<img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-image">`;
                     } else {
                         const popupThumbs = place.images.slice(0, 4).map((img, i) => {
-                            const url = resolveAsset(img.url);
-                            return `<img src="${url}" alt="${img.caption || ''}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${url}">`;
+                            const url = safeUrl(resolveAsset(img.url));
+                            const caption = safeText(img.caption || '');
+                            return `<img src="${safeAttr(url)}" alt="${caption}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${safeAttr(url)}">`;
                         }).join('');
                         popupGallery = `
                             <div class="popup-gallery">
-                                <img src="${firstImg}" alt="${place.name}" class="popup-main-image">
+                                <img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-main-image">
                                 <div class="popup-thumbs">${popupThumbs}</div>
                             </div>
                         `;
@@ -598,7 +629,7 @@ const App = (() => {
                 content.innerHTML = `
                     <div class="popup-content">
                         ${popupGallery}
-                        <strong>${place.name}</strong><br>${place.description}
+                        <strong>${safeText(place.name)}</strong><br>${safeText(place.description)}
                     </div>
                 `;
 
@@ -657,15 +688,16 @@ const App = (() => {
                         if (place.images && place.images.length > 0) {
                             const firstImg = resolveAsset(place.images[0].url);
                             if (place.images.length === 1) {
-                                popupGallery = `<img src="${firstImg}" alt="${place.name}" class="popup-image">`;
+                                popupGallery = `<img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-image">`;
                             } else {
                                 const popupThumbs = place.images.slice(0, 4).map((img, i) => {
-                                    const url = resolveAsset(img.url);
-                                    return `<img src="${url}" alt="${img.caption || ''}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${url}">`;
+                                    const url = safeUrl(resolveAsset(img.url));
+                                    const caption = safeText(img.caption || '');
+                                    return `<img src="${safeAttr(url)}" alt="${caption}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${safeAttr(url)}">`;
                                 }).join('');
                                 popupGallery = `
                                     <div class="popup-gallery">
-                                        <img src="${firstImg}" alt="${place.name}" class="popup-main-image">
+                                        <img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-main-image">
                                         <div class="popup-thumbs">${popupThumbs}</div>
                                     </div>
                                 `;
@@ -675,7 +707,7 @@ const App = (() => {
                         content.innerHTML = `
                             <div class="popup-content">
                                 ${popupGallery}
-                                <strong>${place.name}</strong><br>${place.description}
+                                <strong>${safeText(place.name)}</strong><br>${safeText(place.description)}
                             </div>
                         `;
 
@@ -708,19 +740,21 @@ const App = (() => {
 
         try {
             const characters = await loadCharacters();
-            const noImageText = t('noimage', 'No image');
-            const detailsText = t('characters.btn.details', 'Learn More');
+            const noImageText = safeText(t('noimage', 'No image'));
+            const detailsText = safeText(t('characters.btn.details', 'Learn More'));
             container.innerHTML = characters.map((character) => {
-                const image = resolveAsset(character.image);
+                const image = safeUrl(resolveAsset(character.image));
+                const charName = safeText(character.name);
+                const shortDescription = safeText(character.shortDescription);
                 return `
                     <article class="card">
-                        <div class="card-image" onclick="App.openLightbox('${image}', '${character.name}')">
-                            ${image ? `<img src="${image}" alt="${character.name}">` : noImageText}
+                        <div class="card-image" data-lightbox-url="${safeAttr(image)}" data-lightbox-caption="${safeAttr(character.name)}">
+                            ${image ? `<img src="${safeAttr(image)}" alt="${charName}">` : noImageText}
                         </div>
                         <div class="card-body">
-                            <h3 class="card-title">${character.name}</h3>
-                            <p class="card-text">${character.shortDescription}</p>
-                            <a class="btn btn-primary" href="${state.basePath}pages/character-detail.html?id=${character.id}">${detailsText}</a>
+                            <h3 class="card-title">${charName}</h3>
+                            <p class="card-text">${shortDescription}</p>
+                            <a class="btn btn-primary" href="${safeAttr(state.basePath)}pages/character-detail.html?id=${Number(character.id) || 0}">${detailsText}</a>
                         </div>
                     </article>
                 `;
@@ -740,7 +774,7 @@ const App = (() => {
         const params = new URLSearchParams(window.location.search);
         const id = Number(params.get('id'));
         if (!id) {
-            container.innerHTML = `<div class="empty-state">${t('error.char_not_found', 'Character not found.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('error.char_not_found', 'Character not found.'))}</div>`;
             return;
         }
 
@@ -748,24 +782,26 @@ const App = (() => {
             const characters = await loadCharacters();
             const character = characters.find((item) => item.id === id);
             if (!character) {
-                container.innerHTML = `<div class="empty-state">${t('error.char_not_found', 'Character not found.')}</div>`;
+                container.innerHTML = `<div class="empty-state">${safeText(t('error.char_not_found', 'Character not found.'))}</div>`;
                 return;
             }
-            const image = resolveAsset(character.image);
+            const image = safeUrl(resolveAsset(character.image));
+            const charName = safeText(character.name);
+            const fullBio = safeText(character.fullBio);
             container.innerHTML = `
                 <article class="card">
-                    <div class="card-image" style="height: 400px;" onclick="App.openLightbox('${image}', '${character.name}')">
-                        ${image ? `<img src="${image}" alt="${character.name}">` : `<div class="no-image">${t('noimage', 'No image')}</div>`}
+                    <div class="card-image" style="height: 400px;" data-lightbox-url="${safeAttr(image)}" data-lightbox-caption="${safeAttr(character.name)}">
+                        ${image ? `<img src="${safeAttr(image)}" alt="${charName}">` : `<div class="no-image">${safeText(t('noimage', 'No image'))}</div>`}
                     </div>
                     <div class="card-body">
-                        <h2 class="card-title">${character.name}</h2>
-                        <p class="card-text">${character.fullBio}</p>
-                        <a class="btn btn-secondary" href="${state.basePath}pages/characters.html" data-i18n="characters.btn.back">${t('characters.btn.back', 'Back to Characters')}</a>
+                        <h2 class="card-title">${charName}</h2>
+                        <p class="card-text">${fullBio}</p>
+                        <a class="btn btn-secondary" href="${safeAttr(state.basePath)}pages/characters.html" data-i18n="characters.btn.back">${safeText(t('characters.btn.back', 'Back to Characters'))}</a>
                     </div>
                 </article>
             `;
         } catch (error) {
-            container.innerHTML = `<div class="empty-state">${t('error.load_data', 'Failed to load data')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('error.load_data', 'Failed to load data'))}</div>`;
         }
     };
 
@@ -780,13 +816,17 @@ const App = (() => {
             const questionsText = t('quizzes.questions', 'Questions');
             const startText = t('quizzes.btn.start', 'Start');
             container.innerHTML = quizzes.map((quiz) => {
+                const quizId = Number(quiz.id) || 0;
+                const title = safeText(quiz.title);
+                const description = safeText(quiz.description);
+                const questionsCount = Number(quiz.questionsCount) || 0;
                 return `
                     <article class="card">
                         <div class="card-body">
-                            <h3 class="card-title">${quiz.title}</h3>
-                            <p class="card-text">${quiz.description}</p>
-                            <div class="card-meta">${questionsText}: ${quiz.questionsCount}</div>
-                            <a class="btn btn-primary" href="${state.basePath}pages/quiz-detail.html?quiz=${quiz.id}">${startText}</a>
+                            <h3 class="card-title">${title}</h3>
+                            <p class="card-text">${description}</p>
+                            <div class="card-meta">${questionsText}: ${questionsCount}</div>
+                            <a class="btn btn-primary" href="${safeAttr(state.basePath)}pages/quiz-detail.html?quiz=${quizId}">${startText}</a>
                         </div>
                     </article>
                 `;
@@ -806,7 +846,7 @@ const App = (() => {
         const params = new URLSearchParams(window.location.search);
         const id = Number(params.get('quiz'));
         if (!id) {
-            container.innerHTML = `<div class="empty-state">${t('error.quiz_not_found', 'Quiz not found.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('error.quiz_not_found', 'Quiz not found.'))}</div>`;
             return;
         }
 
@@ -814,19 +854,20 @@ const App = (() => {
             const quizzes = await loadQuizzes();
             const quiz = quizzes.find((item) => item.id === id);
             if (!quiz) {
-                container.innerHTML = `<div class="empty-state">${t('error.quiz_not_found', 'Quiz not found.')}</div>`;
+                container.innerHTML = `<div class="empty-state">${safeText(t('error.quiz_not_found', 'Quiz not found.'))}</div>`;
                 return;
             }
 
             container.innerHTML = `
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title">${quiz.title}</h2>
-                        <p class="card-text">${quiz.description}</p>
+                        <h2 class="card-title">${safeText(quiz.title)}</h2>
+                        <p class="card-text">${safeText(quiz.description)}</p>
                     </div>
                 </div>
                 <form id="quiz-form" class="grid" data-quiz-form>
                     ${quiz.questions.map((question, index) => {
+                const questionKey = Number(question.id) || index + 1;
                 // Определяем тип вопроса
                 const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
                 const correctOptionsCount = (question.options || []).filter(opt => opt.isCorrect).length;
@@ -836,11 +877,11 @@ const App = (() => {
 
                 if (isInputType) {
                     // Вопрос с текстовым вводом
-                    const placeholder = t('quizzes.input.placeholder', 'Enter your answer...');
+                    const placeholder = safeText(t('quizzes.input.placeholder', 'Enter your answer...'));
                     questionContent = `
                         <div class="quiz-input-wrapper">
                             <input type="text" 
-                                   name="q${question.id}" 
+                                   name="q${questionKey}" 
                                    class="quiz-text-input" 
                                    placeholder="${placeholder}"
                                    autocomplete="off">
@@ -850,27 +891,28 @@ const App = (() => {
                     // Вопрос с вариантами ответов (радиокнопки или чекбоксы)
                     const inputType = isMultiple ? 'checkbox' : 'radio';
                     questionContent = question.options.map((option) => {
-                        const image = resolveAsset(option.image);
+                        const image = safeUrl(resolveAsset(option.image));
+                        const optionText = safeText(option.text);
                         return `
                             <label class="quiz-option">
-                                <input type="${inputType}" name="q${question.id}" value="${option.id}">
-                                ${image ? `<img src="${image}" alt="${option.text}">` : ''}
-                                <span>${option.text}</span>
+                                <input type="${inputType}" name="q${questionKey}" value="${Number(option.id) || 0}">
+                                ${image ? `<img src="${safeAttr(image)}" alt="${optionText}">` : ''}
+                                <span>${optionText}</span>
                             </label>
                         `;
                     }).join('');
                 }
 
-                const questionLabel = t('quizzes.question', 'Question');
+                const questionLabel = safeText(t('quizzes.question', 'Question'));
                 return `
                     <div class="quiz-question" data-question-type="${isInputType ? 'input' : (isMultiple ? 'multiple' : 'options')}">
                         <h3>${questionLabel} ${index + 1}</h3>
-                        <p>${question.text}</p>
+                        <p>${safeText(question.text)}</p>
                         <div class="quiz-options">${questionContent}</div>
                     </div>
                 `;
             }).join('')}
-                    <button type="button" class="btn btn-primary" id="quiz-submit">${t('quizzes.btn.check', 'Check Answers')}</button>
+                    <button type="button" class="btn btn-primary" id="quiz-submit">${safeText(t('quizzes.btn.check', 'Check Answers'))}</button>
                     <div id="quiz-result" class="result-box" style="display: none;"></div>
                 </form>
             `;
@@ -883,12 +925,13 @@ const App = (() => {
                 let correct = 0;
                 let answered = 0;
 
-                quiz.questions.forEach((question) => {
+                quiz.questions.forEach((question, qIndex) => {
+                    const questionKey = Number(question.id) || (qIndex + 1);
                     const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
 
                     if (isInputType) {
                         // Проверка текстового ввода
-                        const input = form.querySelector(`input[name="q${question.id}"]`);
+                        const input = form.querySelector(`input[name="q${questionKey}"]`);
                         if (input && input.value.trim()) {
                             answered += 1;
                             const userAnswer = input.value.trim().toLowerCase();
@@ -904,7 +947,7 @@ const App = (() => {
                         }
                     } else {
                         // Проверка выбора из вариантов (один или несколько)
-                        const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${question.id}"]:checked`));
+                        const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${questionKey}"]:checked`));
                         if (selectedInputs.length > 0) {
                             answered += 1;
 
@@ -931,10 +974,10 @@ const App = (() => {
                 const percent = Math.round((correct / quiz.questions.length) * 100);
                 resultBox.style.display = 'block';
                 const resultText = t('quizzes.result', 'Your result');
-                resultBox.textContent = `${resultText}: ${correct} ${t('quizzes.of', 'of')} ${quiz.questions.length} (${percent}%).`;
+                resultBox.textContent = `${resultText}: ${correct} ${safeText(t('quizzes.of', 'of'))} ${quiz.questions.length} (${percent}%).`;
             });
         } catch (error) {
-            container.innerHTML = `<div class="empty-state">${t('error.quiz_not_found', 'Quiz not found.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('error.quiz_not_found', 'Quiz not found.'))}</div>`;
         }
     };
 
@@ -1151,7 +1194,7 @@ const App = (() => {
         if (!container) return;
 
         if (!Supa.isReady()) {
-            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Connect Supabase to view.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('supabase.connect', 'Connect Supabase to view.'))}</div>`;
             return;
         }
 
@@ -1160,7 +1203,7 @@ const App = (() => {
         try {
             const fanfics = await Supa.getFanfics();
             if (fanfics.length === 0) {
-                container.innerHTML = `<div class="empty-state">${t('fanfics.empty', 'No fanfics yet. Be the first!')}</div>`;
+                container.innerHTML = `<div class="empty-state">${safeText(t('fanfics.empty', 'No fanfics yet. Be the first!'))}</div>`;
                 return;
             }
             const authorText = t('fanfics.author', 'Author');
@@ -1168,18 +1211,18 @@ const App = (() => {
 
             const renderList = (items) => {
                 if (items.length === 0) {
-                    container.innerHTML = `<div class="empty-state">${t('search.no_results', 'Ничего не найдено')}</div>`;
+                    container.innerHTML = `<div class="empty-state">${safeText(t('search.no_results', 'Ничего не найдено'))}</div>`;
                     return;
                 }
                 container.innerHTML = items.map((fanfic) => `
                     <article class="card fanfic-card">
                         <div class="card-body">
-                            <h4 class="card-title">${fanfic.title}</h4>
+                            <h4 class="card-title">${safeText(fanfic.title)}</h4>
                             <div class="card-meta">
-                                <span>${authorText}: ${fanfic.name}</span>
-                                ${fanfic.character ? `<span>${characterText}: ${fanfic.character}</span>` : ''}
+                                <span>${safeText(authorText)}: ${safeText(fanfic.name)}</span>
+                                ${fanfic.character ? `<span>${safeText(characterText)}: ${safeText(fanfic.character)}</span>` : ''}
                             </div>
-                            <p class="card-text fanfic-story">${fanfic.story}</p>
+                            <p class="card-text fanfic-story">${safeText(fanfic.story)}</p>
                         </div>
                     </article>
                 `).join('');
@@ -1199,7 +1242,7 @@ const App = (() => {
                 });
             }
         } catch (error) {
-            container.innerHTML = `<div class="empty-state">${t('fanfics.error', 'Не удалось загрузить фанфики.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('fanfics.error', 'Не удалось загрузить фанфики.'))}</div>`;
         }
     };
 
@@ -1209,7 +1252,7 @@ const App = (() => {
         if (!container) return;
 
         if (!Supa.isReady()) {
-            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Connect Supabase to view.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('supabase.connect', 'Connect Supabase to view.'))}</div>`;
             return;
         }
 
@@ -1218,23 +1261,23 @@ const App = (() => {
         try {
             const illustrations = await Supa.getIllustrations();
             if (illustrations.length === 0) {
-                container.innerHTML = `<div class="empty-state">${t('illustrations.empty', 'No illustrations yet. Be the first!')}</div>`;
+                container.innerHTML = `<div class="empty-state">${safeText(t('illustrations.empty', 'No illustrations yet. Be the first!'))}</div>`;
                 return;
             }
             const authorText = t('fanfics.author', 'Author');
 
             const renderList = (items) => {
                 if (items.length === 0) {
-                    container.innerHTML = `<div class="empty-state">${t('search.no_results', 'Ничего не найдено')}</div>`;
+                    container.innerHTML = `<div class="empty-state">${safeText(t('search.no_results', 'Ничего не найдено'))}</div>`;
                     return;
                 }
                 container.innerHTML = `<div class="grid grid-3">${items.map((ill) => `
                     <article class="card illustration-card">
-                        ${ill.file_url ? `<div class="card-image" style="height: 300px;" onclick="App.openLightbox('${ill.file_url}', '${ill.title}')"><img src="${ill.file_url}" alt="${ill.title}"></div>` : ''}
+                        ${ill.file_url ? `<div class="card-image" style="height: 300px;" data-lightbox-url="${safeAttr(safeUrl(ill.file_url))}" data-lightbox-caption="${safeAttr(ill.title)}"><img src="${safeAttr(safeUrl(ill.file_url))}" alt="${safeText(ill.title)}"></div>` : ''}
                         <div class="card-body">
-                            <h4 class="card-title">${ill.title}</h4>
-                            <div class="card-meta">${authorText}: ${ill.name}</div>
-                            ${ill.description ? `<p class="card-text">${ill.description}</p>` : ''}
+                            <h4 class="card-title">${safeText(ill.title)}</h4>
+                            <div class="card-meta">${safeText(authorText)}: ${safeText(ill.name)}</div>
+                            ${ill.description ? `<p class="card-text">${safeText(ill.description)}</p>` : ''}
                         </div>
                     </article>
                 `).join('')}</div>`;
@@ -1254,7 +1297,7 @@ const App = (() => {
                 });
             }
         } catch (error) {
-            container.innerHTML = `<div class="empty-state">${t('illustrations.error', 'Failed to load illustrations.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('illustrations.error', 'Failed to load illustrations.'))}</div>`;
         }
     };
 
@@ -1263,7 +1306,7 @@ const App = (() => {
         if (!container) return;
 
         if (!Supa.isReady()) {
-            container.innerHTML = `<div class="empty-state">${t('supabase.connect', 'Connect Supabase to view.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('supabase.connect', 'Connect Supabase to view.'))}</div>`;
             return;
         }
 
@@ -1272,29 +1315,29 @@ const App = (() => {
         try {
             const sections = await Supa.getAbout();
             if (sections.length === 0) {
-                container.innerHTML = `<div class="empty-state">${t('about.empty', 'History hasn\'t been written yet. Tell us about yourself!')}</div>`;
+                container.innerHTML = `<div class="empty-state">${safeText(t('about.empty', 'History hasn\'t been written yet. Tell us about yourself!'))}</div>`;
                 return;
             }
             container.innerHTML = sections.map(section => `
                 <div class="accordion-item">
-                    <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+                    <div class="accordion-header">
                         <div class="accordion-header-text">
-                            <h3 class="accordion-title">${section.title}</h3>
+                            <h3 class="accordion-title">${safeText(section.title)}</h3>
                         </div>
                         <span class="accordion-icon">▼</span>
                     </div>
                     <div class="accordion-content">
                         ${(section.blocks || []).map(block => `
                             <div class="about-content-block">
-                                ${block.subtitle ? `<h4 class="about-block-subtitle">${block.subtitle}</h4>` : ''}
-                                <p class="about-block-content">${block.content.replace(/\n/g, '<br>')}</p>
+                                ${block.subtitle ? `<h4 class="about-block-subtitle">${safeText(block.subtitle)}</h4>` : ''}
+                                <p class="about-block-content">${safeMultilineHtml(block.content)}</p>
                             </div>
                         `).join('')}
                     </div>
                 </div>
             `).join('');
         } catch (error) {
-            container.innerHTML = `<div class="empty-state">${t('about.error', 'Failed to load information.')}</div>`;
+            container.innerHTML = `<div class="empty-state">${safeText(t('about.error', 'Failed to load information.'))}</div>`;
         }
     };
 
@@ -1320,6 +1363,7 @@ const App = (() => {
     const init = async () => {
         initBasePath();
         setupNav();
+        setupSafeInteractions();
 
         // Инициализируем i18n
         if (typeof I18n !== 'undefined') {
@@ -1348,6 +1392,8 @@ const App = (() => {
     };
 
     const openLightbox = (url, caption) => {
+        const sanitizedUrl = safeUrl(url);
+        if (!sanitizedUrl) return;
         let lightbox = document.querySelector('.lightbox');
         if (!lightbox) {
             lightbox = document.createElement('div');
@@ -1374,7 +1420,7 @@ const App = (() => {
         const cap = lightbox.querySelector('.lightbox-caption');
         lightbox.querySelector('.lightbox-nav').style.display = 'none';
 
-        img.src = url;
+        img.src = sanitizedUrl;
         cap.textContent = caption || '';
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
@@ -1417,13 +1463,39 @@ const App = (() => {
 
             const update = (idx) => {
                 currentIndex = (idx + images.length) % images.length;
-                img.src = images[currentIndex].url;
+                img.src = safeUrl(images[currentIndex].url);
                 cap.textContent = images[currentIndex].caption || placeName;
             };
 
             lightbox.querySelector('.lb-prev').onclick = (e) => { e.stopPropagation(); update(currentIndex - 1); };
             lightbox.querySelector('.lb-next').onclick = (e) => { e.stopPropagation(); update(currentIndex + 1); };
         }
+    };
+
+    const setupSafeInteractions = () => {
+        document.addEventListener('click', (event) => {
+            const lightboxTarget = event.target.closest('[data-lightbox-url]');
+            if (lightboxTarget) {
+                event.preventDefault();
+                openLightbox(lightboxTarget.dataset.lightboxUrl || '', lightboxTarget.dataset.lightboxCaption || '');
+                return;
+            }
+
+            const galleryTarget = event.target.closest('[data-gallery-open]');
+            if (galleryTarget) {
+                event.preventDefault();
+                openLightboxWithGallery(galleryTarget, galleryTarget.dataset.galleryName || '');
+                return;
+            }
+
+            const accordionHeader = event.target.closest('.accordion-header');
+            if (accordionHeader) {
+                const item = accordionHeader.closest('.accordion-item');
+                if (item) {
+                    item.classList.toggle('active');
+                }
+            }
+        });
     };
 
     return { init, reloadContent, openLightbox, openLightboxWithGallery, openLightboxFromPopup };

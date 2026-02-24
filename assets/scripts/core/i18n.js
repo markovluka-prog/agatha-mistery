@@ -377,6 +377,15 @@ const I18n = (() => {
         // Переводим страницу сразу тем, что есть в локальных переводах
         translatePage();
 
+        const langBtn = document.querySelector('[data-lang-toggle]');
+        if (langBtn && !langBtn.dataset.boundToggle) {
+            langBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                toggle();
+            });
+            langBtn.dataset.boundToggle = '1';
+        }
+
         // Пробуем загрузить переводы из Supabase
         await loadFromSupabase();
 

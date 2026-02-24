@@ -31,8 +31,44 @@ const Supa = (() => {
     const hasPlaceholders = url.includes('YOUR_') || anonKey.includes('YOUR_');
     const isConfigured = Boolean(url && anonKey && !hasPlaceholders && window.supabase);
     const client = isConfigured ? window.supabase.createClient(url, anonKey) : null;
+    const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+    const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
+    const ALLOWED_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif']);
 
     const isReady = () => Boolean(client);
+
+    const validateTextField = (value, min, max, fieldName) => {
+        const normalized = String(value ?? '').trim();
+        if (normalized.length < min || normalized.length > max) {
+            throw new Error(`Invalid ${fieldName} length`);
+        }
+        return normalized;
+    };
+
+    const validateIllustrationFile = (file) => {
+        if (!file || file.size <= 0) return null;
+        if (file.size > MAX_UPLOAD_BYTES) {
+            throw new Error('File is too large');
+        }
+        const ext = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : '';
+        if (!ALLOWED_EXTENSIONS.has(ext)) {
+            throw new Error('Unsupported file extension');
+        }
+        if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+            throw new Error('Unsupported file type');
+        }
+        return { ext };
+    };
+
+    const enforceClientRateLimit = (actionKey, intervalMs = 8000) => {
+        const now = Date.now();
+        const key = `rate_limit_${actionKey}`;
+        const last = Number(localStorage.getItem(key) || '0');
+        if (now - last < intervalMs) {
+            throw new Error('Too many requests');
+        }
+        localStorage.setItem(key, String(now));
+    };
 
     const retry = async (fn, maxAttempts = 3, delay = 1000) => {
         let lastError;
@@ -73,32 +109,44 @@ const Supa = (() => {
 
     const addFanfic = async ({ name, title, character, story }) => {
         if (!client) throw new Error('Supabase не настроен');
+        enforceClientRateLimit('fanfic_submit');
+        const safeName = validateTextField(name, 2, 60, 'name');
+        const safeTitle = validateTextField(title, 2, 100, 'title');
+        const safeCharacter = String(character ?? '').trim().slice(0, 80);
+        const safeStory = validateTextField(story, 20, 2000, 'story');
         const { error } = await client
             .from('fanfics')
-            .insert({ name, title, character, story });
+            .insert({ name: safeName, title: safeTitle, character: safeCharacter, story: safeStory });
         if (error) throw error;
         return true;
     };
 
     const addIllustration = async ({ name, title, description }, file) => {
         if (!client) throw new Error('Supabase не настроен');
+        enforceClientRateLimit('illustration_submit');
+        const safeName = validateTextField(name, 2, 60, 'name');
+        const safeTitle = validateTextField(title, 2, 80, 'title');
+        const safeDescription = String(description ?? '').trim().slice(0, 500);
         let filePath = null;
         let fileUrl = null;
         let fileName = null;
 
         if (file && file.size > 0) {
-            const ext = file.name.includes('.') ? file.name.split('.').pop() : 'bin';
-            const safeExt = ext.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const validation = validateIllustrationFile(file);
+            const safeExt = validation.ext;
             fileName = file.name;
             const randomId = (window.crypto && window.crypto.randomUUID)
                 ? window.crypto.randomUUID()
                 : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-            filePath = `${randomId}.${safeExt || 'bin'}`;
+            filePath = `${randomId}.${safeExt}`;
 
             const { error: uploadError } = await client
                 .storage
                 .from('illustrations')
-                .upload(filePath, file);
+                .upload(filePath, file, {
+                    contentType: file.type,
+                    upsert: false
+                });
             if (uploadError) throw uploadError;
 
             const { data } = client.storage.from('illustrations').getPublicUrl(filePath);
@@ -108,9 +156,9 @@ const Supa = (() => {
         const { error } = await client
             .from('illustrations')
             .insert({
-                name,
-                title,
-                description,
+                name: safeName,
+                title: safeTitle,
+                description: safeDescription,
                 file_path: filePath,
                 file_url: fileUrl,
                 file_name: fileName

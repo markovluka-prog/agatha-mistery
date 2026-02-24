@@ -31,7 +31,7 @@
         if (!reviews.length) {
             reviewsList.innerHTML = `
                 <div class="reviews-empty">
-                    <p>${t('reviews.empty', 'No reviews yet. Be the first!')}</p>
+                    <p>${escapeHtml(t('reviews.empty', 'No reviews yet. Be the first!'))}</p>
                 </div>
             `;
             return;
@@ -72,7 +72,7 @@
         reviewsList.innerHTML = `
             <div class="loading-container">
                 <div class="loading-spinner"></div>
-                <p class="loading-text">${t('reviews.loading', 'Loading reviews...')}</p>
+                <p class="loading-text">${escapeHtml(t('reviews.loading', 'Loading reviews...'))}</p>
             </div>
         `;
     };
@@ -88,8 +88,8 @@
             } catch (error) {
                 reviewsList.innerHTML = `
                     <div class="error-container">
-                        <p>${t('reviews.error', 'Failed to load reviews')}</p>
-                        <button class="btn btn-retry" id="retry-reviews">${t('error.retry', 'Try Again')}</button>
+                        <p>${escapeHtml(t('reviews.error', 'Failed to load reviews'))}</p>
+                        <button class="btn btn-retry" id="retry-reviews">${escapeHtml(t('error.retry', 'Try Again'))}</button>
                     </div>
                 `;
                 document.getElementById('retry-reviews')?.addEventListener('click', loadReviews);

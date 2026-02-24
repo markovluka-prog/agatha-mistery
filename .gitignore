@@ -16,3 +16,7 @@ migrate_about.js
 patch_admin.js
 patch_main.js
 cleanup_admin.js
+
+data/backup/
+*.sql.dump
+*.db_dump.json

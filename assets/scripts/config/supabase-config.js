@@ -1,5 +1,5 @@
 window.SUPABASE_CONFIG = {
     // Вставьте данные из Supabase: Project Settings → API
-    url: 'https://eetgsrcitolkvdifltns.supabase.co',
-    anonKey: 'sb_publishable_1MMNtWUeX-J0WczKl8Bl2Q_9bqNCqBL'
+    url: 'YOUR_SUPABASE_URL',
+    anonKey: 'YOUR_SUPABASE_ANON_KEY'
 };

@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'">
   <meta name="description" content="Викторины по книгам Агаты Мистери.">
   <title>Викторины | Агата Мистери</title>
 
@@ -28,7 +29,7 @@
         <li><a href="quiz.html" class="active" data-i18n="nav.quizzes">Викторины</a></li>
         <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
         <li><a href="about.html" data-i18n="nav.about">О нас</a></li>
-        <li><button class="lang-toggle" data-lang-toggle onclick="I18n.toggle()">RU</button></li>
+        <li><button class="lang-toggle" data-lang-toggle>RU</button></li>
       </ul>
     </div>
   </nav>
@@ -179,7 +180,7 @@
   }
 ]
     </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../node_modules/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script src="../assets/scripts/config/supabase-config.js"></script>
   <script src="../assets/scripts/core/i18n.js"></script>
   <script src="../assets/scripts/core/storage.js"></script>

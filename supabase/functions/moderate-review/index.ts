@@ -1,22 +1,65 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
-};
-
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") || "";
 const OPENAI_MODEL = Deno.env.get("OPENAI_MODEL") || "gpt-4o-mini";
 const MODERATION_THRESHOLD = Number(Deno.env.get("MODERATION_THRESHOLD") || "7");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+const SITE_ORIGIN = Deno.env.get("SITE_ORIGIN") || "";
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || SITE_ORIGIN)
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
 
-const jsonResponse = (status: number, payload: Record<string, unknown>) => {
+const MAX_NAME_LEN = 60;
+const MAX_TEXT_LEN = 500;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 8;
+const rateLimitStore = new Map<string, { count: number; expiresAt: number }>();
+
+const getClientIp = (req: Request): string => {
+    const forwarded = req.headers.get("x-forwarded-for");
+    if (forwarded) {
+        return forwarded.split(",")[0].trim();
+    }
+    return req.headers.get("cf-connecting-ip") || "unknown";
+};
+
+const checkRateLimit = (key: string) => {
+    const now = Date.now();
+    const current = rateLimitStore.get(key);
+    if (!current || current.expiresAt <= now) {
+        rateLimitStore.set(key, { count: 1, expiresAt: now + RATE_LIMIT_WINDOW_MS });
+        return { ok: true, retryAfterSec: 0 };
+    }
+    if (current.count >= RATE_LIMIT_MAX_REQUESTS) {
+        return { ok: false, retryAfterSec: Math.ceil((current.expiresAt - now) / 1000) };
+    }
+    current.count += 1;
+    return { ok: true, retryAfterSec: 0 };
+};
+
+const corsHeadersFor = (origin: string | null) => {
+    const allowOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : "";
+    const headers: Record<string, string> = {
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Vary": "Origin"
+    };
+
+    if (allowOrigin) {
+        headers["Access-Control-Allow-Origin"] = allowOrigin;
+    }
+    return headers;
+};
+
+const jsonResponse = (origin: string | null, status: number, payload: Record<string, unknown>, extraHeaders: Record<string, string> = {}) => {
     return new Response(JSON.stringify(payload), {
         status,
         headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json"
+            ...corsHeadersFor(origin),
+            "Content-Type": "application/json",
+            ...extraHeaders
         }
     });
 };
@@ -105,30 +148,52 @@ const scoreReview = async (name: string, text: string) => {
 };
 
 serve(async (req) => {
+    const origin = req.headers.get("origin");
+
     if (req.method === "OPTIONS") {
-        return new Response("ok", { headers: corsHeaders });
+        return new Response("ok", {
+            headers: corsHeadersFor(origin)
+        });
+    }
+
+    if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
+        return jsonResponse(origin, 403, { error: "Origin not allowed" });
     }
 
     if (req.method !== "POST") {
-        return jsonResponse(405, { error: "Method not allowed" });
+        return jsonResponse(origin, 405, { error: "Method not allowed" });
     }
 
     if (!OPENAI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-        return jsonResponse(500, { error: "Missing server configuration" });
+        return jsonResponse(origin, 500, { error: "Missing server configuration" });
+    }
+
+    const rateLimit = checkRateLimit(`${origin}|${getClientIp(req)}`);
+    if (!rateLimit.ok) {
+        return jsonResponse(
+            origin,
+            429,
+            { error: "Too many requests. Try again later." },
+            { "Retry-After": String(rateLimit.retryAfterSec) }
+        );
     }
 
     let payload: { name?: string; text?: string } = {};
     try {
         payload = await req.json();
     } catch (_error) {
-        return jsonResponse(400, { error: "Invalid JSON" });
+        return jsonResponse(origin, 400, { error: "Invalid JSON" });
     }
 
     const name = String(payload.name || "").trim();
     const text = String(payload.text || "").trim();
 
     if (!name || !text) {
-        return jsonResponse(400, { error: "Name and text are required" });
+        return jsonResponse(origin, 400, { error: "Name and text are required" });
+    }
+
+    if (name.length > MAX_NAME_LEN || text.length > MAX_TEXT_LEN) {
+        return jsonResponse(origin, 400, { error: "Input is too long" });
     }
 
     try {
@@ -136,7 +201,7 @@ serve(async (req) => {
         const approved = moderation.score >= MODERATION_THRESHOLD;
 
         if (!approved) {
-            return jsonResponse(200, {
+            return jsonResponse(origin, 200, {
                 approved,
                 score: moderation.score,
                 reason: moderation.reason
@@ -155,23 +220,23 @@ serve(async (req) => {
         });
 
         if (!insertResponse.ok) {
-            const errorText = await insertResponse.text();
-            return jsonResponse(500, {
+            console.error("Review insert failed", { status: insertResponse.status });
+            return jsonResponse(origin, 500, {
                 approved: false,
                 score: moderation.score,
-                reason: "Database insert failed",
-                detail: errorText
+                reason: "Database insert failed"
             });
         }
 
         const inserted = await insertResponse.json();
-        return jsonResponse(200, {
+        return jsonResponse(origin, 200, {
             approved: true,
             score: moderation.score,
             reason: moderation.reason,
             review: Array.isArray(inserted) ? inserted[0] : null
         });
     } catch (error) {
-        return jsonResponse(500, { error: String(error) });
+        console.error("Moderate review failed", error);
+        return jsonResponse(origin, 500, { error: "Internal server error" });
     }
 });
