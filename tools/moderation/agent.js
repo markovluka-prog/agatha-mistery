@@ -31,18 +31,22 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 const TABLES = [
     {
         name: 'reviews',
+        orderBy: 'created_at',
         label: (row) => `Имя: ${row.name}\nОтзыв: ${row.text}`
     },
     {
         name: 'fanfics',
+        orderBy: 'created_at',
         label: (row) => `Автор: ${row.name}\nНазвание: ${row.title}\nИстория: ${row.story}`
     },
     {
         name: 'illustrations',
+        orderBy: 'created_at',
         label: (row) => `Автор: ${row.name}\nНазвание: ${row.title}\nОписание: ${row.description || '—'}`
     },
     {
         name: 'places',
+        orderBy: 'id',
         label: (row) => `Название: ${row.name}\nОписание: ${row.description || '—'}`
     }
 ];
@@ -105,7 +109,7 @@ async function processTable(table) {
         .from(table.name)
         .select('*')
         .eq('status', 'pending')
-        .order('created_at', { ascending: true })
+        .order(table.orderBy || 'id', { ascending: true })
         .limit(20);
 
     if (error) {
