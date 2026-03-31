@@ -183,6 +183,7 @@ const Supa = (() => {
             const { data, error } = await client
                 .from('places')
                 .select('*')
+                .eq('status', 'approved')
                 .order('id', { ascending: true });
             if (error) throw error;
 

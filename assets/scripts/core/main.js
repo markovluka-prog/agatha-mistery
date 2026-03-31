@@ -218,6 +218,48 @@ const App = (() => {
         }
     };
 
+    const DEFAULT_ABOUT = [
+        {
+            id: 1,
+            title: 'О нас',
+            title_en: 'About Us',
+            blocks: [
+                {
+                    subtitle: 'Кто мы',
+                    subtitle_en: 'Who We Are',
+                    content: 'Мы — фанаты книжной серии про Агату Мистери. Этот сайт создан с любовью к приключениям Агаты и Ларри по всему миру.',
+                    content_en: 'We are fans of the Agatha Mystery book series. This site was created with love for Agatha and Larry\'s adventures around the world.'
+                }
+            ]
+        },
+        {
+            id: 2,
+            title: 'Наша миссия',
+            title_en: 'Our Mission',
+            blocks: [
+                {
+                    subtitle: 'Что мы делаем',
+                    subtitle_en: 'What We Do',
+                    content: 'Мы собираем карты приключений, викторины и истории о персонажах. Поддерживаем фанатское творчество — иллюстрации и фанфики.',
+                    content_en: 'We collect adventure maps, quizzes, and character stories. We support fan creativity — illustrations and fanfiction.'
+                }
+            ]
+        },
+        {
+            id: 3,
+            title: 'Присоединяйся',
+            title_en: 'Join Us',
+            blocks: [
+                {
+                    subtitle: 'Как участвовать',
+                    subtitle_en: 'How to Participate',
+                    content: 'Пройди викторину, исследуй карту мира, оставь отзыв или отправь свою иллюстрацию и фанфик в творческую мастерскую.',
+                    content_en: 'Take a quiz, explore the world map, leave a review, or submit your illustration and fanfic to the creative workshop.'
+                }
+            ]
+        }
+    ];
+
     const DEFAULT_CHARACTERS = [
         { name: "Агата Мистери" },
         { name: "Ларри Мистери" },
@@ -1305,40 +1347,48 @@ const App = (() => {
         const container = document.getElementById('about-content-container');
         if (!container) return;
 
-        if (!Supa.isReady()) {
-            container.innerHTML = `<div class="empty-state">${safeText(t('supabase.connect', 'Connect Supabase to view.'))}</div>`;
-            return;
-        }
+        const lang = (typeof I18n !== 'undefined' && I18n.getLang) ? I18n.getLang() : 'ru';
 
-        showLoading(container, t('about.loading', 'Loading history...'));
+        let sections = null;
 
-        try {
-            const sections = await Supa.getAbout();
-            if (sections.length === 0) {
-                container.innerHTML = `<div class="empty-state">${safeText(t('about.empty', 'History hasn\'t been written yet. Tell us about yourself!'))}</div>`;
-                return;
+        if (Supa.isReady()) {
+            showLoading(container, t('about.loading', 'Loading history...'));
+            try {
+                sections = await Supa.getAbout();
+            } catch (error) {
+                sections = null;
             }
-            container.innerHTML = sections.map(section => `
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="accordion-header-text">
-                            <h3 class="accordion-title">${safeText(section.title)}</h3>
-                        </div>
-                        <span class="accordion-icon">▼</span>
-                    </div>
-                    <div class="accordion-content">
-                        ${(section.blocks || []).map(block => `
-                            <div class="about-content-block">
-                                ${block.subtitle ? `<h4 class="about-block-subtitle">${safeText(block.subtitle)}</h4>` : ''}
-                                <p class="about-block-content">${safeMultilineHtml(block.content)}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        } catch (error) {
-            container.innerHTML = `<div class="empty-state">${safeText(t('about.error', 'Failed to load information.'))}</div>`;
         }
+
+        if (!sections || sections.length === 0) {
+            sections = DEFAULT_ABOUT.map(section => ({
+                id: section.id,
+                title: lang === 'en' && section.title_en ? section.title_en : section.title,
+                blocks: (section.blocks || []).map(block => ({
+                    subtitle: lang === 'en' && block.subtitle_en ? block.subtitle_en : block.subtitle,
+                    content: lang === 'en' && block.content_en ? block.content_en : block.content
+                }))
+            }));
+        }
+
+        container.innerHTML = sections.map(section => `
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="accordion-header-text">
+                        <h3 class="accordion-title">${safeText(section.title)}</h3>
+                    </div>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    ${(section.blocks || []).map(block => `
+                        <div class="about-content-block">
+                            ${block.subtitle ? `<h4 class="about-block-subtitle">${safeText(block.subtitle)}</h4>` : ''}
+                            <p class="about-block-content">${safeMultilineHtml(block.content)}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
     };
 
     const reloadContent = async () => {

@@ -1,0 +1,17 @@
+{
+  "name": "agatha-moderation-agent",
+  "version": "1.0.0",
+  "description": "Агент модерации контента для сайта Agatha Mystery",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "start:env": "node -r dotenv/config agent.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
+    "dotenv": "^16.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
