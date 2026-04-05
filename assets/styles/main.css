@@ -473,13 +473,23 @@ img {
 .places-carousel {
     flex: 1;
     min-height: 0;
-    position: relative;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .map-grid {
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
+}
+
+.carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-shrink: 0;
 }
 
 .map-sidebar h3 {
@@ -513,12 +523,8 @@ img {
 }
 
 .carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     border: none;
     background: rgba(20, 20, 20, 0.75);
@@ -530,14 +536,7 @@ img {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-
-.carousel-arrow.carousel-prev {
-    left: 8px;
-}
-
-.carousel-arrow.carousel-next {
-    right: 8px;
+    flex-shrink: 0;
 }
 
 .carousel-arrow:hover:not(:disabled) {
@@ -553,7 +552,7 @@ img {
     text-align: center;
     font-size: 0.8rem;
     color: var(--text-light);
-    margin-top: 8px;
+    min-width: 72px;
     letter-spacing: 0.03em;
 }
 
