@@ -460,79 +460,93 @@ img {
 .places-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: var(--spacing-medium);
+    gap: 6px;
+    margin-bottom: 14px;
 }
 
 .filter-btn {
-    padding: 5px 14px;
-    border: 1.5px solid var(--primary-color);
+    padding: 5px 12px;
+    border: 1.5px solid #141414;
     border-radius: 20px;
     background: transparent;
-    color: var(--primary-color);
-    font-size: 0.82rem;
+    color: #141414;
+    font-size: 0.78rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.18s, color 0.18s;
+    white-space: nowrap;
 }
 
 .filter-btn.active,
 .filter-btn:hover {
-    background: var(--primary-color);
+    background: #141414;
     color: #fff;
 }
 
 .places-carousel {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    position: relative;
 }
 
 .carousel-arrow {
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    border: 1.5px solid var(--primary-color);
-    background: transparent;
-    color: var(--primary-color);
-    font-size: 1.1rem;
+    border: none;
+    background: rgba(20, 20, 20, 0.75);
+    color: #fff;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, opacity 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.carousel-arrow.carousel-prev {
+    left: 8px;
+}
+
+.carousel-arrow.carousel-next {
+    right: 8px;
 }
 
 .carousel-arrow:hover:not(:disabled) {
-    background: var(--primary-color);
-    color: #fff;
+    background: rgba(20, 20, 20, 0.95);
 }
 
 .carousel-arrow:disabled {
-    opacity: 0.3;
+    opacity: 0.2;
     cursor: default;
 }
 
 .carousel-counter {
     text-align: center;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-light);
     margin-top: 8px;
+    letter-spacing: 0.03em;
 }
 
 .map-grid {
-    flex: 1;
     min-width: 0;
 }
 
 .map-grid .card {
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: none;
+    display: none !important;
+    animation: none !important;
+    opacity: 1 !important;
 }
 
 .map-grid .card.active {
-    display: block;
+    display: flex !important;
+    animation: fadeInUp 0.35s ease-out forwards !important;
+    opacity: 0 !important;
 }
 
 .map-grid .card:hover {
