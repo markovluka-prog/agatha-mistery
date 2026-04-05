@@ -121,7 +121,13 @@
                 </div>
                 <aside class="map-sidebar">
                     <h3 data-i18n="map.sidebar.title">Локации</h3>
-                    <div id="places-grid" class="grid map-grid"></div>
+                    <div id="places-filters" class="places-filters"></div>
+                    <div class="places-carousel">
+                        <button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="Назад">&#8592;</button>
+                        <div id="places-grid" class="map-grid"></div>
+                        <button class="carousel-arrow carousel-next" id="carousel-next" aria-label="Вперёд">&#8594;</button>
+                    </div>
+                    <div id="carousel-counter" class="carousel-counter"></div>
                 </aside>
             </div>
         </div>

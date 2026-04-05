@@ -508,17 +508,20 @@ const App = (() => {
             try {
                 const places = await loadPlaces();
                 const coordsText = safeText(t('map.coords', 'Coordinates'));
+
+                // Render all cards (hidden by default)
                 container.innerHTML = places.map((place) => {
-                    const galleryHtml = renderImageGallery(place.images, place.name);
+                    const imgHtml = place.image_url
+                        ? `<img src="${safeAttr(safeUrl(place.image_url))}" alt="${safeText(place.name)}" style="width:100%;height:100%;object-fit:cover;">`
+                        : renderImageGallery(place.images, place.name);
                     const placeName = safeText(place.name);
                     const placeDescription = safeText(place.description);
                     const lat = Number(place.lat);
                     const lng = Number(place.lng);
+                    const placeBook = safeAttr(place.book || '');
                     return `
-                        <article class="card place-card" data-place-id="${Number(place.id) || 0}">
-                            <div class="card-image">
-                                ${galleryHtml}
-                            </div>
+                        <article class="card place-card" data-place-id="${Number(place.id) || 0}" data-book="${placeBook}">
+                            <div class="card-image">${imgHtml}</div>
                             <div class="card-body">
                                 <h3 class="card-title">${placeName}</h3>
                                 <p class="card-text">${placeDescription}</p>
@@ -529,6 +532,64 @@ const App = (() => {
                 }).join('');
 
                 initGalleryInteractions(container);
+
+                // Build filters by book
+                const filtersEl = document.getElementById('places-filters');
+                if (filtersEl) {
+                    const books = ['Все', ...new Set(places.map(p => p.book).filter(Boolean))];
+                    filtersEl.innerHTML = books.map(book =>
+                        `<button class="filter-btn${book === 'Все' ? ' active' : ''}" data-filter="${safeAttr(book)}">${safeText(book)}</button>`
+                    ).join('');
+                }
+
+                // Carousel state
+                let currentFilter = 'Все';
+                let currentIndex = 0;
+
+                const getVisible = () => Array.from(container.querySelectorAll('.place-card')).filter(card => {
+                    if (currentFilter === 'Все') return true;
+                    return card.dataset.book === currentFilter;
+                });
+
+                const updateCarousel = () => {
+                    const visible = getVisible();
+                    const prevBtn = document.getElementById('carousel-prev');
+                    const nextBtn = document.getElementById('carousel-next');
+                    const counter = document.getElementById('carousel-counter');
+
+                    // Hide all, show current
+                    container.querySelectorAll('.place-card').forEach(c => c.classList.remove('active'));
+                    if (visible.length > 0) {
+                        if (currentIndex >= visible.length) currentIndex = 0;
+                        visible[currentIndex].classList.add('active');
+                    }
+
+                    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+                    if (nextBtn) nextBtn.disabled = currentIndex >= visible.length - 1;
+                    if (counter) counter.textContent = visible.length > 0 ? `${currentIndex + 1} / ${visible.length}` : '0 / 0';
+                };
+
+                updateCarousel();
+
+                // Arrow buttons
+                const prevBtn = document.getElementById('carousel-prev');
+                const nextBtn = document.getElementById('carousel-next');
+                if (prevBtn) prevBtn.onclick = () => { if (currentIndex > 0) { currentIndex--; updateCarousel(); } };
+                if (nextBtn) nextBtn.onclick = () => { if (currentIndex < getVisible().length - 1) { currentIndex++; updateCarousel(); } };
+
+                // Filter buttons
+                if (filtersEl) {
+                    filtersEl.addEventListener('click', (e) => {
+                        const btn = e.target.closest('.filter-btn');
+                        if (!btn) return;
+                        filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentFilter = btn.dataset.filter;
+                        currentIndex = 0;
+                        updateCarousel();
+                    });
+                }
+
                 return places;
             } catch (error) {
                 showError(container, t('map.error', 'Failed to load locations'), () => {
@@ -704,11 +765,11 @@ const App = (() => {
             }
         }
 
-        // Link external cards to map
-        const cards = document.querySelectorAll('.place-card');
-        cards.forEach((card) => {
-            card.addEventListener('click', () => {
-                const id = Number(card.dataset.placeId);
+        // Link external cards to map (event delegation — works after async render)
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('.place-card');
+            if (!card) return;
+            const id = Number(card.dataset.placeId);
                 const feature = markers.get(id);
 
                 if (feature) {
@@ -770,7 +831,6 @@ const App = (() => {
 
                     }, 1000);
                 }
-            });
         });
     };
 

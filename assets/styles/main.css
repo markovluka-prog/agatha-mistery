@@ -457,15 +457,82 @@ img {
     margin-bottom: var(--spacing-medium);
 }
 
-.map-grid {
+.places-filters {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-medium);
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--spacing-medium);
+}
+
+.filter-btn {
+    padding: 5px 14px;
+    border: 1.5px solid var(--primary-color);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--primary-color);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.places-carousel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.carousel-arrow {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-arrow:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.carousel-arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.carousel-counter {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 8px;
+}
+
+.map-grid {
+    flex: 1;
+    min-width: 0;
 }
 
 .map-grid .card {
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: none;
+}
+
+.map-grid .card.active {
+    display: block;
 }
 
 .map-grid .card:hover {
