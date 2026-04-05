@@ -1,0 +1,110 @@
+[
+  {
+    "id": 22,
+    "name": "Международный аэропорт Фьюмичино",
+    "name_en": "Leonardo da Vinci–Fiumicino Airport",
+    "description": "Фьюмичино — это момент, когда итальянская часть истории наконец становится настоящей: самолёт садится, тревога оживает, и впереди уже чувствуется Рим. Ещё секунду назад дело было далёким, а после приземления всё начинает происходить здесь и сейчас. Аэропорт хорош тем, что даёт книге резкий, почти кинематографичный вход в новое расследование.",
+    "description_en": "The heroes land at Fiumicino Airport at the beginning of the book, when the Italian part of their adventure is just starting. It is more than a transit point: their arrival here sharply shifts the story into its Roman phase and gives the investigation a clear geographic direction.",
+    "lat": 41.8002778,
+    "lng": 12.2388889,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Leonardo_da_Vinci%E2%80%93Fiumicino_Airport_%2801%29.jpg",
+    "book": "Книга 11: Похищение в Ватикане",
+    "status": "approved"
+  },
+  {
+    "id": 23,
+    "name": "Виа Национале, Рим",
+    "name_en": "Via Nazionale, Rome",
+    "description": "На Виа Национале герои впервые по-настоящему чувствуют Рим вокруг себя: шум улицы, близость старого центра и ощущение, что дело вот-вот начнёт разворачиваться всерьёз. После дороги из аэропорта именно здесь абстрактное «прибытие в Италию» превращается в живую городскую сцену. Улица запоминается как тот самый шаг из дороги прямо в сердце римского приключения.",
+    "description_en": "The Londoners are dropped off on Via Nazionale after the drive from the airport, placing them within walking distance of the historic city center. The street serves as a concrete point of entry into the Roman setting of the book, turning a generic arrival into active city movement and pushing the plot forward.",
+    "lat": 41.9015781,
+    "lng": 12.4945267,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Monti_-_via_Nazionale_1411.JPG/960px-Monti_-_via_Nazionale_1411.JPG",
+    "book": "Книга 11: Похищение в Ватикане",
+    "status": "approved"
+  },
+  {
+    "id": 25,
+    "name": "Альгамбра, Гранада, Испания",
+    "name_en": "Alhambra, Granada, Spain",
+    "description": "Альгамбра в этой книге не просто красивая крепость на холме, а настоящее сердце испанской тайны. Героев тянет сюда ощущение старой легенды, спрятанной за стенами, двориками и красноватыми башнями. Именно возле Альгамбры приключение в Гранаде начинает звучать по-настоящему загадочно и по-восточному сказочно.",
+    "description_en": "In this book, the Alhambra is not just a beautiful fortress on a hill but the true heart of the Spanish mystery. The heroes are drawn here by the feeling of an old legend hidden behind its walls, courtyards, and reddish towers. Near the Alhambra, the Granada adventure begins to feel genuinely mysterious and almost fairy-tale-like.",
+    "lat": 37.177297,
+    "lng": -3.590339,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/55/La_Alhambra%2C_Granada_012.JPG",
+    "book": "Книга 12: Таинственная роза Альгамбры",
+    "status": "approved"
+  },
+  {
+    "id": 27,
+    "name": "Манхэттен, Нью-Йорк, США",
+    "name_en": "Manhattan, New York City, United States",
+    "description": "Манхэттен в книге ощущается как место, где любая подсказка сразу становится серьёзнее: небоскрёбы, адреса, спешка и чувство большого города, который играет против героев. Именно сюда приводит открытка, и с этого момента нью-йоркская загадка перестаёт быть красивой картинкой и становится настоящим следом. Манхэттен запоминается как точка, где интрига наконец получает точный городской адрес.",
+    "description_en": "A postcard with a New York view leads the heroes to an address in Manhattan, so this is no longer just a citywide backdrop but a specific point tied to the main clue. Manhattan matters as the place indicated by the mystery and the exact address that gives the New York segment of the investigation its shape.",
+    "lat": 40.7127,
+    "lng": -74.0059,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/84/New_York_City_skyline.jpg",
+    "book": "Книга 14: Сыщик против сыщика",
+    "status": "approved"
+  },
+  {
+    "id": 28,
+    "name": "Международный аэропорт имени Джона Ф. Кеннеди",
+    "name_en": "John F. Kennedy International Airport",
+    "description": "JFK в этой книге — это шумный порог большого американского эпизода, где усталость после перелёта сразу уступает место новому азарту. Именно здесь герои впервые ступают в Нью-Йорк и понимают, что дальше всё пойдёт быстрее, жёстче и масштабнее. Аэропорт хорош как точка, где приключение буквально выходит из самолёта навстречу городу.",
+    "description_en": "After departing Heathrow, the heroes land here, and from that moment the New York part of the story becomes real. The airport is important not as a generic transit mark but as the arrival point where the transatlantic flight ends and the New York action begins.",
+    "lat": 40.63972,
+    "lng": -73.77889,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/JFK_Aerial_Nov_14_2018.jpg/250px-JFK_Aerial_Nov_14_2018.jpg",
+    "book": "Книга 14: Сыщик против сыщика",
+    "status": "approved"
+  },
+  {
+    "id": 41,
+    "name": "Оксфорд, Англия",
+    "name_en": "Oxford, England",
+    "description": "Оксфорд в книге выглядит не только учёным и старинным, но и тревожным: за академическим спокойствием тут прячется история о похищении и выкупе. Именно сюда стягиваются все нити дела, и университетская среда делает тайну особенно необычной. Город запоминается как место, где холодная логика расследования встречается с почти готической английской атмосферой.",
+    "description_en": "The title spread names Oxford as the destination, and the central kidnapping plot is built around an Oxford student. The city frames the whole route of the book and anchors the investigation in the university world around the ransom chase.",
+    "lat": 51.75,
+    "lng": -1.23,
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Oxford%20Skyline%20Panorama%20from%20St%20Mary%27s%20Church%20-%20Oct%202006.jpg",
+    "book": "Книга 22: Миллион за птицу додо",
+    "status": "approved"
+  },
+  {
+    "id": 42,
+    "name": "Уитем-Вудс, Оксфордшир, Англия",
+    "name_en": "Wytham Woods, Oxfordshire, England",
+    "description": "Уитем-Вудс сразу делает историю напряжённее: лес, озеро, дуб и выкуп, который нужно оставить в почти сказочно-жутком месте. Здесь уже невозможно спрятаться за словами или письмами — план похитителей приходится проверять вживую. Лес запоминается как тихая, красивая и очень нервная сцена ожидания.",
+    "description_en": "This is where the kidnappers set the ransom drop: the money must be left in a bag on the lowest branch of an oak by the lake. The woods are crucial because they become the test point of the kidnappers' plan, where the heroes try to intercept them and expose the lie.",
+    "lat": 51.769,
+    "lng": -1.33,
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Wytham%20Great%20Wood%20-%20geograph.org.uk%20-%20908888.jpg",
+    "book": "Книга 22: Миллион за птицу додо",
+    "status": "approved"
+  },
+  {
+    "id": 44,
+    "name": "Александерплац, Берлин, Германия",
+    "name_en": "Alexanderplatz, Berlin, Germany",
+    "description": "Александерплац встречает героев как настоящий берлинский ориентир: телебашня, открытое пространство и ощущение большого города, в котором легко затеряться. После шифров и писем расследование наконец встаёт ногами на землю и получает живую городскую сцену. Площадь запоминается как место, где загадка впервые начинает дышать настоящим Берлином.",
+    "description_en": "Alexanderplatz greets the heroes as a true Berlin landmark: the TV tower, the wide-open space, and the feeling of a huge city where anyone can disappear. After ciphers and letters, the investigation finally touches the ground and gains a living urban scene. The square stands out as the place where the mystery first begins to breathe with the reality of Berlin.",
+    "lat": 52.521918,
+    "lng": 13.413215,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Berlin_Alexanderplatz_Nacht.jpg/800px-Berlin_Alexanderplatz_Nacht.jpg",
+    "book": "Книга 23: Шифр контрабандистов",
+    "status": "approved"
+  },
+  {
+    "id": 45,
+    "name": "Берлин-Тегель, Германия",
+    "name_en": "Berlin Tegel Airport, Germany",
+    "description": "В Тегеле история словно щёлкает переключателем: ещё минуту назад всё было шифром на бумаге, а теперь герои уже бегут по залу прилёта в поисках нужного человека. Здесь берлинское приключение начинается по-настоящему, с суеты, ожидания и первых тревожных намёков, что дело будет сложнее, чем казалось. Аэропорт хорош именно этой энергией старта, когда загадка впервые становится реальностью.",
+    "description_en": "At Tegel, the story feels as if a switch has been flipped: a moment ago everything was just a cipher on paper, and now the heroes are hurrying through the arrivals hall looking for the right person. This is where the Berlin adventure truly begins, with bustle, expectation, and the first uneasy hints that the case will be harder than it seemed. The airport works because of that starting energy, when the mystery first becomes real.",
+    "lat": 52.55972,
+    "lng": 13.28778,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Flughafen_Tegel_Tower_und_Hauptgeb%C3%A4ude.jpg/250px-Flughafen_Tegel_Tower_und_Hauptgeb%C3%A4ude.jpg",
+    "book": "Книга 23: Шифр контрабандистов",
+    "status": "approved"
+  }
+]

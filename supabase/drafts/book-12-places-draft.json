@@ -1,22 +1,10 @@
 [
   {
     "id": null,
-    "name": "Гранада, Испания",
-    "name_en": "Granada, Spain",
-    "description": "Агата, Ларри и дядя Мануэль приезжают в Гранаду в самом начале испанского эпизода. Сразу после прибытия они селятся в старом отеле на Калье дель Росарио, и город становится их базой для расследования. Отсюда начинается история, связанная с Альгамброй и местной тайной.",
-    "description_en": "Agatha, Larry, and Uncle Manuel arrive in Granada at the start of the Spanish episode. They immediately check into an old hotel on Calle del Rosario, making the city their base for the investigation. From there, the story moves into the mystery tied to the Alhambra and the local setting.",
-    "lat": 37.175,
-    "lng": -3.6,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e7/View_of_Granada%2C_Spain.jpg",
-    "book": "Книга 12: Таинственная роза Альгамбры",
-    "status": "approved"
-  },
-  {
-    "id": null,
     "name": "Альгамбра, Гранада, Испания",
     "name_en": "Alhambra, Granada, Spain",
-    "description": "Само название книги выводит Альгамбру в центр сюжета, а глава «Красная крепость» прямо подводит к этому месту. Для героев это не просто достопримечательность, а главный исторический фон испанской части расследования. Именно вокруг Альгамбры строится местная тайна, которую они разбирают в Гранаде.",
-    "description_en": "The book title puts the Alhambra at the center of the story, and the chapter title 'Red Fortress' points directly to it. For the heroes, it is not just a landmark but the main historical backdrop for the Spanish part of the investigation. The local mystery in Granada revolves around the Alhambra.",
+    "description": "Альгамбра в этой книге не просто красивая крепость на холме, а настоящее сердце испанской тайны. Героев тянет сюда ощущение старой легенды, спрятанной за стенами, двориками и красноватыми башнями. Именно возле Альгамбры приключение в Гранаде начинает звучать по-настоящему загадочно и по-восточному сказочно.",
+    "description_en": "In this book, the Alhambra is not just a beautiful fortress on a hill but the true heart of the Spanish mystery. The heroes are drawn here by the feeling of an old legend hidden behind its walls, courtyards, and reddish towers. Near the Alhambra, the Granada adventure begins to feel genuinely mysterious and almost fairy-tale-like.",
     "lat": 37.177297,
     "lng": -3.590339,
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/55/La_Alhambra%2C_Granada_012.JPG",

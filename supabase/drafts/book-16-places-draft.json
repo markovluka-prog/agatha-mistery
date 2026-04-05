@@ -1,25 +1,25 @@
 [
   {
     "id": null,
-    "name": "Самарканд, Узбекистан",
-    "name_en": "Samarkand, Uzbekistan",
-    "description": "Агата и Ларри отправляются в Самарканд, чтобы выйти на след похитителя ценного ковра, исчезнувшего вскоре после открытия музея. Этот древний узбекский город становится главной целью их поездки и ключевой точкой расследования, вокруг которой строится вся миссия. Именно здесь дело перестаёт быть далёкой новостью и превращается в реальную охоту за вором и украденной реликвией.",
-    "description_en": "Agatha and Larry travel to Samarkand to track down the thief who stole a valuable carpet shortly after a museum opening. This ancient Uzbek city becomes the main destination of their journey and the central location around which the whole investigation is built. Here, the case stops being distant news and turns into a real hunt for the thief and the stolen treasure.",
-    "lat": 39.65055556,
-    "lng": 66.96527778,
+    "name": "Регистан, Самарканд, Узбекистан",
+    "name_en": "Registan, Samarkand, Uzbekistan",
+    "description": "Регистан лучше всего передаёт тот Самарканд, к которому летят Агата и Ларри: древний, яркий и будто обещающий новую загадку за каждым поворотом. Здесь история о похищенном ковре перестаёт быть просто тревожной новостью издалека и превращается в настоящее восточное приключение. Через Регистан книга даёт почувствовать, что герои вошли в совсем другой мир — торжественный, тёплый и полный тайн.",
+    "description_en": "Registan best captures the Samarkand Agatha and Larry are flying toward: ancient, vivid, and as if promising a new mystery around every corner. Here, the story of the stolen carpet stops being distant troubling news and becomes a true eastern adventure. Through Registan, the book makes it feel as though the heroes have stepped into a completely different world, ceremonial, warm, and full of secrets.",
+    "lat": 39.65472222,
+    "lng": 66.97583333,
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/960px-RegistanSquare_Samarkand.jpg",
     "book": "Книга 16: Агата Мистери. Разыскивается ковёр-самолёт",
     "status": "approved"
   },
   {
     "id": null,
-    "name": "Лондон, Великобритания",
-    "name_en": "London, United Kingdom",
-    "description": "История начинается в Лондоне, где семья Мистери находится в Бейкер-Палас и узнаёт о новом международном деле. Именно отсюда запускается расследование и начинается подготовка к поездке в Узбекистан, поэтому Лондон работает как важная стартовая площадка всей книги. Здесь герои переходят от привычной домашней сцены к очередному большому приключению за пределами Англии.",
-    "description_en": "The story begins in London, where the Mistery family is at Baker Palace and learns about a new international case. The investigation is launched from here and the journey to Uzbekistan begins to take shape, making London the key starting ground of the book. It is the place where the heroes move from a familiar domestic setting into another major adventure beyond England.",
-    "lat": 51.50722222,
-    "lng": -0.1275,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/London_Skyline_%28125508655%29.jpeg/960px-London_Skyline_%28125508655%29.jpeg",
+    "name": "Бейкер-Палас, Лондон, Великобритания",
+    "name_en": "Baker Palace, London, United Kingdom",
+    "description": "У Бейкер-Палас всё ещё кажется спокойным и привычным, но именно здесь уютное семейное утро вдруг ломается новостями о новом деле. От этого лондонского адреса книга резко делает шаг в сторону большого путешествия и погони за похитителем ковра. Бейкер-Палас запоминается как точка, где обычный день Мистери внезапно превращается в начало международного приключения.",
+    "description_en": "At Baker Palace, everything still seems calm and familiar, yet this is exactly where a cozy family morning is suddenly broken by news of a new case. From this London address, the book sharply turns toward a long journey and the chase for the carpet thief. Baker Palace stands out as the point where an ordinary day for the Misterys suddenly becomes the start of an international adventure.",
+    "lat": 51.523767,
+    "lng": -0.158555,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/221B_Baker_Street.jpg/800px-221B_Baker_Street.jpg",
     "book": "Книга 16: Агата Мистери. Разыскивается ковёр-самолёт",
     "status": "approved"
   }

@@ -1,14 +1,1 @@
-[
-  {
-    "id": null,
-    "name": "Остров Бали, Индонезия",
-    "name_en": "Bali, Indonesia",
-    "description": "На титульном развороте именно Бали назван пунктом назначения, куда герои должны попасть по ходу миссии. Это не просто маршрутная отметка: весь замысел книги и поиски сокровища королевы пиратов с самого начала привязаны к этому острову. Через Бали история получает своё направление, тропическую атмосферу и конкретную географическую цель расследования.",
-    "description_en": "The title spread explicitly names Bali as the destination the heroes must reach during the mission. This is more than a route marker: from the very beginning, the whole design of the book and the search for the pirate queen's treasure are tied to this island. Bali gives the story its direction, tropical atmosphere, and concrete geographic goal for the investigation.",
-    "lat": -8.335,
-    "lng": 115.08805556,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bali%20panorama.jpg",
-    "book": "Книга 26: Агата Мистери. Сокровища королевы пиратов",
-    "status": "approved"
-  }
-]
+[]

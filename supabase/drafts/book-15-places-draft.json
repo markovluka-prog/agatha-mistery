@@ -1,21 +1,9 @@
 [
   {
     "id": null,
-    "name": "Клуж-Напока, Румыния",
-    "name_en": "Cluj-Napoca, Romania",
-    "description": "В начале миссии героев отправляют в Трансильванию, и на развороте карта прямо отмечает Клуж-Напоку как точку прибытия. Это старт румынской части расследования, где тема графа Дракулы начинает обретать конкретный географический контур. Место важно потому, что именно с него книга переводит загадку из общего намёка в реальную поездку.",
-    "description_en": "At the start of the mission, the heroes are sent to Transylvania, and the spread explicitly marks Cluj-Napoca as the arrival point. This begins the Romanian part of the investigation, where the Dracula theme turns into a concrete geographic trail. It matters because the book moves the mystery from a general hint into an actual journey from this point.",
-    "lat": 46.767,
-    "lng": 23.583,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Romania-2382_-_View_from_Hotel_%287794313314%29.jpg/330px-Romania-2382_-_View_from_Hotel_%287794313314%29.jpg",
-    "book": "Книга 15: Секрет графа Дракулы",
-    "status": "approved"
-  },
-  {
-    "id": null,
     "name": "Лондонский глаз, Лондон, Великобритания",
     "name_en": "London Eye, London, United Kingdom",
-    "description": "Ларри назначает встречу с Рози именно на Лондонском глазе, и сцена строится вокруг их разговора на колесе обозрения. Оттуда герой смотрит на город, пытается произвести впечатление и одновременно сбивается с детективных мыслей. Эпизод важен, потому что он связывает романтическую линию с прологом расследования и задаёт книге эмоциональный тон.",
+    "description": "На Лондонском глазе детективная история вдруг становится почти романтической: Ларри пытается произвести впечатление, город лежит у него под ногами, а мысли всё равно упрямо ускользают к расследованию. Эта сцена запоминается своей лёгкостью и неловкостью одновременно. Колесо обозрения красиво связывает начало тайны с личной линией героя и делает тон книги теплее.",
     "description_en": "Larry arranges to meet Rosie at the London Eye, and the scene is built around their conversation on the observation wheel. From there he looks out over the city, tries to impress her, and keeps losing his detective focus. The episode matters because it ties the romantic thread to the prologue of the investigation and sets the story's emotional tone.",
     "lat": 51.5033,
     "lng": -0.1194,

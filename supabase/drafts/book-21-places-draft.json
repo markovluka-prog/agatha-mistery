@@ -1,14 +1,1 @@
-[
-  {
-    "id": null,
-    "name": "Новый Орлеан, Луизиана, США",
-    "name_en": "New Orleans, Louisiana, United States",
-    "description": "Старинный пароход с украденной рукописью Марка Твена направляется именно в Новый Орлеан, и поэтому весь маршрут расследования постепенно стягивается к этому городу. Для героев это не просто финальная точка на карте, а место, где речной след должен наконец привести их к преступникам. Новый Орлеан важен как конкретная цель погони, на которой сходятся и дорога, и главная интрига книги.",
-    "description_en": "The old steamboat carrying Mark Twain's stolen manuscript is bound for New Orleans, which makes the entire route of the investigation gradually converge on this city. For the heroes, it is not just the endpoint on a map but the place where the river trail is finally supposed to lead them to the criminals. New Orleans matters as the concrete target of the chase, where both the journey and the book's central intrigue come together.",
-    "lat": 29.96,
-    "lng": -90.08,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/New_Orleans_from_the_Air_September_2019_-_Central_Business_District_Skyline_%28cropped%29.jpg/960px-New_Orleans_from_the_Air_September_2019_-_Central_Business_District_Skyline_%28cropped%29.jpg",
-    "book": "Книга 21: Агата Мистери. Преступление на десерт",
-    "status": "approved"
-  }
-]
+[]

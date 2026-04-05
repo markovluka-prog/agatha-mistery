@@ -1,21 +1,9 @@
 [
   {
     "id": null,
-    "name": "Барселона, Испания",
-    "name_en": "Barcelona, Spain",
-    "description": "Именно в Барселону преподаватель отправляет Ларри срочно доставить таинственный пакет, так что город становится главным местом действия этой книги. Герои прилетают туда из Лондона уже в режиме задания, а не обычной поездки, и все дальнейшее расследование завязано на барселонскую встречу. Барселона важна как центр эпизода: здесь шифр превращается в реальную передачу пакета и поиск людей, связанных с ним.",
-    "description_en": "The professor sends Larry to Barcelona to deliver a mysterious package, so the city becomes the book's main setting. The heroes arrive from London on a mission, not on an ordinary trip, and everything that follows is tied to the Barcelona handoff. Barcelona matters as the episode's center: here the cipher turns into a real package exchange and a search for the people connected to it.",
-    "lat": 41.383,
-    "lng": 2.183,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Barcelona_Skyline.jpg",
-    "book": "Книга 25: Непредвиденный казус в Барселоне",
-    "status": "approved"
-  },
-  {
-    "id": null,
     "name": "Площадь Каталонии, Барселона, Испания",
     "name_en": "Plaça de Catalunya, Barcelona, Spain",
-    "description": "Именно на площади Каталонии назначена встреча с агентом ДК33, который должен получить красный пакет в красной обертке. Герои добираются сюда как к точке финальной передачи, поэтому квадратный центр города становится главным узлом сцены. Это важное место эпизода, потому что на нем сходятся и дорожная подсказка, и сама передача посылки.",
+    "description": "Площадь Каталонии в книге — это место, где всё должно наконец совпасть: агент, пакет, условленный час и слишком много людей вокруг. Герои идут сюда с ощущением, что любая мелочь может сорвать встречу в последнюю секунду. Площадь запоминается как нервный центр барселонского эпизода, где ожидание буквально звенит в воздухе.",
     "description_en": "The meeting with agent DK33 is set at Plaça de Catalunya, where the red-wrapped package is supposed to be handed over. The heroes head here as to the final delivery point, so the city square becomes the main node of the scene. It matters because the route clue and the package handoff converge in one place.",
     "lat": 41.38667,
     "lng": 2.17,
@@ -27,7 +15,7 @@
     "id": null,
     "name": "Фонтан Каналетес, Барселона, Испания",
     "name_en": "Font de Canaletes, Barcelona, Spain",
-    "description": "Встреча на Рамбле привязана именно к фонтану Каналетес, который упоминается как узнаваемая точка на барселонской прогулочной оси. Ларри и Агата идут сюда через людную центральную улицу, где толпы, книжные прилавки и туристы создают нужную атмосферу слежки и ожидания. Фонтан важен тем, что он превращает обычную городскую прогулку в четко назначенное место контакта между героями и агентом.",
+    "description": "Фонтан Каналетес делает сцену особенно живой: вокруг шумит Рамбла, толпятся туристы, мелькают книги и вывески, а героям всё равно нужно заметить именно того человека. В такой толпе легко потеряться, и поэтому встреча здесь становится ещё тревожнее. Фонтан запоминается как точка, где красивая городская суета превращается в почти шпионское ожидание.",
     "description_en": "The Rambla meeting is anchored to Font de Canaletes, a recognizable point on Barcelona's pedestrian axis. Larry and Agatha come here through the crowded central street, where crowds, book stalls, and tourists create the right atmosphere for surveillance and waiting. The fountain matters because it turns an ordinary city walk into a clearly designated contact point between the heroes and the agent.",
     "lat": 41.38528,
     "lng": 2.170139,

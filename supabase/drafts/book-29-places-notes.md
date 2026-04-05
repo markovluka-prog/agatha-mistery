@@ -4,7 +4,6 @@ Best-effort draft with only strong story-relevant external locations.
 
 ## Confirmed locations
 
-- Milan, Italy
 - Piazza del Duomo, Milan
 - Royal Palace of Milan
 - Piazza Gae Aulenti, Milan
@@ -18,6 +17,7 @@ Best-effort draft with only strong story-relevant external locations.
 
 ## Exclusions
 
+- I excluded the generic `Milan` point after tightening the standard to prefer scene-based locations over city-level placeholders.
 - I excluded map-only labels and weak unnamed settings.
 - I also excluded indoor rooms, corridors, wardrobe interiors, and transport unless they were tied to a clearly named external place.
 
