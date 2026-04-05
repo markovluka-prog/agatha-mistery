@@ -428,7 +428,12 @@ img {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: var(--spacing-large);
-    align-items: start;
+    align-items: stretch;
+}
+
+.map-panel {
+    display: flex;
+    flex-direction: column;
 }
 
 .places-map {
@@ -451,6 +456,30 @@ img {
     padding: var(--spacing-large);
     border: 1px solid rgba(20, 20, 20, 0.12);
     box-shadow: var(--shadow-small);
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.map-sidebar h3 {
+    flex-shrink: 0;
+}
+
+.places-filters {
+    flex-shrink: 0;
+}
+
+.places-carousel {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-grid {
+    height: 100%;
+    overflow-y: auto;
 }
 
 .map-sidebar h3 {
@@ -481,10 +510,6 @@ img {
 .filter-btn:hover {
     background: #141414;
     color: #fff;
-}
-
-.places-carousel {
-    position: relative;
 }
 
 .carousel-arrow {
@@ -532,21 +557,15 @@ img {
     letter-spacing: 0.03em;
 }
 
-.map-grid {
-    min-width: 0;
-}
-
 .map-grid .card {
     cursor: pointer;
     display: none !important;
     animation: none !important;
-    opacity: 1 !important;
 }
 
 .map-grid .card.active {
     display: flex !important;
-    animation: fadeInUp 0.35s ease-out forwards !important;
-    opacity: 0 !important;
+    animation: fadeInUp 0.3s ease-out both !important;
 }
 
 .map-grid .card:hover {
@@ -555,7 +574,14 @@ img {
 }
 
 .map-grid .card-image {
-    height: 200px;
+    height: 180px;
+    overflow: hidden;
+}
+
+.map-grid .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .popup-content {
