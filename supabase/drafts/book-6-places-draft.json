@@ -1,0 +1,26 @@
+[
+  {
+    "id": null,
+    "name": "Бермудский треугольник",
+    "name_en": "Bermuda Triangle",
+    "description": "В книге это центральная зона тайны: именно вокруг Бермудского треугольника герои разбирают карту исчезновений судов и пытаются понять, почему здесь веками пропадают корабли без следа. Ларри и Агата получают объяснение, что треугольник лежит между Флоридой, Пуэрто-Рико и Бермудским архипелагом, и эта география прямо задаёт главное расследование.",
+    "description_en": "In the book, this is the core mystery zone: the heroes study a map of vanished ships around the Bermuda Triangle and try to understand why vessels have been disappearing there for centuries. Larry and Agatha are told that the triangle lies between Florida, Puerto Rico, and the Bermuda archipelago, and that geography directly frames the main investigation.",
+    "lat": 25.0,
+    "lng": -71.0,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg",
+    "book": "Книга 6: Сокровище Бермудских островов",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Бермуды",
+    "name_en": "Bermuda",
+    "description": "Бермуды становятся опорной точкой морского маршрута и измерения расстояния: в книге прямо сказано, что корабль стоит примерно в пятидесяти морских милях к югу от Бермуд. Для сюжета это важно, потому что именно через эту точку герои связывают карту, морской путь и загадку Бермудского треугольника.",
+    "description_en": "Bermuda serves as a reference point for the sea route and distance: the book explicitly says the ship is anchored about fifty nautical miles south of Bermuda. This matters to the plot because the heroes connect the map, the sea route, and the mystery of the Bermuda Triangle through this location.",
+    "lat": 32.3078,
+    "lng": -64.7505,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Bermuda.jpg",
+    "book": "Книга 6: Сокровище Бермудских островов",
+    "status": "approved"
+  }
+]

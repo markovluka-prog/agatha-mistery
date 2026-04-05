@@ -20,3 +20,5 @@ cleanup_admin.js
 data/backup/
 *.sql.dump
 *.db_dump.json
+client_secret.json
+token.json

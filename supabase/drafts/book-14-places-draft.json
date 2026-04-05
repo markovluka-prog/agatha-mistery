@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "name": "Нью-Йорк, США",
+    "name_en": "New York City, United States",
+    "description": "Ларри срочно летит в Нью-Йорк на международный конгресс детективов, и именно этот город задаёт старт всему американскому эпизоду книги. Пока Агата и мистер Кент разбирают новую подсказку, Нью-Йорк становится главным местом встречи, соперничества и будущих соревнований между сыщиками.",
+    "description_en": "Larry urgently flies to New York for the international detective congress, and the city sets the opening of the American episode of the book. While Agatha and Mr. Kent work through the new clue, New York becomes the main place for the meeting, rivalry, and upcoming competition between detectives.",
+    "lat": 40.7128,
+    "lng": -74.0061,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/43/New_York_City_%28New_York%2C_USA%29%2C_Manhattan%2C_Skyline_--_2012_--_6682.jpg",
+    "book": "Книга 14: Сыщик против сыщика",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Манхэттен, Нью-Йорк, США",
+    "name_en": "Manhattan, New York City, United States",
+    "description": "Открытка с видом на Нью-Йорк приводит героев к адресу в Манхэттене, и это уже не общий городской фон, а конкретная точка, связанная с ключевой подсказкой. Здесь действие книги получает точный адресный ориентир: Манхэттен важен как место, куда указывает загадка и куда мысленно сводится весь нью-йоркский фрагмент расследования.",
+    "description_en": "A postcard with a New York view leads the heroes to an address in Manhattan, so this is no longer just a citywide backdrop but a specific point tied to the main clue. Manhattan matters as the place indicated by the mystery and the exact address that gives the New York segment of the investigation its shape.",
+    "lat": 40.7127,
+    "lng": -74.0059,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/84/New_York_City_skyline.jpg",
+    "book": "Книга 14: Сыщик против сыщика",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Международный аэропорт имени Джона Ф. Кеннеди",
+    "name_en": "John F. Kennedy International Airport",
+    "description": "После вылета из Хитроу герои приземляются именно здесь, и с этого момента ново-йоркская часть истории становится реальностью. Аэропорт важен не как проходная отметка, а как точка прибытия, где заканчивается трансатлантический перелёт и начинается действие в Нью-Йорке.",
+    "description_en": "After departing Heathrow, the heroes land here, and from that moment the New York part of the story becomes real. The airport is important not as a generic transit mark but as the arrival point where the transatlantic flight ends and the New York action begins.",
+    "lat": 40.63972,
+    "lng": -73.77889,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/JFK_Aerial_Nov_14_2018.jpg/250px-JFK_Aerial_Nov_14_2018.jpg",
+    "book": "Книга 14: Сыщик против сыщика",
+    "status": "approved"
+  }
+]

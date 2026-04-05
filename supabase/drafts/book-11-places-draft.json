@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "name": "Рим, Италия",
+    "name_en": "Rome, Italy",
+    "description": "После прилёта в Италию Агата, Ларри и мистер Кент отправляются в центр Рима, и именно здесь начинается их расследование перед событиями, связанными с Ватиканом. Город становится для героев первой большой точкой опоры: отсюда они входят в ритм дела, ориентируются в новой обстановке и приближаются к историческому сердцу истории.",
+    "description_en": "After landing in Italy, Agatha, Larry, and Mr. Kent head into central Rome, and this is where their investigation begins before the Vatican-related events unfold. The city becomes their first major point of reference, as they adjust to the case, navigate a new setting, and move toward the historic heart of the story.",
+    "lat": 41.902782,
+    "lng": 12.496366,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Rome_skyline_panorama.jpg",
+    "book": "Книга 11: Похищение в Ватикане",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Международный аэропорт Фьюмичино",
+    "name_en": "Leonardo da Vinci–Fiumicino Airport",
+    "description": "Именно в аэропорту Фьюмичино герои приземляются в начале книги, когда их итальянская часть приключения только начинается. Это не просто транзитная точка: с прибытия сюда история резко переключается в римский эпизод, а расследование получает конкретное географическое направление.",
+    "description_en": "The heroes land at Fiumicino Airport at the beginning of the book, when the Italian part of their adventure is just starting. It is more than a transit point: their arrival here sharply shifts the story into its Roman phase and gives the investigation a clear geographic direction.",
+    "lat": 41.8002778,
+    "lng": 12.2388889,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Leonardo_da_Vinci%E2%80%93Fiumicino_Airport_%2801%29.jpg",
+    "book": "Книга 11: Похищение в Ватикане",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Виа Национале, Рим",
+    "name_en": "Via Nazionale, Rome",
+    "description": "На Виа Национале лондонцев высаживают уже после дороги из аэропорта, и отсюда они оказываются совсем рядом с историческим центром города. Эта улица работает как конкретная точка входа в римское пространство книги: из абстрактного прибытия герои переходят к живому городскому действию и к дальнейшему продвижению по сюжету.",
+    "description_en": "The Londoners are dropped off on Via Nazionale after the drive from the airport, placing them within walking distance of the historic city center. The street serves as a concrete point of entry into the Roman setting of the book, turning a generic arrival into active city movement and pushing the plot forward.",
+    "lat": 41.9015781,
+    "lng": 12.4945267,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Monti_-_via_Nazionale_1411.JPG/960px-Monti_-_via_Nazionale_1411.JPG",
+    "book": "Книга 11: Похищение в Ватикане",
+    "status": "approved"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 12,
+    "name": "Тронхейм, Норвегия",
+    "name_en": "Trondheim, Norway",
+    "description": "Пункт назначения круиза лайнера «Король Артур». Агата и Ларри ведут расследование до прибытия в Тронхейм, а агент АП36 должен прибыть туда ночным поездом.",
+    "description_en": "The destination of the King Arthur cruise. Agatha and Larry race to solve the case before arriving in Trondheim, while agent AP36 is due to get there by night train.",
+    "lat": 63.4304475,
+    "lng": 10.3952118,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Trondheim_overview_01.jpg/960px-Trondheim_overview_01.jpg",
+    "book": "Книга 10: Опасный круиз",
+    "status": "approved"
+  },
+  {
+    "id": 13,
+    "name": "Берген, Норвегия",
+    "name_en": "Bergen, Norway",
+    "description": "Норвежский порт, где дядя Сэмюэль с семьёй поднимается на борт, а агент АП36 теряет след Бисмарка перед тем, как шпион садится на лайнер.",
+    "description_en": "The Norwegian port where Uncle Samuel boards with his family and where agent AP36 loses Bismarck's trail just before the spy boards the liner.",
+    "lat": 60.3943055,
+    "lng": 5.3259192,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Bergen_panorama_at_night_-_panoramio_%281%29.jpg/960px-Bergen_panorama_at_night_-_panoramio_%281%29.jpg",
+    "book": "Книга 10: Опасный круиз",
+    "status": "approved"
+  },
+  {
+    "id": 14,
+    "name": "Тронхеймс-фьорд, Норвегия",
+    "name_en": "Trondheimsfjord, Norway",
+    "description": "Фьорд на маршруте «Короля Артура». После остановки в Тронхеймс-фьорде лайнер должен взять курс дальше на север, и именно до этого пункта герои стараются завершить расследование.",
+    "description_en": "A fjord on the King Arthur route. After the stop in Trondheimsfjord, the liner is due to head farther north, and the heroes are trying to finish the investigation before that point.",
+    "lat": 63.5329566,
+    "lng": 10.3911621,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Aasenfiord.JPG/960px-Aasenfiord.JPG",
+    "book": "Книга 10: Опасный круиз",
+    "status": "approved"
+  }
+]

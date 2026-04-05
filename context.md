@@ -16,6 +16,8 @@
 - Заполнены переводы `about_sections` (title_en, subtitle_en, content_en) через REST API
 - Создан скрипт `search_console.py` — аналитика из Google Search Console
 - Создан файл `analytics.html` — дашборд в стиле Search Console (клики, показы, страны, график)
+- Добавлены локации из `Книга 10: Опасный круиз` в `places`: `Тронхейм`, `Берген`, `Тронхеймс-фьорд`
+- Подготовлены черновики по книге `Опасный круиз`: `supabase/drafts/opasnyy-kruiz-places-draft.json` и `supabase/drafts/opasnyy-kruiz-places-notes.md`
 
 ## Важные детали
 - **Репо**: https://github.com/markovluka-prog/agatha-mistery
@@ -59,3 +61,62 @@
 - Разобраться с `about.html` — почему контент не загружается (возможно RLS в Supabase)
 - Добавить `client_secret.json`, `token.json`, `analytics.html` в `.gitignore`
 - Бот для перевода нового контента (квизы, карты) — обсуждалось, не реализовано
+
+## Как добавлять локации из книги
+1. Достать книгу
+- Скачать PDF с Флибусты
+- Загрузить файл в `/workspaces/My-Projects/`
+
+2. Распознать текст (OCR)
+- Установить инструменты:
+```bash
+sudo apt-get install -y tesseract-ocr tesseract-ocr-rus poppler-utils
+```
+- Конвертировать PDF в PNG (300 DPI):
+```bash
+pdftoppm -r 300 -png /path/to/book.pdf /tmp/book
+```
+- Распознать все страницы в один текстовый файл:
+```bash
+for f in /tmp/book*.png; do
+  tesseract "$f" stdout -l rus 2>/dev/null
+done > /tmp/fullbook.txt
+```
+
+3. Найти локации в тексте
+- Базовый поиск:
+```bash
+grep -n -i -E "(локация|город|улица|площадь|район|замок)" /tmp/fullbook.txt
+```
+- Дальше читать контекст вокруг совпадений и вручную выписывать все места с описаниями из книги
+
+4. Найти координаты и фото
+- Координаты: Google Maps или вручную
+- Фото: Wikimedia Commons / Wikipedia API
+```bash
+curl "https://en.wikipedia.org/w/api.php?action=query&titles=Place+Name&prop=pageimages&format=json&pithumbsize=900"
+```
+
+5. Добавить в Supabase
+- Вставлять записи в `places` через REST API
+- Поле `book` обязательно заполнять: фильтры на карте строятся автоматически из него
+- `id` указывать вручную: брать `max(id) + 1`
+- Пример:
+```bash
+curl -X POST "https://.../rest/v1/places" \
+  -d '[{"id":..., "name":"...", "name_en":"...", "description":"...", "description_en":"...", "lat":..., "lng":..., "image_url":"...", "book":"Книга N: Название", "status":"approved"}]'
+```
+
+6. Обновить `context.md`
+- После каждой книги записывать, что именно уже добавлено, чтобы не потерять прогресс между сессиями
+
+## Ключевые детали по локациям
+- Колонка `book` в Supabase нужна для автоматических фильтров на карте
+- `id` не автоинкрементный: его нужно проставлять вручную
+- Фото берём с Wikimedia, потому что их можно свободно использовать на сайте
+
+## 2026-04-05
+- В `Supabase` добавлен пакет локаций по книгам `6, 7, 8, 11, 12, 14, 15, 16, 17, 19, 21, 22, 23, 24, 25, 26, 27, 29, 30` из файла `supabase/drafts/batch-places-payload.json`.
+- Вставлено `46` записей в `places` с `id` от `15` до `60`.
+- Для книги `13` оставлен blocker: надёжные внешние сюжетные локации по OCR не подтверждены, в базу ничего не отправлялось.
+

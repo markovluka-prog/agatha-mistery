@@ -1,0 +1,26 @@
+[
+  {
+    "id": null,
+    "name": "Токио, Япония",
+    "name_en": "Tokyo, Japan",
+    "description": "На титульном развороте книги прямо указан пункт назначения «Токио — Япония», и именно сюда герои попадают в начале японского этапа расследования. Токио важен как стартовая точка всей миссии: здесь завязывается местный сюжет и становится понятно, что дело выводит Агату и Ларри далеко за пределы привычной европейской географии.",
+    "description_en": "The title spread explicitly names Tokyo, Japan as the destination, and this is where the heroes arrive at the start of the Japanese stage of the investigation. Tokyo matters as the launch point of the whole mission: it sets up the local plot and makes clear that Agatha and Larry have moved far beyond their familiar European ground.",
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tokyo_Skyline.jpg/330px-Tokyo_Skyline.jpg",
+    "book": "Книга 24: Месть на горе Фудзи",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Гора Фудзи, Япония",
+    "name_en": "Mount Fuji, Japan",
+    "description": "На развороте главы прямо стоит заголовок «У подножия горы Фудзи», и книга выводит героев из токийского эпизода к самой знаменитой японской горе. Это ключевая внешняя точка истории: именно здесь концентрируется центральная интрига книги, а место работает не как фон, а как цель расследования и важная сцена действия.",
+    "description_en": "The chapter spread explicitly reads 'At the foot of Mount Fuji', and the story moves the heroes from the Tokyo segment to Japan's most famous mountain. This is a key external location in the book: the central intrigue gathers here, and the place works not as a backdrop but as a target of the investigation and an important scene of action.",
+    "lat": 35.3606,
+    "lng": 138.7274,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Mount_Fuji%2C_Japan.JPG",
+    "book": "Книга 24: Месть на горе Фудзи",
+    "status": "approved"
+  }
+]

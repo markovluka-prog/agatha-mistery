@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "name": "Рио-де-Жанейро, Бразилия",
+    "name_en": "Rio de Janeiro, Brazil",
+    "description": "В Рио герои проводят начало бразильской части истории: они знакомятся с прибрежной жизнью города и с Уолтером Нестором да Соузой Мистери, чья работа связана с местными пляжами.",
+    "description_en": "In Rio, the heroes spend the opening of the Brazilian section of the story: they get to know the city's coastal life and Walter Nestor da Souza Mistery, whose work is tied to the local beaches.",
+    "lat": -22.906847,
+    "lng": -43.172896,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Rio_Downtown-Aerial.jpg",
+    "book": "Книга 17: Пожар в джунглях",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Пляж Ипанема",
+    "name_en": "Ipanema Beach",
+    "description": "Именно на Ипанеме герои оказываются у океана, где их встречает Уолтер и где прибрежный Рио показан как важная часть сюжета.",
+    "description_en": "The heroes reach Ipanema by the ocean, where Walter meets them and the coastal side of Rio becomes an important part of the story.",
+    "lat": -22.974672,
+    "lng": -43.183136,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Ipanema_Beach.jpg",
+    "book": "Книга 17: Пожар в джунглях",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Манаус, Бразилия",
+    "name_en": "Manaus, Brazil",
+    "description": "В Манаусе начинается следующий этап расследования: сюда герои прилетают, чтобы встретиться с Эриком Броди и затем двигаться дальше к джунглям Амазонии.",
+    "description_en": "In Manaus, the next stage of the investigation begins: the heroes fly here to meet Eric Brody and then move on toward the Amazon jungle.",
+    "lat": -3.119027,
+    "lng": -60.021731,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Skyline-de-Manaus.jpg",
+    "book": "Книга 17: Пожар в джунглях",
+    "status": "approved"
+  }
+]

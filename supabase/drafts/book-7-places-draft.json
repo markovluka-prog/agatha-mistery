@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "name": "Венеция, Италия",
+    "name_en": "Venice, Italy",
+    "description": "В начале книги герои прямо обсуждают Венецию и ее историю как особый город на воде. Здесь же становится ясно, что расследование будет идти по венецианским правилам: по картам, по каналам и с постоянной оглядкой на людей, связанных с городом. Для сюжета это отправная точка всей итальянской части истории.",
+    "description_en": "At the start of the book, the heroes discuss Venice and its history as a city on the water. It quickly becomes clear that the investigation will have to follow Venetian rules: maps, canals, and constant attention to people connected with the city. For the story, this is the starting point of the entire Italian section.",
+    "lat": 45.43719,
+    "lng": 12.33459,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Venice_Panorama_%28182659769%29.jpg",
+    "book": "Книга 7: Корона дожа",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Венецианская лагуна, Италия",
+    "name_en": "Venetian Lagoon, Italy",
+    "description": "Агата объясняет, что город расположен в лагуне и что на машинах здесь не проехать. Это не просто географическая справка, а важное правило сцены: передвижение в расследовании сразу становится водным. Именно лагуна задает книге ее особую, почти полностью лодочную логику.",
+    "description_en": "Agatha explains that the city is located in a lagoon and that cars cannot get through here. This is not just geographic color; it sets a crucial rule for the scene, because movement in the investigation immediately becomes water-based. The lagoon gives the book its special, almost entirely boat-driven logic.",
+    "lat": 45.434,
+    "lng": 12.339,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/The_Venetian_Lagoon_ESA25362327.jpg",
+    "book": "Книга 7: Корона дожа",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Гранд-канал, Венеция, Италия",
+    "name_en": "Grand Canal, Venice, Italy",
+    "description": "В главе о погоне на гондоле герои проходят по каналам и выходят к воде, где след за подозреваемым приходится брать уже на лодке. Гранд-канал важен не как открытка с видами, а как главная артерия венецианского преследования. Именно здесь книга превращает городской маршрут в полноценную водную погоню.",
+    "description_en": "In the gondola chase chapter, the heroes move through the canals and head onto the water, where the trail must be followed by boat. The Grand Canal matters not as a postcard view but as the main artery of the Venetian pursuit. This is where the book turns a city route into a full water chase.",
+    "lat": 45.4353,
+    "lng": 12.3265,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Venice_-_Grand_Canal_08.jpg",
+    "book": "Книга 7: Корона дожа",
+    "status": "approved"
+  }
+]

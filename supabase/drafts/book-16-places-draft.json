@@ -1,0 +1,26 @@
+[
+  {
+    "id": null,
+    "name": "Самарканд, Узбекистан",
+    "name_en": "Samarkand, Uzbekistan",
+    "description": "Агата и Ларри отправляются в Самарканд, чтобы выйти на след похитителя ценного ковра, исчезнувшего вскоре после открытия музея. Этот древний узбекский город становится главной целью их поездки и ключевой точкой расследования, вокруг которой строится вся миссия. Именно здесь дело перестаёт быть далёкой новостью и превращается в реальную охоту за вором и украденной реликвией.",
+    "description_en": "Agatha and Larry travel to Samarkand to track down the thief who stole a valuable carpet shortly after a museum opening. This ancient Uzbek city becomes the main destination of their journey and the central location around which the whole investigation is built. Here, the case stops being distant news and turns into a real hunt for the thief and the stolen treasure.",
+    "lat": 39.65055556,
+    "lng": 66.96527778,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/960px-RegistanSquare_Samarkand.jpg",
+    "book": "Книга 16: Агата Мистери. Разыскивается ковёр-самолёт",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Лондон, Великобритания",
+    "name_en": "London, United Kingdom",
+    "description": "История начинается в Лондоне, где семья Мистери находится в Бейкер-Палас и узнаёт о новом международном деле. Именно отсюда запускается расследование и начинается подготовка к поездке в Узбекистан, поэтому Лондон работает как важная стартовая площадка всей книги. Здесь герои переходят от привычной домашней сцены к очередному большому приключению за пределами Англии.",
+    "description_en": "The story begins in London, where the Mistery family is at Baker Palace and learns about a new international case. The investigation is launched from here and the journey to Uzbekistan begins to take shape, making London the key starting ground of the book. It is the place where the heroes move from a familiar domestic setting into another major adventure beyond England.",
+    "lat": 51.50722222,
+    "lng": -0.1275,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/London_Skyline_%28125508655%29.jpeg/960px-London_Skyline_%28125508655%29.jpeg",
+    "book": "Книга 16: Агата Мистери. Разыскивается ковёр-самолёт",
+    "status": "approved"
+  }
+]

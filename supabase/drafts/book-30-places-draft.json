@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "name": "Собор Святого Патрика, Дублин",
+    "name_en": "St Patrick's Cathedral, Dublin",
+    "description": "В книге герои рассматривают модель собора как часть ирландской подсказки и связывают её с легендами и старинными историями, которые помогают продвигать расследование. Это не просто красивая достопримечательность, а важный ориентир, через который объясняют ирландскую линию сюжета.",
+    "description_en": "In the book, the heroes examine a model of the cathedral as part of the Irish clue set and connect it with legends and old stories that help the investigation move forward. It is not just a landmark, but an important reference point that introduces the Irish thread of the plot.",
+    "lat": 53.337,
+    "lng": -6.2695,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/St_patricks_cathedral_dublin.jpg",
+    "book": "Книга 30: Пропавшее кольцо",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Россавил, графство Голуэй",
+    "name_en": "Rossaveal, County Galway",
+    "description": "Герои едут в Россавил к Молли, и именно здесь проверяют одну из ключевых версий дела. Приморская деревушка на другой стороне бухты важна для сюжета как место встречи с человеком, связанным с пропавшим кольцом.",
+    "description_en": "The heroes travel to Rossaveal to meet Molly, and this is where one of the key leads in the case is checked. The coastal village across the bay matters because it is where they meet someone connected to the missing ring.",
+    "lat": 53.2708,
+    "lng": -9.5511,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Rossaveel.jpg",
+    "book": "Книга 30: Пропавшее кольцо",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Ведьмина голова, утёсы Моэр",
+    "name_en": "Hag's Head, Cliffs of Moher",
+    "description": "К финалу герои добираются до скал по подсказке и в дождливую погоду выходят к южной точке рифа, где видят людей с лопатами. Это уже не просто пейзаж, а место, где расследование превращается в прямое столкновение с преступниками.",
+    "description_en": "By the finale, the heroes reach the cliffs through a clue and, in rainy weather, come out to the southern point of the reef where they see people with shovels. This is no longer just scenery: it is the place where the investigation turns into a direct confrontation with the criminals.",
+    "lat": 52.93611,
+    "lng": -9.47083,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/82/Cliffs_of_Moher_April_02.jpg",
+    "book": "Книга 30: Пропавшее кольцо",
+    "status": "approved"
+  }
+]

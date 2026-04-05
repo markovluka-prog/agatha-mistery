@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Лондон, Великобритания",
+    "name_en": "London, United Kingdom",
+    "description": "История начинается в Лондоне, где герои оказываются в танцевальной школе «Пэддс». Именно отсюда завязывается миссия и становится ясно, что их ждёт поездка в Австрию. Лондон важен как стартовая сцена, которая переводит сюжет из обычного городского дня в международное расследование.",
+    "description_en": "The story begins in London, where the heroes are at the dance school 'Padds'. From there the mission is set in motion and the trip to Austria becomes clear. London matters as the starting scene that turns an ordinary city day into an international investigation.",
+    "lat": 51.50722222,
+    "lng": -0.1275,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/London_Skyline_%28125508655%29.jpeg/960px-London_Skyline_%28125508655%29.jpeg",
+    "book": "Книга 27: Агата Мистери. Загадочное происшествие на Венском балу",
+    "status": "approved"
+  },
+  {
+    "id": 2,
+    "name": "Вена, Австрия",
+    "name_en": "Vienna, Austria",
+    "description": "Герои прилетают в Вену на Большой бал в особняк барона Гаутмана. Здесь им нужно предотвратить кражу бесценного ожерелья у юной графини де Регинар. Вена важна как основная сцена бала и место, где сосредоточен главный конфликт книги.",
+    "description_en": "The heroes fly to Vienna for the grand ball at Baron Gautman's mansion. There they must prevent the theft of a priceless necklace from the young Countess de Reginar. Vienna matters as the main ballroom setting and the place where the book's central conflict unfolds.",
+    "lat": 48.2083,
+    "lng": 16.3725,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Schoenbrunn_philharmoniker_2012.jpg/960px-Schoenbrunn_philharmoniker_2012.jpg",
+    "book": "Книга 27: Агата Мистери. Загадочное происшествие на Венском балу",
+    "status": "approved"
+  }
+]

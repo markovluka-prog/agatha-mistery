@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "name": "Херенграхт, Амстердам, Нидерланды",
+    "name_en": "Herengracht, Amsterdam, Netherlands",
+    "description": "Агата, Ларри и мистер Кент едут по Амстердаму на велосипедах вдоль Херенграхт и лавируют среди туристов. Это не просто прогулка, а часть погони по центру города, где они пытаются нащупать след в деле об алмазе. Отсюда маршрут ведет их дальше к городским точкам, связанным с расследованием.",
+    "description_en": "Agatha, Larry, and Mr. Kent ride through Amsterdam along the Herengracht, weaving through the tourist crowd. It is not a casual ride but part of their chase through the city center as they try to catch the trail in the diamond case. From here, the route leads them on to the next places tied to the investigation.",
+    "lat": 52.364783,
+    "lng": 4.894061,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Amsterdam_-_Herengracht_512.JPG",
+    "book": "Книга 19: По следам алмаза",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Magna Plaza, Амстердам, Нидерланды",
+    "name_en": "Magna Plaza, Amsterdam, Netherlands",
+    "description": "Герои направляются в центр Амстердама, где расположен торговый комплекс Magna Plaza. В книге это выглядит как осмысленная точка их городского маршрута, а не случайная остановка по дороге. Место важно потому, что сюда приводит их поиск по следу и здесь расследование продолжает разворачиваться.",
+    "description_en": "The heroes head into central Amsterdam, where the Magna Plaza shopping center is located. In the book, this is an intentional stop on their city route rather than an incidental detour. The place matters because their trail leads them here and the investigation continues to unfold around it.",
+    "lat": 52.3736,
+    "lng": 4.8903,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Magna_Plaza_2665.jpg/330px-Magna_Plaza_2665.jpg",
+    "book": "Книга 19: По следам алмаза",
+    "status": "approved"
+  },
+  {
+    "id": null,
+    "name": "Магере-Брюг, Амстердам, Нидерланды",
+    "name_en": "Magere Brug, Amsterdam, Netherlands",
+    "description": "Агата объясняет Ларри, что Magere Brug по-голландски означает «тощий мост», и показывает его как ориентир на Амстеле. Герои приходят сюда не ради вида: мост становится местом встречи и одним из узлов, через который они раскручивают план грабителя. В эпизоде это один из самых узнаваемых и сюжетно значимых амстердамских символов.",
+    "description_en": "Agatha explains to Larry that Magere Brug means the \"Skinny Bridge\" and uses it as a landmark on the Amstel. The heroes come here for more than the view: the bridge becomes a meeting point and one of the nodes through which they untangle the robber's plan. In the episode, it is one of the most recognizable and story-relevant symbols of Amsterdam.",
+    "lat": 52.3582,
+    "lng": 4.9015,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Magere_Brug_Amsterdam.JPG",
+    "book": "Книга 19: По следам алмаза",
+    "status": "approved"
+  }
+]
