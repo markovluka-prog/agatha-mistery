@@ -390,6 +390,251 @@ const App = (() => {
         }
     };
 
+    const shuffleArray = (items) => {
+        const copy = Array.isArray(items) ? items.slice() : [];
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    };
+
+    const getQuestionMode = (question) => {
+        const options = Array.isArray(question.options) ? question.options : [];
+        if (question.type === 'input' || options.length === 0) return 'input';
+        if (options.some((option) => option.image)) return 'image';
+        if (options.filter((option) => option.isCorrect).length > 1) return 'multiple';
+        return 'single';
+    };
+
+    const normalizeDifficultyValue = (value) => {
+        if (!value) return null;
+        const cleaned = String(value).trim().toLowerCase().replace(/ё/g, 'е');
+        if (['easy', 'легкая', 'лёгкая', 'простая', 'low'].includes(cleaned)) return 'easy';
+        if (['medium', 'средняя', 'средне', 'normal', 'mid'].includes(cleaned)) return 'medium';
+        if (['hard', 'сложная', 'высокая', 'high'].includes(cleaned)) return 'hard';
+        return null;
+    };
+
+    const inferQuestionDifficulty = (question) => {
+        const normalized = normalizeDifficultyValue(question.difficulty || question.level);
+        if (normalized) return normalized;
+        return 'medium';
+    };
+
+    const polishQuestionText = (value) => {
+        if (!value) return value;
+        let text = String(value).trim();
+
+        text = text.replace(/Как называется точка входа в (.+?)\?/i, 'С чего начинается $1?');
+        text = text.replace(/Какая точка действия выделяется в (.+?)\?/i, 'Какая локация особенно выделяется в $1?');
+        text = text.replace(/Какое место ключевое для (.+?)\?/i, 'Какое место становится ключевым для $1?');
+        text = text.replace(/Какое место является главным в (.+?)\?/i, 'Какое место становится главным в $1?');
+        text = text.replace(/Какую локацию стоит связать с (.+?)\?/i, 'Какую локацию мы вспоминаем, когда речь о $1?');
+        text = text.replace(/С какой страной или регионом прежде всего связана (.+?)\?/i, 'С какой страной или регионом прежде всего связывают $1?');
+        text = text.replace(/Что верно о книге «(.+?)»\?/i, 'Какой факт верно относится к книге «$1»?');
+        text = text.replace(/Что верно о герое «(.+?)»\?/i, 'Какой факт лучше всего характеризует героя «$1»?');
+
+        return text;
+    };
+
+    const normalizeQuizQuestion = (question, index) => ({
+        ...question,
+        id: Number(question.id) || index + 1,
+        text: polishQuestionText(question.text),
+        questionMode: getQuestionMode(question),
+        difficulty: inferQuestionDifficulty(question)
+    });
+
+    const normalizeQuizBank = (quiz) => {
+        const questions = Array.isArray(quiz.questions)
+            ? quiz.questions.map((question, index) => normalizeQuizQuestion(question, index))
+            : [];
+        return {
+            ...quiz,
+            questions,
+            questionsCount: Number(quiz.questionsCount) || Number(quiz.questions_count) || questions.length
+        };
+    };
+
+    const filterQuizQuestions = (questions, difficulty) => questions.filter((question) => (
+        question.difficulty === difficulty && question.questionMode !== 'image'
+    ));
+
+    const pickRandomQuestions = (pool, count, previousIds) => {
+        const shuffled = shuffleArray(pool);
+        const picked = shuffled.slice(0, count);
+
+        if (!previousIds || pool.length <= count) {
+            return picked;
+        }
+
+        const pickedIds = picked.map((question) => question.id).join(',');
+        if (pickedIds !== previousIds.join(',')) {
+            return picked;
+        }
+
+        for (let attempt = 0; attempt < 5; attempt += 1) {
+            const retry = shuffleArray(pool).slice(0, count);
+            const retryIds = retry.map((question) => question.id).join(',');
+            if (retryIds !== previousIds.join(',')) {
+                return retry;
+            }
+        }
+
+        return picked;
+    };
+
+    const getModeLabel = (mode) => {
+        switch (mode) {
+            case 'single':
+                return t('quizzes.mode.single', 'Один ответ');
+            case 'multiple':
+                return t('quizzes.mode.multiple', 'Несколько ответов');
+            case 'image':
+                return t('quizzes.mode.image', 'С картинками');
+            case 'input':
+                return t('quizzes.mode.input', 'Текстовый ответ');
+            default:
+                return t('quizzes.mode.mixed', 'Смешанные');
+        }
+    };
+
+    const getDifficultyLabel = (difficulty) => {
+        switch (difficulty) {
+            case 'easy':
+                return t('quizzes.difficulty.easy', 'Лёгкая');
+            case 'medium':
+                return t('quizzes.difficulty.medium', 'Средняя');
+            case 'hard':
+                return t('quizzes.difficulty.hard', 'Сложная');
+            default:
+                return difficulty;
+        }
+    };
+
+    const normalizeAnswer = (value) => String(value || '')
+        .trim()
+        .toLowerCase()
+        .replace(/ё/g, 'е')
+        .replace(/[«»"'`.,!?]/g, '')
+        .replace(/\s+/g, ' ');
+
+    const applyTemplate = (template, data) => String(template || '').replace(/\{(\w+)\}/g, (match, key) => (
+        Object.prototype.hasOwnProperty.call(data, key) ? data[key] : match
+    ));
+
+    const renderQuizForm = (container, quiz, questions, config) => {
+        const difficultyLabel = getDifficultyLabel(config?.difficulty || questions[0]?.difficulty || 'easy');
+
+        container.innerHTML = `
+            <div class="quiz-meta-line">${safeText(difficultyLabel)} • 10 ${safeText(t('quizzes.questions.lower', 'вопросов'))}</div>
+            <form id="quiz-form" class="grid" data-quiz-form>
+                ${questions.map((question, index) => {
+            const questionKey = index + 1;
+            const isInputType = question.questionMode === 'input';
+            const isMultiple = question.questionMode === 'multiple';
+
+            let questionContent = '';
+
+            if (isInputType) {
+                const placeholder = safeText(t('quizzes.input.placeholder', 'Enter your answer...'));
+                questionContent = `
+                    <div class="quiz-input-wrapper">
+                        <input type="text"
+                               name="q${questionKey}"
+                               class="quiz-text-input"
+                               placeholder="${placeholder}"
+                               autocomplete="off">
+                    </div>
+                `;
+            } else {
+                const inputType = isMultiple ? 'checkbox' : 'radio';
+                questionContent = (question.options || []).map((option) => {
+                    const image = safeUrl(resolveAsset(option.image));
+                    const optionText = safeText(option.text);
+                    return `
+                        <label class="quiz-option">
+                            <input type="${inputType}" name="q${questionKey}" value="${Number(option.id) || 0}">
+                            ${image ? `<img src="${safeAttr(image)}" alt="${optionText}">` : ''}
+                            <span>${optionText}</span>
+                        </label>
+                    `;
+                }).join('');
+            }
+
+            return `
+                <div class="quiz-question" data-question-type="${isInputType ? 'input' : (isMultiple ? 'multiple' : 'options')}">
+                    <h3>${safeText(t('quizzes.question', 'Question'))} ${index + 1}</h3>
+                    <p>${safeText(question.text)}</p>
+                    <div class="quiz-options">${questionContent}</div>
+                </div>
+            `;
+        }).join('')}
+                <button type="button" class="btn btn-primary" id="quiz-submit">${safeText(t('quizzes.btn.check', 'Check Answers'))}</button>
+                <div id="quiz-result" class="result-box" style="display: none;"></div>
+            </form>
+        `;
+
+        const submit = document.getElementById('quiz-submit');
+        const resultBox = document.getElementById('quiz-result');
+        const form = document.getElementById('quiz-form');
+
+        submit.addEventListener('click', () => {
+            let correct = 0;
+            let answered = 0;
+
+            questions.forEach((question, qIndex) => {
+                const questionKey = qIndex + 1;
+
+                if (question.questionMode === 'input') {
+                    const input = form.querySelector(`input[name="q${questionKey}"]`);
+                    if (input && input.value.trim()) {
+                        answered += 1;
+                        const userAnswer = normalizeAnswer(input.value);
+                        const correctAnswer = normalizeAnswer(question.correctAnswer);
+                        if (userAnswer === correctAnswer) {
+                            correct += 1;
+                            input.classList.add('correct');
+                            input.classList.remove('incorrect');
+                        } else {
+                            input.classList.add('incorrect');
+                            input.classList.remove('correct');
+                        }
+                    }
+                    return;
+                }
+
+                const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${questionKey}"]:checked`));
+                if (selectedInputs.length > 0) {
+                    answered += 1;
+                    const selectedIds = selectedInputs.map((input) => String(input.value));
+                    const correctIds = (question.options || []).filter((opt) => opt.isCorrect).map((opt) => String(opt.id));
+                    const isCorrect = correctIds.length === selectedIds.length
+                        && correctIds.every((id) => selectedIds.includes(id));
+                    if (isCorrect) {
+                        correct += 1;
+                    }
+                }
+            });
+
+            if (answered < questions.length) {
+                resultBox.style.display = 'block';
+                resultBox.textContent = t('quizzes.answer.all', 'Answer all questions to see your result.');
+                return;
+            }
+
+            const percent = Math.round((correct / questions.length) * 100);
+            const resultTemplate = t('quizzes.result', 'Ваш результат: {correct} из {total} ({percent}%).');
+            resultBox.style.display = 'block';
+            resultBox.textContent = applyTemplate(resultTemplate, {
+                correct,
+                total: questions.length,
+                percent
+            });
+        });
+    };
+
     const renderImageGallery = (images, placeName) => {
         if (!images || images.length === 0) {
             return `<div class="gallery-empty">${safeText(t('noimage', 'No image'))}</div>`;
@@ -914,20 +1159,23 @@ const App = (() => {
         showLoading(container, t('quizzes.loading', 'Loading quizzes...'));
 
         try {
-            const quizzes = await loadQuizzes();
-            const questionsText = t('quizzes.questions', 'Questions');
+            const quizzes = (await loadQuizzes()).map(normalizeQuizBank);
+            if (!quizzes.length) {
+                container.innerHTML = `<div class="empty-state">${safeText(t('quizzes.empty', 'Пока викторин нет.'))}</div>`;
+                return;
+            }
             const startText = t('quizzes.btn.start', 'Start');
+            const randomText = t('quizzes.random10', '10 случайных вопросов');
             container.innerHTML = quizzes.map((quiz) => {
                 const quizId = Number(quiz.id) || 0;
                 const title = safeText(quiz.title);
                 const description = safeText(quiz.description);
-                const questionsCount = Number(quiz.questionsCount) || 0;
                 return `
                     <article class="card">
                         <div class="card-body">
                             <h3 class="card-title">${title}</h3>
                             <p class="card-text">${description}</p>
-                            <div class="card-meta">${questionsText}: ${questionsCount}</div>
+                            <div class="card-meta">${safeText(randomText)}</div>
                             <a class="btn btn-primary" href="${safeAttr(state.basePath)}pages/quiz-detail.html?quiz=${quizId}">${startText}</a>
                         </div>
                     </article>
@@ -953,7 +1201,7 @@ const App = (() => {
         }
 
         try {
-            const quizzes = await loadQuizzes();
+            const quizzes = (await loadQuizzes()).map(normalizeQuizBank);
             const quiz = quizzes.find((item) => item.id === id);
             if (!quiz) {
                 container.innerHTML = `<div class="empty-state">${safeText(t('error.quiz_not_found', 'Quiz not found.'))}</div>`;
@@ -962,122 +1210,75 @@ const App = (() => {
 
             container.innerHTML = `
                 <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">${safeText(quiz.title)}</h2>
-                        <p class="card-text">${safeText(quiz.description)}</p>
+                    <div class="card-body quiz-session-body">
+                        <div>
+                            <h2 class="card-title">${safeText(quiz.title)}</h2>
+                            <p class="card-text">${safeText(quiz.description)}</p>
+                        </div>
+                        <a class="btn btn-secondary" href="${safeAttr(state.basePath)}pages/quiz.html">${safeText(t('quizzes.btn.back', 'Назад к темам'))}</a>
                     </div>
                 </div>
-                <form id="quiz-form" class="grid" data-quiz-form>
-                    ${quiz.questions.map((question, index) => {
-                const questionKey = Number(question.id) || index + 1;
-                // Определяем тип вопроса
-                const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
-                const correctOptionsCount = (question.options || []).filter(opt => opt.isCorrect).length;
-                const isMultiple = correctOptionsCount > 1;
-
-                let questionContent = '';
-
-                if (isInputType) {
-                    // Вопрос с текстовым вводом
-                    const placeholder = safeText(t('quizzes.input.placeholder', 'Enter your answer...'));
-                    questionContent = `
-                        <div class="quiz-input-wrapper">
-                            <input type="text" 
-                                   name="q${questionKey}" 
-                                   class="quiz-text-input" 
-                                   placeholder="${placeholder}"
-                                   autocomplete="off">
-                        </div>
-                    `;
-                } else {
-                    // Вопрос с вариантами ответов (радиокнопки или чекбоксы)
-                    const inputType = isMultiple ? 'checkbox' : 'radio';
-                    questionContent = question.options.map((option) => {
-                        const image = safeUrl(resolveAsset(option.image));
-                        const optionText = safeText(option.text);
-                        return `
-                            <label class="quiz-option">
-                                <input type="${inputType}" name="q${questionKey}" value="${Number(option.id) || 0}">
-                                ${image ? `<img src="${safeAttr(image)}" alt="${optionText}">` : ''}
-                                <span>${optionText}</span>
+                <div class="card quiz-builder-card">
+                    <div class="card-body">
+                        <h3 class="card-title">${safeText(t('quizzes.builder.title', 'Выбери сложность'))}</h3>
+                        <p class="card-text">${safeText(t('quizzes.builder.subtitle', 'Тема уже выбрана. Теперь выбери сложность и начни викторину.'))}</p>
+                        <div class="quiz-builder-grid">
+                            <label class="quiz-builder-field">
+                                <span>${safeText(t('quizzes.builder.difficulty', 'Сложность'))}</span>
+                                <select id="quiz-difficulty">
+                                    <option value="easy">${safeText(t('quizzes.difficulty.easy', 'Лёгкая'))}</option>
+                                    <option value="medium">${safeText(t('quizzes.difficulty.medium', 'Средняя'))}</option>
+                                    <option value="hard">${safeText(t('quizzes.difficulty.hard', 'Сложная'))}</option>
+                                </select>
                             </label>
-                        `;
-                    }).join('');
-                }
-
-                const questionLabel = safeText(t('quizzes.question', 'Question'));
-                return `
-                    <div class="quiz-question" data-question-type="${isInputType ? 'input' : (isMultiple ? 'multiple' : 'options')}">
-                        <h3>${questionLabel} ${index + 1}</h3>
-                        <p>${safeText(question.text)}</p>
-                        <div class="quiz-options">${questionContent}</div>
+                        </div>
+                        <p id="quiz-builder-summary" class="quiz-builder-summary"></p>
+                        <button type="button" class="btn btn-primary" id="quiz-generate">${safeText(t('quizzes.builder.generate', 'Начать викторину'))}</button>
+                        <div id="quiz-generated" class="quiz-generated"></div>
                     </div>
-                `;
-            }).join('')}
-                    <button type="button" class="btn btn-primary" id="quiz-submit">${safeText(t('quizzes.btn.check', 'Check Answers'))}</button>
-                    <div id="quiz-result" class="result-box" style="display: none;"></div>
-                </form>
+                </div>
             `;
+            const difficultySelect = document.getElementById('quiz-difficulty');
+            const generateButton = document.getElementById('quiz-generate');
+            const summary = document.getElementById('quiz-builder-summary');
+            const generatedContainer = document.getElementById('quiz-generated');
+            let lastGeneratedIds = null;
 
-            const submit = document.getElementById('quiz-submit');
-            const resultBox = document.getElementById('quiz-result');
-            const form = document.getElementById('quiz-form');
+            const updateSummary = () => {
+                const available = filterQuizQuestions(quiz.questions, difficultySelect.value);
+                summary.textContent = available.length
+                    ? `${safeText(t('quizzes.builder.available', 'Вопросов на этой сложности'))}: ${available.length}`
+                    : safeText(t('quizzes.builder.empty', 'Для таких фильтров пока нет вопросов.'));
+                generateButton.disabled = available.length === 0;
+            };
 
-            submit.addEventListener('click', () => {
-                let correct = 0;
-                let answered = 0;
-
-                quiz.questions.forEach((question, qIndex) => {
-                    const questionKey = Number(question.id) || (qIndex + 1);
-                    const isInputType = question.type === 'input' || (!question.options || question.options.length === 0);
-
-                    if (isInputType) {
-                        // Проверка текстового ввода
-                        const input = form.querySelector(`input[name="q${questionKey}"]`);
-                        if (input && input.value.trim()) {
-                            answered += 1;
-                            const userAnswer = input.value.trim().toLowerCase();
-                            const correctAnswer = (question.correctAnswer || '').toLowerCase();
-                            if (userAnswer === correctAnswer) {
-                                correct += 1;
-                                input.classList.add('correct');
-                                input.classList.remove('incorrect');
-                            } else {
-                                input.classList.add('incorrect');
-                                input.classList.remove('correct');
-                            }
-                        }
-                    } else {
-                        // Проверка выбора из вариантов (один или несколько)
-                        const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${questionKey}"]:checked`));
-                        if (selectedInputs.length > 0) {
-                            answered += 1;
-
-                            const selectedIds = selectedInputs.map(input => input.value);
-                            const correctIds = question.options.filter(opt => opt.isCorrect).map(opt => opt.id);
-
-                            // Проверяем, что выбраны все правильные и нет лишних
-                            const isCorrect = correctIds.length === selectedIds.length &&
-                                correctIds.every(id => selectedIds.includes(id));
-
-                            if (isCorrect) {
-                                correct += 1;
-                            }
-                        }
-                    }
-                });
-
-                if (answered < quiz.questions.length) {
-                    resultBox.style.display = 'block';
-                    resultBox.textContent = t('quizzes.answer.all', 'Answer all questions to see your result.');
+            const generateQuiz = () => {
+                const pool = filterQuizQuestions(quiz.questions, difficultySelect.value);
+                if (!pool.length) {
+                    generatedContainer.innerHTML = `<div class="empty-state">${safeText(t('quizzes.builder.empty', 'Для таких фильтров пока нет вопросов.'))}</div>`;
                     return;
                 }
+                const selectedQuestions = pickRandomQuestions(pool, 10, lastGeneratedIds);
+                lastGeneratedIds = selectedQuestions.map((question) => question.id);
+                renderQuizForm(generatedContainer, quiz, selectedQuestions, {
+                    difficulty: difficultySelect.value
+                });
+            };
 
-                const percent = Math.round((correct / quiz.questions.length) * 100);
-                resultBox.style.display = 'block';
-                const resultText = t('quizzes.result', 'Your result');
-                resultBox.textContent = `${resultText}: ${correct} ${safeText(t('quizzes.of', 'of'))} ${quiz.questions.length} (${percent}%).`;
+            difficultySelect.addEventListener('change', () => {
+                lastGeneratedIds = null;
+                updateSummary();
             });
+            generateButton.addEventListener('click', generateQuiz);
+
+            updateSummary();
+            generatedContainer.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">${safeText(t('quizzes.builder.ready', 'Нажми «Начать викторину», и мы соберём для тебя 10 случайных вопросов по этой теме.'))}</p>
+                    </div>
+                </div>
+            `;
         } catch (error) {
             container.innerHTML = `<div class="empty-state">${safeText(t('error.quiz_not_found', 'Quiz not found.'))}</div>`;
         }
