@@ -1,22 +1,10 @@
 [
   {
     "id": null,
-    "name": "Регистан, Самарканд, Узбекистан",
-    "name_en": "Registan, Samarkand, Uzbekistan",
-    "description": "Регистан лучше всего передаёт тот Самарканд, к которому летят Агата и Ларри: древний, яркий и будто обещающий новую загадку за каждым поворотом. Здесь история о похищенном ковре перестаёт быть просто тревожной новостью издалека и превращается в настоящее восточное приключение. Через Регистан книга даёт почувствовать, что герои вошли в совсем другой мир — торжественный, тёплый и полный тайн.",
-    "description_en": "Registan best captures the Samarkand Agatha and Larry are flying toward: ancient, vivid, and as if promising a new mystery around every corner. Here, the story of the stolen carpet stops being distant troubling news and becomes a true eastern adventure. Through Registan, the book makes it feel as though the heroes have stepped into a completely different world, ceremonial, warm, and full of secrets.",
-    "lat": 39.65472222,
-    "lng": 66.97583333,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/960px-RegistanSquare_Samarkand.jpg",
-    "book": "Книга 16: Агата Мистери. Разыскивается ковёр-самолёт",
-    "status": "approved"
-  },
-  {
-    "id": null,
     "name": "Бейкер-Палас, Лондон, Великобритания",
     "name_en": "Baker Palace, London, United Kingdom",
-    "description": "У Бейкер-Палас всё ещё кажется спокойным и привычным, но именно здесь уютное семейное утро вдруг ломается новостями о новом деле. От этого лондонского адреса книга резко делает шаг в сторону большого путешествия и погони за похитителем ковра. Бейкер-Палас запоминается как точка, где обычный день Мистери внезапно превращается в начало международного приключения.",
-    "description_en": "At Baker Palace, everything still seems calm and familiar, yet this is exactly where a cozy family morning is suddenly broken by news of a new case. From this London address, the book sharply turns toward a long journey and the chase for the carpet thief. Baker Palace stands out as the point where an ordinary day for the Misterys suddenly becomes the start of an international adventure.",
+    "description": "На террасе Бейкер-Палас суббота начинается с настоящей катастрофы: Ларри потерял обручальные кольца кузена Даррена, чья свадьба уже через несколько часов. Пока мать Сибилла требует немедленного ответа, Ларри использует ИнтерОко как металлодетектор и в итоге находит кольца в мусорном мешке. Но тут же на экране появляется новое задание от ЮМ60: лететь в Самарканд — из музея Улугбека похищен легендарный ковёр Атеши-тан, считающийся прообразом сказочного летающего ковра из «Тысячи и одной ночи».",
+    "description_en": "On the rooftop terrace of Baker Palace, Saturday begins with a real disaster: Larry has lost the wedding rings for cousin Darren, whose ceremony is just hours away. While his mother Sybilla demands answers, Larry uses ИнтерОко as a metal detector and eventually finds the rings in a rubbish bag. Then a new message from ЮМ60 appears on screen: fly to Samarkand — the legendary carpet Ateshi-tan, believed to be the inspiration for the magic flying carpet in A Thousand and One Nights, has been stolen from the Ulugbek Museum.",
     "lat": 51.523767,
     "lng": -0.158555,
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/221B_Baker_Street.jpg/800px-221B_Baker_Street.jpg",
