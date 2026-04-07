@@ -568,6 +568,15 @@ img {
     border-top: 1px solid rgba(20, 20, 20, 0.12);
 }
 
+.map-filters-standalone {
+    margin-top: var(--spacing-medium);
+    padding: var(--spacing-medium);
+    background-color: var(--background-white);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(20, 20, 20, 0.12);
+    box-shadow: var(--shadow-small);
+}
+
 .map-filters-label {
     margin-bottom: 10px;
     font-size: 0.85rem;
