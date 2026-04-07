@@ -77,7 +77,7 @@
     </style>
 </head>
 
-<body class="map-page">
+<body>
     <nav class="main-nav">
         <div class="nav-container">
             <div class="logo">
@@ -117,6 +117,10 @@
                         <a href="#" id="popup-closer" class="ol-popup-closer"></a>
                         <div id="popup-content"></div>
                     </div>
+                    <div class="map-filters-panel map-filters-standalone">
+                        <p class="map-filters-label">Фильтр по книгам</p>
+                        <div id="places-filters" class="places-filters places-filters-bottom"></div>
+                    </div>
                     <p class="map-note" data-i18n="map.note">Нажми на карточку локации, чтобы приблизить карту.</p>
                 </div>
                 <div class="map-side">
@@ -131,13 +135,8 @@
                             </div>
                         </div>
                     </aside>
-                    <div class="map-filters-panel map-filters-standalone">
-                        <p class="map-filters-label">Фильтр по книгам</p>
-                        <div id="places-filters" class="places-filters places-filters-bottom"></div>
-                    </div>
                 </div>
             </div>
-            <div class="map-filters-spacer" aria-hidden="true"></div>
         </div>
     </section>
 

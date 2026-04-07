@@ -583,19 +583,6 @@ img {
     box-shadow: var(--shadow-small);
 }
 
-.map-page .map-filters-standalone {
-    position: fixed;
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    width: min(1100px, calc(100% - 40px));
-    z-index: 40;
-}
-
-.map-filters-spacer {
-    height: 140px;
-}
-
 .map-filters-label {
     margin-bottom: 10px;
     font-size: 0.85rem;
@@ -938,14 +925,6 @@ input[type="file"] {
         min-height: 520px;
     }
 
-    .map-page .map-filters-standalone {
-        width: calc(100% - 24px);
-        bottom: 12px;
-    }
-
-    .map-filters-spacer {
-        height: 180px;
-    }
 
     .map-filters-panel {
         padding-top: 8px;
