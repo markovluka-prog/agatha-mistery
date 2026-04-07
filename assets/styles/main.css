@@ -500,6 +500,13 @@ img {
     align-items: stretch;
 }
 
+.map-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+    height: 520px;
+}
+
 .map-panel {
     display: flex;
     flex-direction: column;
@@ -525,11 +532,11 @@ img {
     padding: var(--spacing-large);
     border: 1px solid rgba(20, 20, 20, 0.12);
     box-shadow: var(--shadow-small);
-    height: 520px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     gap: 14px;
+    flex: 1 1 auto;
 }
 
 .map-sidebar h3 {
@@ -569,7 +576,6 @@ img {
 }
 
 .map-filters-standalone {
-    margin-top: var(--spacing-medium);
     padding: var(--spacing-medium);
     background-color: var(--background-white);
     border-radius: var(--border-radius);
@@ -911,8 +917,11 @@ input[type="file"] {
         height: 380px;
     }
 
-    .map-sidebar {
+    .map-side {
         height: auto;
+    }
+
+    .map-sidebar {
         min-height: 520px;
     }
 

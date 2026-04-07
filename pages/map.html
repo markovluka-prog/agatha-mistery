@@ -119,21 +119,23 @@
                     </div>
                     <p class="map-note" data-i18n="map.note">Нажми на карточку локации, чтобы приблизить карту.</p>
                 </div>
-                <aside class="map-sidebar">
-                    <h3 data-i18n="map.sidebar.title">Локации</h3>
-                    <div class="places-carousel">
-                        <div id="places-grid" class="map-grid"></div>
-                        <div class="carousel-controls">
-                            <button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="Назад">&#8592;</button>
-                            <div id="carousel-counter" class="carousel-counter">1 / —</div>
-                            <button class="carousel-arrow carousel-next" id="carousel-next" aria-label="Вперёд">&#8594;</button>
+                <div class="map-side">
+                    <aside class="map-sidebar">
+                        <h3 data-i18n="map.sidebar.title">Локации</h3>
+                        <div class="places-carousel">
+                            <div id="places-grid" class="map-grid"></div>
+                            <div class="carousel-controls">
+                                <button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="Назад">&#8592;</button>
+                                <div id="carousel-counter" class="carousel-counter">1 / —</div>
+                                <button class="carousel-arrow carousel-next" id="carousel-next" aria-label="Вперёд">&#8594;</button>
+                            </div>
                         </div>
+                    </aside>
+                    <div class="map-filters-panel map-filters-standalone">
+                        <p class="map-filters-label">Фильтр по книгам</p>
+                        <div id="places-filters" class="places-filters places-filters-bottom"></div>
                     </div>
-                </aside>
-            </div>
-            <div class="map-filters-panel map-filters-standalone">
-                <p class="map-filters-label">Фильтр по книгам</p>
-                <div id="places-filters" class="places-filters places-filters-bottom"></div>
+                </div>
             </div>
         </div>
     </section>
