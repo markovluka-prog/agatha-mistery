@@ -873,13 +873,14 @@ const App = (() => {
         if (!container || !content || !closer) return;
 
         // Create Overlay for Popup
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
         const overlay = new window.ol.Overlay({
             element: container,
             autoPan: {
-                animation: {
-                    duration: 250,
-                },
+                animation: { duration: 250 },
+                margin: isMobile ? 20 : 50,
             },
+            positioning: isMobile ? 'bottom-center' : 'bottom-left',
         });
 
         // Close popup handler
@@ -902,10 +903,11 @@ const App = (() => {
                 place: place
             });
 
-            // Style for the marker (simple red circle with white border to mimic a pin head)
+            // Style for the marker — larger on mobile for better touch targets
+            const markerRadius = window.matchMedia('(max-width: 768px)').matches ? 13 : 8;
             feature.setStyle(new window.ol.style.Style({
                 image: new window.ol.style.Circle({
-                    radius: 8,
+                    radius: markerRadius,
                     fill: new window.ol.style.Fill({ color: '#e74c3c' }),
                     stroke: new window.ol.style.Stroke({ color: '#fff', width: 2 })
                 })
@@ -1296,6 +1298,40 @@ const App = (() => {
                 message.classList.add('message', type === 'success' ? 'message-success' : 'message-error');
             };
 
+            // showFormSuccess: 2s «ОТПРАВЛЕНО» banner + 5s progress bar + form reset
+            const showFormSuccess = (targetForm, msg) => {
+                // Banner
+                const banner = document.createElement('div');
+                banner.className = 'form-sent-banner';
+                banner.textContent = t('form.sent.banner', 'ОТПРАВЛЕНО');
+                document.body.appendChild(banner);
+                setTimeout(() => banner.remove(), 2000);
+
+                // Progress bar + message in form
+                if (message) {
+                    message.innerHTML = `
+                        <span class="form-success-text">${safeText(msg)}</span>
+                        <div class="form-progress-bar"><div class="form-progress-fill"></div></div>
+                    `;
+                    message.classList.remove('message-error');
+                    message.classList.add('message', 'message-success');
+                    const fill = message.querySelector('.form-progress-fill');
+                    if (fill) {
+                        fill.style.transition = 'width 5s linear';
+                        // Force reflow before animation
+                        void fill.offsetWidth;
+                        fill.style.width = '100%';
+                    }
+                    setTimeout(() => {
+                        targetForm.reset();
+                        message.innerHTML = '';
+                        message.classList.remove('message', 'message-success');
+                    }, 5000);
+                } else {
+                    targetForm.reset();
+                }
+            };
+
             // Init Autosave
             const initAutosave = () => {
                 const formId = form.id; // Ensure forms have IDs
@@ -1386,13 +1422,18 @@ const App = (() => {
                 if (Supa.isReady()) {
                     try {
                         await submitToSupabase(storageKey, data, file);
-                        setMessage(t('form.success', 'Thank you! Your work has been submitted.'), 'success');
-                        form.reset();
-                        localStorage.removeItem(`autosave_${form.id}`); // Clear autosave
+                        const isFanficOrIllustration = storageKey === 'agatha_fanfics' || storageKey === 'agatha_illustrations';
+                        const successMsg = isFanficOrIllustration
+                            ? t('form.success.pending', 'Спасибо! Работа отправлена на проверку — скоро появится на сайте.')
+                            : t('form.success', 'Спасибо! Ваша работа принята.');
+                        showFormSuccess(form, successMsg);
+                        localStorage.removeItem(`autosave_${form.id}`);
                         if (submitButton) submitButton.disabled = false;
                         return;
                     } catch (error) {
-                        setMessage(t('form.error.supabase', 'Failed to submit data to Supabase.'), 'error');
+                        setMessage(error.message && error.message.includes('Invalid')
+                            ? error.message
+                            : t('form.error.supabase', 'Не удалось отправить. Попробуй ещё раз.'), 'error');
                         if (submitButton) submitButton.disabled = false;
                         return;
                     }

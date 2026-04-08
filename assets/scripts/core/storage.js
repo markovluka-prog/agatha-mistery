@@ -112,11 +112,11 @@ const Supa = (() => {
         enforceClientRateLimit('fanfic_submit');
         const safeName = validateTextField(name, 2, 60, 'name');
         const safeTitle = validateTextField(title, 2, 100, 'title');
-        const safeCharacter = String(character ?? '').trim().slice(0, 80);
-        const safeStory = validateTextField(story, 20, 2000, 'story');
+        const safeCharacter = validateTextField(character, 1, 80, 'character');
+        const safeStory = validateTextField(story, 50, 2000, 'story');
         const { error } = await client
             .from('fanfics')
-            .insert({ name: safeName, title: safeTitle, character: safeCharacter, story: safeStory });
+            .insert({ name: safeName, title: safeTitle, character: safeCharacter, story: safeStory, status: 'pending' });
         if (error) throw error;
         return true;
     };
@@ -161,7 +161,8 @@ const Supa = (() => {
                 description: safeDescription,
                 file_path: filePath,
                 file_url: fileUrl,
-                file_name: fileName
+                file_name: fileName,
+                status: 'pending'
             });
         if (error) throw error;
         return true;

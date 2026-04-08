@@ -17,7 +17,7 @@
             position: absolute;
             background-color: white;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-            padding: 15px;
+            padding: 15px 36px 15px 15px;
             border-radius: 10px;
             border: 1px solid #cccccc;
             bottom: 12px;
@@ -55,11 +55,17 @@
         .ol-popup-closer {
             text-decoration: none;
             position: absolute;
-            top: 2px;
-            right: 8px;
+            top: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #aaa;
             font-size: 20px;
             font-weight: bold;
+            border-radius: 0 10px 0 0;
         }
 
         .ol-popup-closer:after {
@@ -73,6 +79,34 @@
 
         .popup-gallery {
             margin-bottom: 10px;
+        }
+
+        /* Mobile popup — центрируем и ограничиваем ширину */
+        @media (max-width: 768px) {
+            .ol-popup {
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 16px;
+                min-width: 240px;
+                max-width: calc(100vw - 24px);
+                width: calc(100vw - 24px);
+                font-size: 13px;
+            }
+
+            .ol-popup:after {
+                left: 50%;
+            }
+
+            .ol-popup:before {
+                left: 50%;
+                margin-left: -1px;
+            }
+
+            .ol-popup-closer {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+            }
         }
     </style>
 </head>

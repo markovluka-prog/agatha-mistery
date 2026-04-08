@@ -68,6 +68,40 @@
         form.prepend(message);
     };
 
+    const showSentSuccess = (text) => {
+        // 2-second «ОТПРАВЛЕНО» banner
+        const banner = document.createElement('div');
+        banner.className = 'form-sent-banner';
+        banner.textContent = 'ОТПРАВЛЕНО';
+        document.body.appendChild(banner);
+        setTimeout(() => banner.remove(), 2000);
+
+        // Message + 5-second progress bar in form
+        const existing = form.querySelector('.message');
+        if (existing) existing.remove();
+
+        const message = document.createElement('div');
+        message.classList.add('message', 'message-success');
+        message.innerHTML = `
+            <span class="form-success-text">${escapeHtml(text)}</span>
+            <div class="form-progress-bar"><div class="form-progress-fill"></div></div>
+        `;
+        form.prepend(message);
+
+        const fill = message.querySelector('.form-progress-fill');
+        if (fill) {
+            fill.style.transition = 'width 5s linear';
+            void fill.offsetWidth;
+            fill.style.width = '100%';
+        }
+
+        setTimeout(() => {
+            form.reset();
+            updateCounter();
+            message.remove();
+        }, 5000);
+    };
+
     const showLoading = () => {
         reviewsList.innerHTML = `
             <div class="loading-container">
@@ -115,9 +149,7 @@
                 const result = await Supa.submitReview({ name, text });
                 if (result && result.approved) {
                     await loadReviews();
-                    addMessage('success', t('reviews.success', 'Thank you for your review!'));
-                    form.reset();
-                    updateCounter();
+                    showSentSuccess(t('reviews.success', 'Спасибо за отзыв! Он уже опубликован.'));
                     return;
                 }
                 const scoreLabel = result && typeof result.score === 'number' ? t('review.score', { score: result.score }) : '';
