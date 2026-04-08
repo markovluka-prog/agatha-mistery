@@ -170,7 +170,7 @@ async function moderateRecord(tableName, row) {
     }
 
     if (tableName === 'fanfics') {
-        const text = `Автор: ${row.name}\nНазвание: ${row.title}\nПерсонаж: ${row.character || '(не указан)'}\nИстория: ${row.story}`;
+        const text = `Автор: ${row.name}\nНазвание: ${row.title}\nПерсонаж: ${row.genre || '(не указан)'}\nИстория: ${row.story}`;
         return moderateText(SYSTEM_PROMPT_FANFIC, text);
     }
 

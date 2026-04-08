@@ -1564,7 +1564,7 @@ const App = (() => {
                             <h4 class="card-title">${safeText(fanfic.title)}</h4>
                             <div class="card-meta">
                                 <span>${safeText(authorText)}: ${safeText(fanfic.name)}</span>
-                                ${fanfic.character ? `<span>${safeText(characterText)}: ${safeText(fanfic.character)}</span>` : ''}
+                                ${fanfic.genre ? `<span>${safeText(characterText)}: ${safeText(fanfic.genre)}</span>` : ''}
                             </div>
                             <p class="card-text fanfic-story">${safeText(fanfic.story)}</p>
                         </div>

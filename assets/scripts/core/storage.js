@@ -112,11 +112,12 @@ const Supa = (() => {
         enforceClientRateLimit('fanfic_submit');
         const safeName = validateTextField(name, 2, 60, 'name');
         const safeTitle = validateTextField(title, 2, 100, 'title');
-        const safeCharacter = validateTextField(character, 1, 80, 'character');
+        // DB column is "genre" but form field is "character" (main character)
+        const safeGenre = validateTextField(character, 1, 80, 'character');
         const safeStory = validateTextField(story, 50, 2000, 'story');
         const { error } = await client
             .from('fanfics')
-            .insert({ name: safeName, title: safeTitle, character: safeCharacter, story: safeStory, status: 'pending' });
+            .insert({ name: safeName, title: safeTitle, genre: safeGenre, story: safeStory, status: 'pending' });
         if (error) throw error;
         return true;
     };
