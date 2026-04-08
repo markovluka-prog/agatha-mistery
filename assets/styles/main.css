@@ -47,6 +47,7 @@ body {
     font-size: 16px;
     line-height: 1.6;
     color: var(--text-dark);
+    overflow-x: hidden;
     /* High contrast gradient to be 100% sure it is visible */
     background: linear-gradient(135deg, #E6D0A1 0%, #FFF5D6 50%, #FFF9EA 100%) !important;
     background-attachment: fixed !important;
@@ -912,6 +913,11 @@ input[type="file"] {
     .map-layout {
         grid-template-columns: 1fr;
         gap: var(--spacing-medium);
+    }
+
+    .map-panel {
+        min-width: 0;
+        max-width: 100%;
     }
 
     .places-map {
