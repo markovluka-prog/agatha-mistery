@@ -944,24 +944,14 @@ input[type="file"] {
     }
 
     .map-grid {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding-bottom: 4px;
-    }
-
-    .map-grid::-webkit-scrollbar {
-        display: none;
+        overflow: visible;
     }
 
     .place-card {
-        min-width: 200px;
-        max-width: 240px;
-        flex: 0 0 auto;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        flex: 1 1 auto;
     }
 
     .carousel-controls {
