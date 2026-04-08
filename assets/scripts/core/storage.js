@@ -100,11 +100,14 @@ const Supa = (() => {
 
     const submitReview = async ({ name, text }) => {
         if (!client) throw new Error('Supabase не настроен');
-        const { data, error } = await client.functions.invoke('moderate-review', {
-            body: { name, text }
-        });
+        enforceClientRateLimit('review_submit');
+        const safeName = validateTextField(name, 2, 60, 'name');
+        const safeText = validateTextField(text, 5, 500, 'text');
+        const { error } = await client
+            .from('reviews')
+            .insert({ name: safeName, text: safeText, status: 'pending' });
         if (error) throw error;
-        return data;
+        return true;
     };
 
     const addFanfic = async ({ name, title, character, story }) => {

@@ -146,14 +146,8 @@
 
         if (Supa.isReady()) {
             try {
-                const result = await Supa.submitReview({ name, text });
-                if (result && result.approved) {
-                    await loadReviews();
-                    showSentSuccess(t('reviews.success', 'Спасибо за отзыв! Он уже опубликован.'));
-                    return;
-                }
-                const scoreLabel = result && typeof result.score === 'number' ? t('review.score', { score: result.score }) : '';
-                addMessage('error', `${scoreLabel}${t('error.review_check', 'Review did not pass moderation.')}`);
+                await Supa.submitReview({ name, text });
+                showSentSuccess(t('reviews.success.pending', 'Спасибо за отзыв! Он появится после проверки.'));
                 return;
             } catch (error) {
                 addMessage('error', t('error.review_generic', 'Failed to submit review. Try later.'));
