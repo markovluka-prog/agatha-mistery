@@ -1000,13 +1000,17 @@ const App = (() => {
             }
         });
 
-        // Fit bounds if multiple places
+        // Fit bounds after browser has applied CSS and map knows its size
         if (places.length > 0) {
-            const extent = vectorSource.getExtent();
-            // Adding padding is a bit more complex in OL, direct fit is easier
-            if (!window.ol.extent.isEmpty(extent)) {
-                map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 5 });
-            }
+            const fitMap = () => {
+                map.updateSize();
+                const extent = vectorSource.getExtent();
+                if (!window.ol.extent.isEmpty(extent)) {
+                    map.getView().fit(extent, { padding: [40, 40, 40, 40], maxZoom: 5 });
+                }
+            };
+            // Double rAF ensures layout is complete
+            requestAnimationFrame(() => requestAnimationFrame(fitMap));
         }
 
         // Link location cards in sidebar to map
