@@ -14,7 +14,7 @@ const SUPABASE_URL = 'https://eetgsrcitolkvdifltns.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVldGdzcmNpdG9sa3ZkaWZsdG5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NTMxNzYsImV4cCI6MjA4NTUyOTE3Nn0.Ry5C_nlp27IZYRWLrnTvnBZH5yqKvHavLMM7uBXZI2I';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 10;
 const DELAY_MS = 1200;
 
 if (!OPENROUTER_API_KEY) {
@@ -99,7 +99,7 @@ async function rewriteBatch(questions) {
             },
         ],
         temperature: 0.7,
-        max_tokens: 4000,
+        max_tokens: 2000,
     };
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
