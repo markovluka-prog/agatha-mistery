@@ -872,15 +872,28 @@ const App = (() => {
 
         if (!container || !content || !closer) return;
 
-        // Create Overlay for Popup
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        // Detect mobile
+        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+        // Mobile detail panel elements
+        const mobileDetail = document.getElementById('map-mobile-detail');
+        const mobileDetailContent = document.getElementById('map-mobile-detail-content');
+        const mobileDetailClose = document.getElementById('map-mobile-detail-close');
+
+        if (mobileDetailClose && mobileDetail) {
+            mobileDetailClose.addEventListener('click', () => {
+                mobileDetail.classList.add('hidden');
+            });
+        }
+
+        // Create Overlay for Popup (desktop only)
         const overlay = new window.ol.Overlay({
             element: container,
             autoPan: {
                 animation: { duration: 250 },
-                margin: isMobile ? 20 : 50,
+                margin: 50,
             },
-            positioning: isMobile ? 'bottom-center' : 'bottom-left',
+            positioning: 'bottom-left',
         });
 
         // Close popup handler
@@ -938,68 +951,52 @@ const App = (() => {
             })
         });
 
-        // Handle clicks on map features (markers)
+        // Build place detail HTML (shared for popup and mobile panel)
+        const buildPlaceHtml = (place) => {
+            let galleryHtml = '';
+            if (place.images && place.images.length > 0) {
+                const firstImg = safeUrl(resolveAsset(place.images[0].url));
+                galleryHtml = `<img src="${safeAttr(firstImg)}" alt="${safeText(place.name)}">`;
+            }
+            return `${galleryHtml}<strong>${safeText(place.name)}</strong>${safeText(place.description)}`;
+        };
+
+        // Show place info depending on device
+        const showPlaceInfo = (place, coordinates) => {
+            const html = buildPlaceHtml(place);
+
+            if (isMobile()) {
+                // Mobile: show panel below map, scroll to it
+                if (mobileDetail && mobileDetailContent) {
+                    mobileDetailContent.innerHTML = html;
+                    mobileDetail.classList.remove('hidden');
+                    setTimeout(() => {
+                        mobileDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+                // Still zoom in on mobile
+                map.getView().animate({ center: coordinates, zoom: 12, duration: 800 });
+            } else {
+                // Desktop: OL popup
+                content.innerHTML = `<div class="popup-content">${html}</div>`;
+                overlay.setPosition(coordinates);
+                map.getView().animate({ center: coordinates, zoom: 15, duration: 1000 });
+            }
+        };
+
+        // Handle clicks/taps on map features
         map.on('singleclick', function (evt) {
-            const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
-                return feature;
-            });
+            // Increase hit tolerance for mobile touch
+            const tolerance = isMobile() ? 12 : 5;
+            const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f, { hitTolerance: tolerance });
 
             if (feature) {
                 const place = feature.get('place');
                 const coordinates = feature.getGeometry().getCoordinates();
-
-                // Zoom to the marker
-                map.getView().animate({
-                    center: coordinates,
-                    zoom: 15,
-                    duration: 1000
-                });
-
-                // Prepare popup content
-                let popupGallery = '';
-                if (place.images && place.images.length > 0) {
-                    const firstImg = resolveAsset(place.images[0].url);
-                    if (place.images.length === 1) {
-                        popupGallery = `<img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-image">`;
-                    } else {
-                        const popupThumbs = place.images.slice(0, 4).map((img, i) => {
-                            const url = safeUrl(resolveAsset(img.url));
-                            const caption = safeText(img.caption || '');
-                            return `<img src="${safeAttr(url)}" alt="${caption}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${safeAttr(url)}">`;
-                        }).join('');
-                        popupGallery = `
-                            <div class="popup-gallery">
-                                <img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-main-image">
-                                <div class="popup-thumbs">${popupThumbs}</div>
-                            </div>
-                        `;
-                    }
-                }
-
-                content.innerHTML = `
-                    <div class="popup-content">
-                        ${popupGallery}
-                        <strong>${safeText(place.name)}</strong><br>${safeText(place.description)}
-                    </div>
-                `;
-
-                // Re-attach gallery listeners for popup
-                const thumbs = content.querySelectorAll('.popup-thumb');
-                const mainImg = content.querySelector('.popup-main-image');
-                if (mainImg && thumbs.length > 0) {
-                    thumbs.forEach((thumb) => {
-                        thumb.addEventListener('click', (e) => {
-                            e.stopPropagation(); // prevent map click
-                            mainImg.src = thumb.dataset.url;
-                            thumbs.forEach((t) => t.classList.remove('active'));
-                            thumb.classList.add('active');
-                        });
-                    });
-                }
-
-                overlay.setPosition(coordinates);
+                showPlaceInfo(place, coordinates);
             } else {
-                overlay.setPosition(undefined); // Hide popup if clicked on map background
+                overlay.setPosition(undefined);
+                if (mobileDetail) mobileDetail.classList.add('hidden');
             }
         });
 
@@ -1012,72 +1009,21 @@ const App = (() => {
             }
         }
 
-        // Link external cards to map (event delegation — works after async render)
+        // Link location cards in sidebar to map
         document.addEventListener('click', (e) => {
             const card = e.target.closest('.place-card');
             if (!card) return;
             const id = Number(card.dataset.placeId);
-                const feature = markers.get(id);
-
-                if (feature) {
-                    const coordinates = feature.getGeometry().getCoordinates();
-                    const view = map.getView();
-
-                    // FlyTo animation
-                    view.animate({
-                        center: coordinates,
-                        zoom: 15,
-                        duration: 1000
-                    });
-
-                    // Simulate click to show popup after animation
-                    setTimeout(() => {
-                        const place = feature.get('place');
-
-                        let popupGallery = '';
-                        if (place.images && place.images.length > 0) {
-                            const firstImg = resolveAsset(place.images[0].url);
-                            if (place.images.length === 1) {
-                                popupGallery = `<img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-image">`;
-                            } else {
-                                const popupThumbs = place.images.slice(0, 4).map((img, i) => {
-                                    const url = safeUrl(resolveAsset(img.url));
-                                    const caption = safeText(img.caption || '');
-                                    return `<img src="${safeAttr(url)}" alt="${caption}" class="popup-thumb ${i === 0 ? 'active' : ''}" data-url="${safeAttr(url)}">`;
-                                }).join('');
-                                popupGallery = `
-                                    <div class="popup-gallery">
-                                        <img src="${safeAttr(safeUrl(firstImg))}" alt="${safeText(place.name)}" class="popup-main-image">
-                                        <div class="popup-thumbs">${popupThumbs}</div>
-                                    </div>
-                                `;
-                            }
-                        }
-
-                        content.innerHTML = `
-                            <div class="popup-content">
-                                ${popupGallery}
-                                <strong>${safeText(place.name)}</strong><br>${safeText(place.description)}
-                            </div>
-                        `;
-
-                        const thumbs = content.querySelectorAll('.popup-thumb');
-                        const mainImg = content.querySelector('.popup-main-image');
-                        if (mainImg && thumbs.length > 0) {
-                            thumbs.forEach((thumb) => {
-                                thumb.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    mainImg.src = thumb.dataset.url;
-                                    thumbs.forEach((t) => t.classList.remove('active'));
-                                    thumb.classList.add('active');
-                                });
-                            });
-                        }
-
-                        overlay.setPosition(coordinates);
-
-                    }, 1000);
-                }
+            const feature = markers.get(id);
+            if (!feature) return;
+            const place = feature.get('place');
+            const coordinates = feature.getGeometry().getCoordinates();
+            setTimeout(() => showPlaceInfo(place, coordinates), isMobile() ? 0 : 1000);
+            map.getView().animate({ center: coordinates, zoom: isMobile() ? 12 : 15, duration: 1000 });
+            // On mobile, scroll map into view
+            if (isMobile()) {
+                document.getElementById('places-map')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
     };
 

@@ -911,10 +911,13 @@ input[type="file"] {
 
     .map-layout {
         grid-template-columns: 1fr;
+        gap: var(--spacing-medium);
     }
 
     .places-map {
-        height: 380px;
+        height: 50vw;
+        min-height: 240px;
+        max-height: 420px;
     }
 
     .map-side {
@@ -922,8 +925,42 @@ input[type="file"] {
     }
 
     .map-sidebar {
-        min-height: 320px;
-        max-height: 420px;
+        min-height: 180px;
+        max-height: none;
+    }
+
+    /* Карусель на мобиле: горизонтальный скролл карточек */
+    .places-carousel {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+    }
+
+    .places-carousel::-webkit-scrollbar {
+        display: none;
+    }
+
+    .map-grid {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .place-card {
+        min-width: 200px;
+        max-width: 240px;
+        flex: 0 0 auto;
+    }
+
+    .carousel-controls {
+        display: none;
     }
 
     .map-filters-panel {
