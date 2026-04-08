@@ -935,19 +935,12 @@ input[type="file"] {
         max-height: none;
     }
 
-    /* Карусель на мобиле: горизонтальный скролл карточек */
+    /* Карусель на мобиле: скролл в map-grid, стрелки видны */
     .places-carousel {
-        flex-direction: row;
-        overflow-x: auto;
-        overflow-y: hidden;
-        gap: 10px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding-bottom: 4px;
-    }
-
-    .places-carousel::-webkit-scrollbar {
-        display: none;
+        flex-direction: column;
+        overflow-x: visible;
+        overflow-y: visible;
+        gap: 8px;
     }
 
     .map-grid {
@@ -957,6 +950,12 @@ input[type="file"] {
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+    }
+
+    .map-grid::-webkit-scrollbar {
+        display: none;
     }
 
     .place-card {
@@ -966,7 +965,7 @@ input[type="file"] {
     }
 
     .carousel-controls {
-        display: none;
+        display: flex;
     }
 
     .map-filters-panel {
