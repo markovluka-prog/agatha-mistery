@@ -103,6 +103,9 @@ const I18n = (() => {
             'form.illustration.submit': 'Загрузить',
 
             'form.success': 'Спасибо! Ваша работа отправлена в архив фанатов.',
+            'form.success.pending': 'Спасибо! Работа отправлена на проверку — скоро появится на сайте.',
+            'reviews.success.pending': 'Спасибо за отзыв! Он появится после проверки.',
+            'form.loading': 'Загрузка...',
             'form.error': 'Не удалось отправить данные.',
             'form.error.supabase': 'Не удалось отправить данные в Supabase.',
             'form.error.local': 'Сохранено локально. Подключите Supabase, чтобы хранить в интернете.',
@@ -284,6 +287,9 @@ const I18n = (() => {
             'form.illustration.submit': 'Upload',
 
             'form.success': 'Thank you! Your work has been submitted to the fan archive.',
+            'form.success.pending': 'Thank you! Your work has been sent for review — it will appear soon.',
+            'reviews.success.pending': 'Thank you for your review! It will appear after moderation.',
+            'form.loading': 'Loading...',
             'form.error': 'Failed to submit data.',
             'form.error.supabase': 'Failed to submit data to Supabase.',
             'form.error.local': 'Saved locally. Connect Supabase to store on the internet.',

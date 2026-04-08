@@ -1367,7 +1367,11 @@ const App = (() => {
                 const { data, file } = buildPayload();
                 const storageKey = form.dataset.storageKey;
 
-                if (submitButton) submitButton.disabled = true;
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.dataset.origText = submitButton.textContent;
+                    submitButton.textContent = t('form.loading', 'Загрузка...');
+                }
 
                 if (Supa.isReady()) {
                     try {
@@ -1378,13 +1382,13 @@ const App = (() => {
                             : t('form.success', 'Спасибо! Ваша работа принята.');
                         showFormSuccess(form, successMsg);
                         localStorage.removeItem(`autosave_${form.id}`);
-                        if (submitButton) submitButton.disabled = false;
+                        if (submitButton) { submitButton.disabled = false; submitButton.textContent = submitButton.dataset.origText; }
                         return;
                     } catch (error) {
                         setMessage(error.message && error.message.includes('Invalid')
                             ? error.message
                             : t('form.error.supabase', 'Не удалось отправить. Попробуй ещё раз.'), 'error');
-                        if (submitButton) submitButton.disabled = false;
+                        if (submitButton) { submitButton.disabled = false; submitButton.textContent = submitButton.dataset.origText; }
                         return;
                     }
                 }

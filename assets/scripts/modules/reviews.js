@@ -140,22 +140,28 @@
         event.preventDefault();
         const name = nameInput.value.trim();
         const text = textInput.value.trim();
+        const submitBtn = form.querySelector('button[type="submit"]');
 
         if (!name || !text) {
             addMessage('error', t('error.review_fields', 'Fill in your name and review text.'));
             return;
         }
 
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.origText = submitBtn.textContent; submitBtn.textContent = t('form.loading', 'Загрузка...'); }
+
         if (Supa.isReady()) {
             try {
                 await Supa.submitReview({ name, text });
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText; }
                 showSentSuccess(t('reviews.success.pending', 'Спасибо за отзыв! Он появится после проверки.'));
                 return;
             } catch (error) {
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText; }
                 addMessage('error', t('error.review_generic', 'Failed to submit review. Try later.'));
                 return;
             }
         }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText; }
 
         const review = {
             id: Date.now(),
