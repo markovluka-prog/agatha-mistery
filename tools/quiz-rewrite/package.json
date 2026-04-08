@@ -1,0 +1,7 @@
+{
+  "name": "quiz-rewrite",
+  "version": "1.0.0",
+  "description": "Rewrites Agatha Mystery quiz questions via OpenRouter",
+  "main": "rewrite.js",
+  "engines": { "node": ">=18" }
+}
