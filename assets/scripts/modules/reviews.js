@@ -7,6 +7,8 @@
 
     if (!reviewsList || !form || !nameInput || !textInput) return;
 
+    const t = (key, fallback) => (typeof I18n !== 'undefined' && I18n.t) ? I18n.t(key) : fallback;
+
     const STORAGE_KEY = 'agatha_reviews';
 
     const escapeHtml = (value) => {
