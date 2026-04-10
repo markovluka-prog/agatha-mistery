@@ -144,35 +144,57 @@ const App = (() => {
         });
 
         // Random Quote in Footer
+        const quoteVariants = [
+            {
+                ru: { text: "Настоящий детектив никогда не игнорирует улики.", author: "Агата Мистери" },
+                en: { text: "A true detective never ignores clues.", author: "Agatha Mystery" }
+            },
+            {
+                ru: { text: "Интуиция — это то, что отличает хорошего сыщика от великого.", author: "Агата Мистери" },
+                en: { text: "Intuition is what separates a good detective from a great one.", author: "Agatha Mystery" }
+            },
+            {
+                ru: { text: "Ларри, хватит думать о еде! У нас дело!", author: "Агата Мистери" },
+                en: { text: "Larry, stop thinking about food! We have a case!", author: "Agatha Mystery" }
+            },
+            {
+                ru: { text: "Даже у самого запутанного преступления есть простая разгадка.", author: "Агата Мистери" },
+                en: { text: "Even the most tangled crime has a simple solution.", author: "Agatha Mystery" }
+            },
+            {
+                ru: { text: "Путешествия развивают ум и наблюдательность.", author: "Мистер Кент" },
+                en: { text: "Travel sharpens the mind and observation.", author: "Mr. Kent" }
+            }
+        ];
+
+        const selectedQuoteIndex = Math.floor(Math.random() * quoteVariants.length);
+
         const renderRandomQuote = () => {
             const footer = document.querySelector('.main-footer .container');
             if (!footer) return;
+            const lang = (typeof I18n !== 'undefined' && I18n.getLang) ? I18n.getLang() : 'ru';
+            const quote = quoteVariants[selectedQuoteIndex][lang] || quoteVariants[selectedQuoteIndex].ru;
 
-            // Check if quote already exists
-            if (footer.querySelector('.footer-quote')) return;
+            let quoteDiv = footer.querySelector('.footer-quote');
+            if (!quoteDiv) {
+                quoteDiv = document.createElement('div');
+                quoteDiv.className = 'footer-quote';
+                quoteDiv.style.marginTop = '20px';
+                quoteDiv.style.fontStyle = 'italic';
+                quoteDiv.style.opacity = '0.8';
+                quoteDiv.style.borderTop = '1px solid rgba(0,0,0,0.1)';
+                quoteDiv.style.paddingTop = '10px';
+                footer.appendChild(quoteDiv);
+            }
 
-            const quotes = [
-                { text: "Настоящий детектив никогда не игнорирует улики.", author: "Агата Мистери" },
-                { text: "Интуиция — это то, что отличает хорошего сыщика от великого.", author: "Агата Мистери" },
-                { text: "Ларри, хватит думать о еде! У нас дело!", author: "Агата Мистери" },
-                { text: "Даже у самого запутанного преступления есть простая разгадка.", author: "Агата Мистери" },
-                { text: "Путешествия развивают ум и наблюдательность.", author: "Мистер Кент" }
-            ];
-
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
-            const quoteDiv = document.createElement('div');
-            quoteDiv.className = 'footer-quote';
-            quoteDiv.style.marginTop = '20px';
-            quoteDiv.style.fontStyle = 'italic';
-            quoteDiv.style.opacity = '0.8';
-            quoteDiv.style.borderTop = '1px solid rgba(0,0,0,0.1)';
-            quoteDiv.style.paddingTop = '10px';
-            quoteDiv.innerHTML = `"${randomQuote.text}" — <strong>${randomQuote.author}</strong>`;
-
-            footer.appendChild(quoteDiv);
+            quoteDiv.replaceChildren();
+            quoteDiv.append(`"${quote.text}" — `);
+            const author = document.createElement('strong');
+            author.textContent = quote.author;
+            quoteDiv.appendChild(author);
         };
         renderRandomQuote();
+        window.addEventListener('langchange', renderRandomQuote);
 
         if (!burger || !menu) return;
 
