@@ -28,6 +28,7 @@ const Supa = (() => {
     const config = window.SUPABASE_CONFIG || {};
     const url = (config.url || '').trim();
     const anonKey = (config.anonKey || '').trim();
+    const secureSubmitUrl = (config.secureSubmitUrl || `${url}/functions/v1/public-submit`).trim();
     const hasPlaceholders = url.includes('YOUR_') || anonKey.includes('YOUR_');
     const isConfigured = Boolean(url && anonKey && !hasPlaceholders && window.supabase);
     const client = isConfigured ? window.supabase.createClient(url, anonKey) : null;
@@ -85,6 +86,46 @@ const Supa = (() => {
         throw lastError;
     };
 
+    const invokeSecureSubmit = async (action, payload) => {
+        if (!secureSubmitUrl || !isConfigured) {
+            return false;
+        }
+
+        try {
+            const response = await fetch(secureSubmitUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': anonKey,
+                    'Authorization': `Bearer ${anonKey}`
+                },
+                body: JSON.stringify({ action, payload })
+            });
+
+            if (response.status === 404 || response.status === 405) {
+                return false;
+            }
+
+            let body = null;
+            try {
+                body = await response.json();
+            } catch (_error) {
+                body = null;
+            }
+
+            if (!response.ok) {
+                throw new Error(body?.error || 'Secure submit failed');
+            }
+
+            return true;
+        } catch (error) {
+            if (error instanceof TypeError) {
+                return false;
+            }
+            throw error;
+        }
+    };
+
     const getReviews = async () => {
         if (!client) throw new Error('Supabase не настроен');
         return retry(async () => {
@@ -98,11 +139,20 @@ const Supa = (() => {
         });
     };
 
-    const submitReview = async ({ name, text }) => {
+    const submitReview = async ({ name, text, website = '', formStartedAt = '' }) => {
         if (!client) throw new Error('Supabase не настроен');
         enforceClientRateLimit('review_submit');
         const safeName = validateTextField(name, 2, 60, 'name');
         const safeText = validateTextField(text, 5, 500, 'text');
+        const usedSecureSubmit = await invokeSecureSubmit('review', {
+            name: safeName,
+            text: safeText,
+            website: String(website || '').trim(),
+            formStartedAt: String(formStartedAt || '').trim()
+        });
+        if (usedSecureSubmit) {
+            return true;
+        }
         const { error } = await client
             .from('reviews')
             .insert({ name: safeName, text: safeText, status: 'pending' });
@@ -110,7 +160,7 @@ const Supa = (() => {
         return true;
     };
 
-    const addFanfic = async ({ name, title, character, story }) => {
+    const addFanfic = async ({ name, title, character, story, website = '', formStartedAt = '' }) => {
         if (!client) throw new Error('Supabase не настроен');
         enforceClientRateLimit('fanfic_submit');
         const safeName = validateTextField(name, 2, 60, 'name');
@@ -118,6 +168,17 @@ const Supa = (() => {
         // DB column is "genre" but form field is "character" (main character)
         const safeGenre = validateTextField(character, 1, 80, 'character');
         const safeStory = validateTextField(story, 50, 2000, 'story');
+        const usedSecureSubmit = await invokeSecureSubmit('fanfic', {
+            name: safeName,
+            title: safeTitle,
+            character: safeGenre,
+            story: safeStory,
+            website: String(website || '').trim(),
+            formStartedAt: String(formStartedAt || '').trim()
+        });
+        if (usedSecureSubmit) {
+            return true;
+        }
         const { error } = await client
             .from('fanfics')
             .insert({ name: safeName, title: safeTitle, genre: safeGenre, story: safeStory, status: 'pending' });

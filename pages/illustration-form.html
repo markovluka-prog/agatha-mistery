@@ -44,10 +44,15 @@
 
     <section class="section">
         <div class="container">
-            <div class="card">
+                <div class="card">
                 <div class="card-body">
                      <form id="illustration-form" class="review-form" data-storage-key="agatha_illustrations">
                         <div class="form-message"></div>
+                        <input type="hidden" name="form_started_at" value="">
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="illustration-website">Не заполняйте это поле</label>
+                            <input type="text" id="illustration-website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-group">
                             <label for="illustration-name" data-i18n="form.illustration.name">Ваше имя</label>
                             <input type="text" id="illustration-name" name="name" placeholder="Имя автора" required

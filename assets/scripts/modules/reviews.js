@@ -70,6 +70,17 @@
         form.prepend(message);
     };
 
+    const isSpamSubmission = () => {
+        const honeypot = form.querySelector('input[name="website"]');
+        if (honeypot && String(honeypot.value || '').trim()) {
+            return true;
+        }
+
+        const startedAtField = form.querySelector('input[name="form_started_at"]');
+        const startedAt = Number(startedAtField?.value || form.dataset.formStartedAt || 0);
+        return Boolean(startedAt && Date.now() - startedAt < 2500);
+    };
+
     const showSentSuccess = (text) => {
         // 2-second «ОТПРАВЛЕНО» banner
         const banner = document.createElement('div');
@@ -84,10 +95,16 @@
 
         const message = document.createElement('div');
         message.classList.add('message', 'message-success');
-        message.innerHTML = `
-            <span class="form-success-text">${escapeHtml(text)}</span>
-            <div class="form-progress-bar"><div class="form-progress-fill"></div></div>
-        `;
+        const successText = document.createElement('span');
+        successText.className = 'form-success-text';
+        successText.textContent = text;
+        const progressBar = document.createElement('div');
+        progressBar.className = 'form-progress-bar';
+        const progressFill = document.createElement('div');
+        progressFill.className = 'form-progress-fill';
+        progressBar.appendChild(progressFill);
+        message.appendChild(successText);
+        message.appendChild(progressBar);
         form.prepend(message);
 
         const fill = message.querySelector('.form-progress-fill');
@@ -99,6 +116,11 @@
 
         setTimeout(() => {
             form.reset();
+            form.dataset.formStartedAt = String(Date.now());
+            const startedAtField = form.querySelector('input[name="form_started_at"]');
+            if (startedAtField) {
+                startedAtField.value = form.dataset.formStartedAt;
+            }
             updateCounter();
             message.remove();
         }, 5000);
@@ -138,6 +160,10 @@
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (isSpamSubmission()) {
+            addMessage('error', t('error.review_generic', 'Failed to submit review. Try later.'));
+            return;
+        }
         const name = nameInput.value.trim();
         const text = textInput.value.trim();
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -151,7 +177,12 @@
 
         if (Supa.isReady()) {
             try {
-                await Supa.submitReview({ name, text });
+                await Supa.submitReview({
+                    name,
+                    text,
+                    website: form.querySelector('input[name="website"]')?.value || '',
+                    formStartedAt: form.querySelector('input[name="form_started_at"]')?.value || ''
+                });
                 if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText; }
                 showSentSuccess(t('reviews.success.pending', 'Спасибо за отзыв! Он появится после проверки.'));
                 return;
@@ -179,6 +210,11 @@
 
     textInput.addEventListener('input', updateCounter);
     form.addEventListener('submit', handleSubmit);
+    form.dataset.formStartedAt = String(Date.now());
+    const startedAtField = form.querySelector('input[name="form_started_at"]');
+    if (startedAtField) {
+        startedAtField.value = form.dataset.formStartedAt;
+    }
 
     loadReviews();
     updateCounter();

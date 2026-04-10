@@ -56,6 +56,84 @@
             </div>
         </section>
 
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">С чего начать</h2>
+                <div class="grid grid-3 home-entry-grid">
+                    <article class="card home-entry-card">
+                        <div class="card-body">
+                            <h3 class="card-title">Познакомься с героями</h3>
+                            <p class="card-text">Быстро разберись, кто есть кто в мире Агаты: семья, союзники, питомцы и эксперты из разных стран.</p>
+                            <a href="pages/characters.html" class="btn btn-primary">Открыть персонажей</a>
+                        </div>
+                    </article>
+                    <article class="card home-entry-card">
+                        <div class="card-body">
+                            <h3 class="card-title">Проверь знания</h3>
+                            <p class="card-text">Выбери тему и сложность, собери случайный набор вопросов и узнай правильные ответы после квиза.</p>
+                            <a href="pages/quiz.html" class="btn btn-primary">Открыть викторины</a>
+                        </div>
+                    </article>
+                    <article class="card home-entry-card">
+                        <div class="card-body">
+                            <h3 class="card-title">Исследуй мир книг</h3>
+                            <p class="card-text">Открой карту путешествий, найди места из книг и посмотри, как приключения разбросаны по всему миру.</p>
+                            <a href="pages/map.html" class="btn btn-primary">Открыть карту</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section home-showcase-section">
+            <div class="container">
+                <div class="home-showcase-head">
+                    <div>
+                        <h2 class="section-title home-showcase-title">Лучшее на сайте</h2>
+                        <p class="home-showcase-subtitle">Живые превью помогают быстрее войти в фандом и увидеть, что сайт уже умеет.</p>
+                    </div>
+                </div>
+                <div class="grid grid-3">
+                    <div class="home-showcase-block">
+                        <div class="home-showcase-topline">
+                            <h3>Персонажи</h3>
+                            <a href="pages/characters.html">Все герои</a>
+                        </div>
+                        <div id="home-characters-preview" class="home-preview-list"></div>
+                    </div>
+                    <div class="home-showcase-block">
+                        <div class="home-showcase-topline">
+                            <h3>Викторины</h3>
+                            <a href="pages/quiz.html">Все квизы</a>
+                        </div>
+                        <div id="home-quizzes-preview" class="home-preview-list"></div>
+                    </div>
+                    <div class="home-showcase-block">
+                        <div class="home-showcase-topline">
+                            <h3>Локации</h3>
+                            <a href="pages/map.html">Вся карта</a>
+                        </div>
+                        <div id="home-places-preview" class="home-preview-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="card home-workshop-card">
+                    <div class="card-body">
+                        <h2 class="card-title">Творческая мастерская фанатов</h2>
+                        <p class="card-text">Популярные фан-сайты удерживают людей не только чтением, но и участием. Здесь можно отправить фанфик, иллюстрацию и со временем собрать настоящее сообщество вокруг серии.</p>
+                        <div class="grid grid-2">
+                            <a class="btn btn-secondary" href="pages/illustration-form.html">Отправить иллюстрацию</a>
+                            <a class="btn btn-primary" href="pages/fanfiction-form.html">Отправить фанфик</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Секция отзывов -->
         <section class="reviews-section">
             <div class="container">
@@ -70,6 +148,11 @@
                 <div class="review-form-wrapper">
                     <h3 data-i18n="reviews.form.title">Оставить отзыв</h3>
                     <form id="review-form" class="review-form">
+                        <input type="hidden" name="form_started_at" value="">
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="review-website">Не заполняйте это поле</label>
+                            <input type="text" id="review-website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-group">
                             <label for="review-name" data-i18n="reviews.form.name">Ваше имя:</label>
                             <input type="text" id="review-name" name="name" required placeholder="Введите ваше имя"

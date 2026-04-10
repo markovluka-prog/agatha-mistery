@@ -67,6 +67,21 @@ const App = (() => {
         }
     };
 
+    const isSpamSubmission = (form) => {
+        const honeypot = form.querySelector('input[name="website"]');
+        if (honeypot && String(honeypot.value || '').trim()) {
+            return true;
+        }
+
+        const startedAtField = form.querySelector('input[name="form_started_at"]');
+        const startedAt = Number(startedAtField?.value || form.dataset.formStartedAt || 0);
+        if (startedAt && Date.now() - startedAt < 2500) {
+            return true;
+        }
+
+        return false;
+    };
+
     const setupNav = () => {
         const burger = document.querySelector('.burger-menu');
         const menu = document.querySelector('.nav-menu');
@@ -524,8 +539,85 @@ const App = (() => {
         Object.prototype.hasOwnProperty.call(data, key) ? data[key] : match
     ));
 
+    const getQuizSessionStorageKey = (quizId) => `quiz_session_${Number(quizId) || 0}`;
+
+    const getQuestionCorrectAnswers = (question) => {
+        if (question.questionMode === 'input') {
+            return [String(question.correctAnswer || '').trim()].filter(Boolean);
+        }
+        return (question.options || [])
+            .filter((option) => option.isCorrect)
+            .map((option) => String(option.text || '').trim())
+            .filter(Boolean);
+    };
+
+    const getQuestionAnswerSummary = (question) => {
+        const answers = getQuestionCorrectAnswers(question);
+        if (!answers.length) {
+            return '—';
+        }
+        return answers.join(question.questionMode === 'multiple' ? ', ' : '');
+    };
+
+    const renderHomeShowcase = async () => {
+        const charactersContainer = document.getElementById('home-characters-preview');
+        const quizzesContainer = document.getElementById('home-quizzes-preview');
+        const placesContainer = document.getElementById('home-places-preview');
+
+        if (!charactersContainer && !quizzesContainer && !placesContainer) {
+            return;
+        }
+
+        if (charactersContainer) {
+            try {
+                const characters = (await loadCharacters()).slice(0, 3);
+                charactersContainer.innerHTML = characters.map((character) => `
+                    <article class="home-preview-card">
+                        <div class="home-preview-meta">${safeText(t('nav.characters', 'Персонажи'))}</div>
+                        <h4>${safeText(character.name)}</h4>
+                        <p>${safeText(character.shortDescription || '')}</p>
+                    </article>
+                `).join('');
+            } catch (_error) {
+                charactersContainer.innerHTML = `<div class="home-preview-card"><p>${safeText(t('characters.error', 'Не удалось загрузить персонажей'))}</p></div>`;
+            }
+        }
+
+        if (quizzesContainer) {
+            try {
+                const quizzes = (await loadQuizzes()).map(normalizeQuizBank).slice(0, 3);
+                quizzesContainer.innerHTML = quizzes.map((quiz) => `
+                    <article class="home-preview-card">
+                        <div class="home-preview-meta">${safeText(t('nav.quizzes', 'Викторины'))}</div>
+                        <h4>${safeText(quiz.title)}</h4>
+                        <p>${safeText(quiz.description || '')}</p>
+                        <p class="home-preview-meta">${safeText(t('quizzes.questions.lower', 'вопросов'))}: ${Number(quiz.questionsCount) || 0}</p>
+                    </article>
+                `).join('');
+            } catch (_error) {
+                quizzesContainer.innerHTML = `<div class="home-preview-card"><p>${safeText(t('quizzes.error', 'Не удалось загрузить викторины'))}</p></div>`;
+            }
+        }
+
+        if (placesContainer) {
+            try {
+                const places = (await loadPlaces()).slice(0, 3);
+                placesContainer.innerHTML = places.map((place) => `
+                    <article class="home-preview-card">
+                        <div class="home-preview-meta">${safeText(t('nav.map', 'Карта мира'))}</div>
+                        <h4>${safeText(place.name)}</h4>
+                        <p>${safeText(place.description || '')}</p>
+                    </article>
+                `).join('');
+            } catch (_error) {
+                placesContainer.innerHTML = `<div class="home-preview-card"><p>${safeText(t('map.error', 'Не удалось загрузить локации'))}</p></div>`;
+            }
+        }
+    };
+
     const renderQuizForm = (container, quiz, questions, config) => {
         const difficultyLabel = getDifficultyLabel(config?.difficulty || questions[0]?.difficulty || 'easy');
+        const sessionStorageKey = getQuizSessionStorageKey(quiz.id);
 
         container.innerHTML = `
             <div class="quiz-meta-line">${safeText(difficultyLabel)} • 10 ${safeText(t('quizzes.questions.lower', 'вопросов'))}</div>
@@ -570,59 +662,133 @@ const App = (() => {
                     <div class="quiz-options">${questionContent}</div>
                 </div>
             `;
-        }).join('')}
+                }).join('')}
                 <button type="button" class="btn btn-primary" id="quiz-submit">${safeText(t('quizzes.btn.check', 'Check Answers'))}</button>
                 <div id="quiz-result" class="result-box" style="display: none;"></div>
+                <div id="quiz-correct-answers" class="quiz-correct-answers" style="display: none;"></div>
             </form>
         `;
 
         const submit = document.getElementById('quiz-submit');
         const resultBox = document.getElementById('quiz-result');
+        const correctAnswersBox = document.getElementById('quiz-correct-answers');
         const form = document.getElementById('quiz-form');
 
-        submit.addEventListener('click', () => {
-            let correct = 0;
-            let answered = 0;
+        const clearOptionState = (label) => {
+            label.classList.remove('correct', 'incorrect', 'is-locked');
+            const marker = label.querySelector('.quiz-option-marker');
+            if (marker) {
+                marker.remove();
+            }
+        };
 
-            questions.forEach((question, qIndex) => {
-                const questionKey = qIndex + 1;
+        const addOptionMarker = (label, markerText) => {
+            if (!markerText) return;
+            if (label.querySelector('.quiz-option-marker')) return;
+            label.insertAdjacentHTML('beforeend', `<span class="quiz-option-marker">${safeText(markerText)}</span>`);
+        };
 
-                if (question.questionMode === 'input') {
-                    const input = form.querySelector(`input[name="q${questionKey}"]`);
-                    if (input && input.value.trim()) {
-                        answered += 1;
-                        const userAnswer = normalizeAnswer(input.value);
-                        const correctAnswer = normalizeAnswer(question.correctAnswer);
-                        if (userAnswer === correctAnswer) {
-                            correct += 1;
-                            input.classList.add('correct');
-                            input.classList.remove('incorrect');
-                        } else {
-                            input.classList.add('incorrect');
-                            input.classList.remove('correct');
-                        }
-                    }
-                    return;
+        const setInputsLocked = () => {
+            Array.from(form.elements).forEach((field) => {
+                if (field instanceof HTMLInputElement) {
+                    field.disabled = true;
+                    field.readOnly = true;
                 }
+            });
+            submit.disabled = true;
+            form.classList.add('quiz-form-completed');
+        };
 
-                const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${questionKey}"]:checked`));
-                if (selectedInputs.length > 0) {
-                    answered += 1;
-                    const selectedIds = selectedInputs.map((input) => String(input.value));
-                    const correctIds = (question.options || []).filter((opt) => opt.isCorrect).map((opt) => String(opt.id));
-                    const isCorrect = correctIds.length === selectedIds.length
-                        && correctIds.every((id) => selectedIds.includes(id));
-                    if (isCorrect) {
-                        correct += 1;
-                    }
+        const collectUserAnswer = (questionKey, question) => {
+            if (question.questionMode === 'input') {
+                const input = form.querySelector(`input[name="q${questionKey}"]`);
+                return input ? input.value.trim() : '';
+            }
+
+            const selectedInputs = Array.from(form.querySelectorAll(`input[name="q${questionKey}"]:checked`));
+            return selectedInputs.map((input) => String(input.value));
+        };
+
+        const validateQuestionAnswered = (questionKey, question, userAnswer) => {
+            if (question.questionMode === 'input') {
+                return Boolean(String(userAnswer || '').trim());
+            }
+            return Array.isArray(userAnswer) && userAnswer.length > 0;
+        };
+
+        const renderCorrectAnswers = (questionResults) => {
+            correctAnswersBox.style.display = 'grid';
+            correctAnswersBox.innerHTML = `
+                <div class="quiz-correct-answers-title">${safeText(t('quizzes.correct.title', 'Правильные ответы'))}</div>
+                ${questionResults.map((result, index) => `
+                    <div class="quiz-correct-answer-item">
+                        <strong>${safeText(t('quizzes.question', 'Question'))} ${index + 1}.</strong>
+                        <span>${safeText(result.correctAnswerText)}</span>
+                    </div>
+                `).join('')}
+            `;
+        };
+
+        const markQuestionReview = (questionKey, question, userAnswer) => {
+            const questionRoot = form.querySelector(`input[name="q${questionKey}"]`)?.closest('.quiz-question')
+                || form.querySelector(`.quiz-question:nth-of-type(${questionKey})`);
+            if (questionRoot) {
+                questionRoot.classList.add('is-reviewed');
+            }
+
+            if (question.questionMode === 'input') {
+                const input = form.querySelector(`input[name="q${questionKey}"]`);
+                const normalizedUser = normalizeAnswer(userAnswer);
+                const normalizedCorrect = normalizeAnswer(question.correctAnswer);
+                const isCorrect = normalizedUser === normalizedCorrect;
+                input.classList.toggle('correct', isCorrect);
+                input.classList.toggle('incorrect', !isCorrect);
+                return isCorrect;
+            }
+
+            const selectedIds = Array.isArray(userAnswer) ? userAnswer.map(String) : [];
+            const correctIds = (question.options || [])
+                .filter((option) => option.isCorrect)
+                .map((option) => String(option.id));
+
+            Array.from(form.querySelectorAll(`input[name="q${questionKey}"]`)).forEach((input) => {
+                const label = input.closest('.quiz-option');
+                if (!label) return;
+
+                clearOptionState(label);
+                label.classList.add('is-locked');
+
+                const isCorrectOption = correctIds.includes(String(input.value));
+                const isSelected = selectedIds.includes(String(input.value));
+
+                if (isCorrectOption) {
+                    label.classList.add('correct');
+                    addOptionMarker(label, '✓');
+                } else if (isSelected) {
+                    label.classList.add('incorrect');
                 }
             });
 
-            if (answered < questions.length) {
-                resultBox.style.display = 'block';
-                resultBox.textContent = t('quizzes.answer.all', 'Answer all questions to see your result.');
-                return;
-            }
+            return correctIds.length === selectedIds.length && correctIds.every((id) => selectedIds.includes(id));
+        };
+
+        const finalizeQuiz = (sessionData, shouldPersist = true) => {
+            let correct = 0;
+            const questionResults = questions.map((question, qIndex) => {
+                const questionKey = qIndex + 1;
+                const userAnswer = sessionData.answers[qIndex];
+                const isCorrect = markQuestionReview(questionKey, question, userAnswer);
+                if (isCorrect) {
+                    correct += 1;
+                }
+
+                return {
+                    questionId: question.id,
+                    isCorrect,
+                    userAnswer,
+                    correctAnswerText: getQuestionAnswerSummary(question)
+                };
+            });
 
             const percent = Math.round((correct / questions.length) * 100);
             const resultTemplate = t('quizzes.result', 'Ваш результат: {correct} из {total} ({percent}%).');
@@ -632,7 +798,65 @@ const App = (() => {
                 total: questions.length,
                 percent
             });
+
+            renderCorrectAnswers(questionResults);
+            setInputsLocked();
+
+            const completedSession = {
+                quizId: quiz.id,
+                difficulty: config?.difficulty || null,
+                questionIds: questions.map((question) => question.id),
+                answers: sessionData.answers,
+                completed: true,
+                score: {
+                    correct,
+                    total: questions.length,
+                    percent
+                }
+            };
+
+            if (shouldPersist) {
+                Storage.set(sessionStorageKey, completedSession);
+                if (typeof config?.onComplete === 'function') {
+                    config.onComplete(completedSession);
+                }
+            }
+        };
+
+        submit.addEventListener('click', () => {
+            const answers = questions.map((question, qIndex) => collectUserAnswer(qIndex + 1, question));
+            const answered = answers.filter((answer, index) => validateQuestionAnswered(index + 1, questions[index], answer)).length;
+
+            if (answered < questions.length) {
+                resultBox.style.display = 'block';
+                resultBox.textContent = t('quizzes.answer.all', 'Answer all questions to see your result.');
+                return;
+            }
+
+            finalizeQuiz({ answers });
         });
+
+        if (config?.completedSession?.completed && Array.isArray(config.completedSession.answers)) {
+            questions.forEach((question, qIndex) => {
+                const questionKey = qIndex + 1;
+                const savedAnswer = config.completedSession.answers[qIndex];
+
+                if (question.questionMode === 'input') {
+                    const input = form.querySelector(`input[name="q${questionKey}"]`);
+                    if (input) {
+                        input.value = String(savedAnswer || '');
+                    }
+                    return;
+                }
+
+                const selectedIds = Array.isArray(savedAnswer) ? savedAnswer.map(String) : [];
+                Array.from(form.querySelectorAll(`input[name="q${questionKey}"]`)).forEach((input) => {
+                    input.checked = selectedIds.includes(String(input.value));
+                });
+            });
+
+            finalizeQuiz(config.completedSession, false);
+        }
     };
 
     const renderImageGallery = (images, placeName) => {
@@ -1195,6 +1419,31 @@ const App = (() => {
             const summary = document.getElementById('quiz-builder-summary');
             const generatedContainer = document.getElementById('quiz-generated');
             let lastGeneratedIds = null;
+            const storedSession = Storage.get(getQuizSessionStorageKey(quiz.id), null);
+
+            const applyCompletedState = (session) => {
+                if (session?.difficulty) {
+                    difficultySelect.value = session.difficulty;
+                }
+                difficultySelect.disabled = true;
+                generateButton.disabled = true;
+                summary.textContent = safeText(t('quizzes.completed.locked', 'Этот квиз уже завершён после финального сабмита и больше не редактируется.'));
+
+                const questionMap = new Map(quiz.questions.map((question) => [question.id, question]));
+                const selectedQuestions = Array.isArray(session?.questionIds)
+                    ? session.questionIds.map((questionId) => questionMap.get(questionId)).filter(Boolean)
+                    : [];
+
+                if (!selectedQuestions.length || selectedQuestions.length !== 10) {
+                    generatedContainer.innerHTML = `<div class="empty-state">${safeText(t('quizzes.completed.locked', 'Этот квиз уже завершён после финального сабмита и больше не редактируется.'))}</div>`;
+                    return;
+                }
+
+                renderQuizForm(generatedContainer, quiz, selectedQuestions, {
+                    difficulty: session.difficulty || difficultySelect.value,
+                    completedSession: session
+                });
+            };
 
             const updateSummary = () => {
                 const available = filterQuizQuestions(quiz.questions, difficultySelect.value);
@@ -1213,7 +1462,8 @@ const App = (() => {
                 const selectedQuestions = pickRandomQuestions(pool, 10, lastGeneratedIds);
                 lastGeneratedIds = selectedQuestions.map((question) => question.id);
                 renderQuizForm(generatedContainer, quiz, selectedQuestions, {
-                    difficulty: difficultySelect.value
+                    difficulty: difficultySelect.value,
+                    onComplete: applyCompletedState
                 });
             };
 
@@ -1222,6 +1472,11 @@ const App = (() => {
                 updateSummary();
             });
             generateButton.addEventListener('click', generateQuiz);
+
+            if (storedSession?.completed) {
+                applyCompletedState(storedSession);
+                return;
+            }
 
             updateSummary();
             generatedContainer.innerHTML = `
@@ -1259,10 +1514,17 @@ const App = (() => {
 
                 // Progress bar + message in form
                 if (message) {
-                    message.innerHTML = `
-                        <span class="form-success-text">${safeText(msg)}</span>
-                        <div class="form-progress-bar"><div class="form-progress-fill"></div></div>
-                    `;
+                    message.textContent = '';
+                    const successText = document.createElement('span');
+                    successText.className = 'form-success-text';
+                    successText.textContent = msg;
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'form-progress-bar';
+                    const progressFill = document.createElement('div');
+                    progressFill.className = 'form-progress-fill';
+                    progressBar.appendChild(progressFill);
+                    message.appendChild(successText);
+                    message.appendChild(progressBar);
                     message.classList.remove('message-error');
                     message.classList.add('message', 'message-success');
                     const fill = message.querySelector('.form-progress-fill');
@@ -1321,6 +1583,11 @@ const App = (() => {
             };
 
             initAutosave();
+            form.dataset.formStartedAt = String(Date.now());
+            const startedAtField = form.querySelector('input[name="form_started_at"]');
+            if (startedAtField) {
+                startedAtField.value = form.dataset.formStartedAt;
+            }
 
             const buildPayload = () => {
                 const data = {};
@@ -1342,7 +1609,9 @@ const App = (() => {
                         name: data.name,
                         title: data.title,
                         character: data.character,
-                        story: data.story
+                        story: data.story,
+                        website: data.website,
+                        formStartedAt: data.form_started_at
                     });
                     return;
                 }
@@ -1364,6 +1633,11 @@ const App = (() => {
 
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
+                if (isSpamSubmission(form)) {
+                    setMessage(t('form.error.supabase', 'Не удалось отправить. Попробуй ещё раз.'), 'error');
+                    if (submitButton) { submitButton.disabled = false; submitButton.textContent = submitButton.dataset.origText || submitButton.textContent; }
+                    return;
+                }
                 const { data, file } = buildPayload();
                 const storageKey = form.dataset.storageKey;
 
@@ -1382,6 +1656,8 @@ const App = (() => {
                             : t('form.success', 'Спасибо! Ваша работа принята.');
                         showFormSuccess(form, successMsg);
                         localStorage.removeItem(`autosave_${form.id}`);
+                        form.dataset.formStartedAt = String(Date.now());
+                        if (startedAtField) startedAtField.value = form.dataset.formStartedAt;
                         if (submitButton) { submitButton.disabled = false; submitButton.textContent = submitButton.dataset.origText; }
                         return;
                     } catch (error) {
@@ -1534,7 +1810,7 @@ const App = (() => {
                     const filtered = fanfics.filter(item =>
                         item.title.toLowerCase().includes(query) ||
                         item.name.toLowerCase().includes(query) ||
-                        (item.character && item.character.toLowerCase().includes(query))
+                        (item.genre && item.genre.toLowerCase().includes(query))
                     );
                     renderList(filtered);
                 });
@@ -1664,6 +1940,7 @@ const App = (() => {
         await renderFanfics();
         await renderIllustrations();
         await renderAbout();
+        await renderHomeShowcase();
     };
 
     const init = async () => {
@@ -1686,6 +1963,7 @@ const App = (() => {
         renderFanfics();
         renderIllustrations();
         renderAbout();
+        renderHomeShowcase();
         setupForms();
 
         // Слушаем смену языка
