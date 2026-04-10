@@ -5,6 +5,7 @@ const App = (() => {
 
     const initBasePath = () => {
         state.basePath = window.location.pathname.includes('/pages/') ? '../' : '';
+        state.konamiUrl = 'https://markovluka-prog.github.io/My-Projects/%D0%A0%D1%8B%D1%86%D0%B0%D1%80%D0%B8%20%D0%B8%20%D0%97%D0%B0%D0%BC%D0%BA%D0%B8.swiftpm/KnightsGame/index.html';
     };
 
     const resolveAsset = (path) => {
@@ -1966,7 +1967,7 @@ const App = (() => {
                 position += 1;
                 if (position === sequence.length) {
                     position = 0;
-                    window.location.href = `${state.basePath}pages/game.html`;
+                    window.location.href = state.konamiUrl || `${state.basePath}pages/game.html`;
                 }
                 return;
             }
