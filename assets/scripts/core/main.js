@@ -1943,10 +1943,43 @@ const App = (() => {
         await renderHomeShowcase();
     };
 
+    const setupKonamiCode = () => {
+        const sequence = [
+            'ArrowUp',
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'ArrowLeft',
+            'ArrowRight'
+        ];
+        let position = 0;
+
+        document.addEventListener('keydown', (event) => {
+            const activeTag = document.activeElement?.tagName;
+            if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || document.activeElement?.isContentEditable) {
+                return;
+            }
+
+            if (event.code === sequence[position]) {
+                position += 1;
+                if (position === sequence.length) {
+                    position = 0;
+                    window.location.href = `${state.basePath}pages/game.html`;
+                }
+                return;
+            }
+
+            position = event.code === sequence[0] ? 1 : 0;
+        });
+    };
+
     const init = async () => {
         initBasePath();
         setupNav();
         setupSafeInteractions();
+        setupKonamiCode();
 
         // Инициализируем i18n
         if (typeof I18n !== 'undefined') {
