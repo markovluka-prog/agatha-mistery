@@ -1967,7 +1967,7 @@ const App = (() => {
                 position += 1;
                 if (position === sequence.length) {
                     position = 0;
-                    window.location.href = state.konamiUrl || `${state.basePath}pages/game.html`;
+                    window.location.href = state.konamiUrl;
                 }
                 return;
             }
