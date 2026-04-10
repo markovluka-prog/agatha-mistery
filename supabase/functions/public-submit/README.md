@@ -10,8 +10,8 @@ Edge Function for safer public text submissions.
 - inserts only `pending` records
 
 ## Required secrets
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `PUBLIC_SUPABASE_URL`
+- `PUBLIC_SUPABASE_SERVICE_ROLE_KEY`
 
 ## Deploy
 ```bash

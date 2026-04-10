@@ -6,10 +6,11 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_URL = Deno.env.get("PUBLIC_SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("PUBLIC_SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const memoryRateLimits = new Map<string, number>();
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -54,39 +55,13 @@ const getClientIp = (req: Request) => {
 
 const enforceRateLimit = async (fingerprint: string, action: "review" | "fanfic") => {
   const limitWindowMs = action === "review" ? 30_000 : 45_000;
-  const { data, error } = await supabase
-    .from("submission_rate_limits")
-    .select("last_attempt_at")
-    .eq("fingerprint", fingerprint)
-    .eq("action", action)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
+  const rateLimitKey = `${action}:${fingerprint}`;
   const now = Date.now();
-  const lastAttemptAt = data?.last_attempt_at ? Date.parse(data.last_attempt_at) : 0;
+  const lastAttemptAt = memoryRateLimits.get(rateLimitKey) ?? 0;
   if (lastAttemptAt && now - lastAttemptAt < limitWindowMs) {
     throw new Error("Too many requests");
   }
-
-  const timestamp = new Date(now).toISOString();
-  const { error: upsertError } = await supabase
-    .from("submission_rate_limits")
-    .upsert(
-      {
-        fingerprint,
-        action,
-        last_attempt_at: timestamp,
-        updated_at: timestamp,
-      },
-      { onConflict: "fingerprint,action" },
-    );
-
-  if (upsertError) {
-    throw upsertError;
-  }
+  memoryRateLimits.set(rateLimitKey, now);
 };
 
 const validateAntiBot = (payload: Record<string, unknown>) => {
