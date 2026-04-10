@@ -182,7 +182,7 @@
         <div class="container">
             <div class="map-layout">
                 <div class="map-panel">
-                    <div id="places-map" class="places-map" aria-label="Карта приключений"></div>
+                    <div id="places-map" class="places-map" aria-label="Карта приключений" data-i18n-aria-label="map.title"></div>
                     <!-- Popup overlay container (desktop only) -->
                     <div id="popup" class="ol-popup">
                         <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -190,11 +190,11 @@
                     </div>
                     <!-- Mobile detail panel (shown when marker is tapped) -->
                     <div id="map-mobile-detail" class="map-mobile-detail hidden">
-                        <button id="map-mobile-detail-close" class="map-mobile-detail-close" aria-label="Закрыть">✕</button>
+                        <button id="map-mobile-detail-close" class="map-mobile-detail-close" aria-label="Закрыть" data-i18n-aria-label="map.close">✕</button>
                         <div id="map-mobile-detail-content"></div>
                     </div>
                     <div class="map-filters-panel map-filters-standalone">
-                        <p class="map-filters-label">Фильтр по книгам</p>
+                        <p class="map-filters-label" data-i18n="map.filters.label">Фильтр по книгам</p>
                         <div id="places-filters" class="places-filters places-filters-bottom"></div>
                     </div>
                     <p class="map-note" data-i18n="map.note">Нажми на маркер, чтобы узнать о локации.</p>
@@ -205,9 +205,9 @@
                         <div class="places-carousel">
                             <div id="places-grid" class="map-grid"></div>
                             <div class="carousel-controls">
-                                <button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="Назад">&#8592;</button>
+                                <button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="Назад" data-i18n-aria-label="carousel.prev">&#8592;</button>
                                 <div id="carousel-counter" class="carousel-counter">1 / —</div>
-                                <button class="carousel-arrow carousel-next" id="carousel-next" aria-label="Вперёд">&#8594;</button>
+                                <button class="carousel-arrow carousel-next" id="carousel-next" aria-label="Вперёд" data-i18n-aria-label="carousel.next">&#8594;</button>
                             </div>
                         </div>
                     </aside>

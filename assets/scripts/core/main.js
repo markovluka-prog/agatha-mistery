@@ -299,55 +299,86 @@ const App = (() => {
     ];
 
     const DEFAULT_CHARACTERS = [
-        { name: "Агата Мистери" },
-        { name: "Ларри Мистери" },
-        { name: "Ватсон (кот)" },
-        { name: "Мистер Кент" },
-        { name: "Чандлер Мистери" }
+        { name: "Агата Мистери", name_en: "Agatha Mystery" },
+        { name: "Ларри Мистери", name_en: "Larry Mystery" },
+        { name: "Ватсон (кот)", name_en: "Watson (cat)" },
+        { name: "Мистер Кент", name_en: "Mr. Kent" },
+        { name: "Чандлер Мистери", name_en: "Chandler Mystery" }
     ];
 
     const DEFAULT_PLACES = [
         {
             id: 1,
             name: "Лондон, Англия",
+            name_en: "London, England",
             description: "Родной город Агаты Мистери. Здесь находится дом семьи Мистери и начинаются многие приключения.",
+            description_en: "Agatha Mystery's home city. The Mistery family home is here, and many adventures begin here.",
             lat: 51.5074,
             lng: -0.1278,
-            images: [{ url: 'assets/images/places/london.svg', caption: 'Биг-Бен' }]
+            images: [{ url: 'assets/images/places/london.svg', caption: 'Биг-Бен', caption_en: 'Big Ben' }]
         },
         {
             id: 2,
             name: "Париж, Франция",
+            name_en: "Paris, France",
             description: "Город любви и загадок, где Агата и Ларри раскрывали тайну исчезнувшей картины в Лувре.",
+            description_en: "The city of love and mysteries, where Agatha and Larry solved the case of a missing painting in the Louvre.",
             lat: 48.8566,
             lng: 2.3522,
-            images: [{ url: 'assets/images/places/paris.svg', caption: 'Эйфелева башня' }]
+            images: [{ url: 'assets/images/places/paris.svg', caption: 'Эйфелева башня', caption_en: 'Eiffel Tower' }]
         },
         {
             id: 3,
             name: "Египет, Каир",
+            name_en: "Cairo, Egypt",
             description: "Земля пирамид и фараонов. Агата исследовала древние гробницы и разгадала загадку проклятия.",
+            description_en: "The land of pyramids and pharaohs. Agatha explored ancient tombs and solved the mystery of a curse.",
             lat: 30.0444,
             lng: 31.2357,
-            images: [{ url: 'assets/images/places/cairo.svg', caption: 'Пирамиды Гизы' }]
+            images: [{ url: 'assets/images/places/cairo.svg', caption: 'Пирамиды Гизы', caption_en: 'Pyramids of Giza' }]
         },
         {
             id: 4,
             name: "Венеция, Италия",
+            name_en: "Venice, Italy",
             description: "Романтический город на воде, где происходила история с похищенной маской на карнавале.",
+            description_en: "A romantic city on the water, where the story of a stolen mask during carnival took place.",
             lat: 45.4408,
             lng: 12.3155,
-            images: [{ url: 'assets/images/places/venice.svg', caption: 'Гранд-канал' }]
+            images: [{ url: 'assets/images/places/venice.svg', caption: 'Гранд-канал', caption_en: 'Grand Canal' }]
         },
         {
             id: 5,
             name: "Токио, Япония",
+            name_en: "Tokyo, Japan",
             description: "Современный мегаполис, где Агата расследовала пропажу древнего самурайского меча.",
+            description_en: "A modern metropolis where Agatha investigated the disappearance of an ancient samurai sword.",
             lat: 35.6762,
             lng: 139.6503,
-            images: [{ url: 'assets/images/places/tokyo.svg', caption: 'Токийская башня' }]
+            images: [{ url: 'assets/images/places/tokyo.svg', caption: 'Токийская башня', caption_en: 'Tokyo Tower' }]
         }
     ];
+
+    const getCurrentLang = () => ((typeof I18n !== 'undefined' && I18n.getLang) ? I18n.getLang() : 'ru');
+
+    const localizeImages = (images = [], lang = getCurrentLang()) => images.map((image) => ({
+        ...image,
+        caption: lang === 'en' && image.caption_en ? image.caption_en : image.caption
+    }));
+
+    const localizeCharacter = (character, lang = getCurrentLang()) => ({
+        ...character,
+        name: lang === 'en' && character.name_en ? character.name_en : character.name,
+        shortDescription: lang === 'en' && character.shortDescription_en ? character.shortDescription_en : character.shortDescription,
+        fullBio: lang === 'en' && character.fullBio_en ? character.fullBio_en : character.fullBio
+    });
+
+    const localizePlace = (place, lang = getCurrentLang()) => ({
+        ...place,
+        name: lang === 'en' && place.name_en ? place.name_en : place.name,
+        description: lang === 'en' && place.description_en ? place.description_en : place.description,
+        images: localizeImages(place.images || [], lang)
+    });
 
     const loadPlaces = async () => {
         if (state.places) return state.places;
@@ -362,8 +393,8 @@ const App = (() => {
         }
 
         // Fallback to defaults if Supabase fails or is empty
-        state.places = DEFAULT_PLACES;
-        return DEFAULT_PLACES;
+        state.places = DEFAULT_PLACES.map((place) => localizePlace(place));
+        return state.places;
     };
 
     const loadCharacters = async () => {
@@ -385,19 +416,19 @@ const App = (() => {
         // Try JSON
         try {
             const characters = await fetchJson(`${state.basePath}assets/data/characters.json`);
-            state.characters = characters;
-            return characters;
+            state.characters = characters.map((character) => localizeCharacter(character));
+            return state.characters;
         } catch (error) {
             // Try Inline
             const inline = readInlineCharacters();
             if (inline) {
-                state.characters = inline;
-                return inline;
+                state.characters = inline.map((character) => localizeCharacter(character));
+                return state.characters;
             }
 
             // Final Fallback
-            state.characters = DEFAULT_CHARACTERS;
-            return DEFAULT_CHARACTERS;
+            state.characters = DEFAULT_CHARACTERS.map((character) => localizeCharacter(character));
+            return state.characters;
         }
     };
 
@@ -561,6 +592,12 @@ const App = (() => {
     const applyTemplate = (template, data) => String(template || '').replace(/\{(\w+)\}/g, (match, key) => (
         Object.prototype.hasOwnProperty.call(data, key) ? data[key] : match
     ));
+
+    const sanitizeAboutContent = (content) => String(content || '')
+        .replace(/\s*На сайте практически отсутствует контент созданный ИИ\.?/g, '')
+        .replace(/\s*The site contains virtually no AI-generated content\.?/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
 
     const getQuizSessionStorageKey = (quizId) => `quiz_session_${Number(quizId) || 0}`;
 
@@ -1925,6 +1962,14 @@ const App = (() => {
                 }))
             }));
         }
+
+        sections = sections.map(section => ({
+            ...section,
+            blocks: (section.blocks || []).map(block => ({
+                ...block,
+                content: sanitizeAboutContent(block.content)
+            }))
+        }));
 
         container.innerHTML = sections.map(section => `
             <div class="accordion-item">

@@ -17,6 +17,7 @@ const I18n = (() => {
             'hero.text': 'Погрузись в захватывающий мир тайн и приключений вместе с Агатой Мистери. У нас ты найдёшь уникальные карты с местами действия историй, интересные викторины, а также подробные биографии персонажей. Проверь свою память и знания о книгах, участвуй в увлекательных играх и делись своими впечатлениями. Создавай иллюстрации и пиши фанфики — у нас есть всё для настоящих фанатов.',
             'hero.btn.map': 'Исследовать карту',
             'hero.btn.quiz': 'Пройти викторину',
+            'form.honeypot': 'Не заполняйте это поле',
             'home.start.title': 'С чего начать',
             'home.start.characters.title': 'Познакомься с героями',
             'home.start.characters.text': 'Быстро разберись, кто есть кто в мире Агаты: семья, союзники, питомцы и эксперты из разных стран.',
@@ -75,6 +76,8 @@ const I18n = (() => {
             // Quizzes page
             'quizzes.title': 'Викторины',
             'quizzes.subtitle': 'Проверь свои знания о мире Агаты Мистери!',
+            'quizzes.detail.title': 'Викторина',
+            'quizzes.detail.subtitle': 'Ответь на вопросы и узнай свой результат.',
             'quizzes.loading': 'Загрузка викторин...',
             'quizzes.error': 'Не удалось загрузить викторины',
             'quizzes.questions': 'Вопросов',
@@ -83,6 +86,7 @@ const I18n = (() => {
             'quizzes.question': 'Вопрос',
             'quizzes.answer.all': 'Ответьте на все вопросы, чтобы узнать результат.',
             'quizzes.result': 'Ваш результат: {correct} из {total} ({percent}%).',
+            'quizzes.correct.title': 'Правильные ответы',
             'quizzes.notfound': 'Викторина не найдена.',
             'quizzes.of': 'из',
             'quizzes.input.placeholder': 'Введите ваш ответ...',
@@ -97,6 +101,7 @@ const I18n = (() => {
             'quizzes.builder.available': 'Вопросов на этой сложности',
             'quizzes.builder.empty': 'Для такой сложности пока нет вопросов.',
             'quizzes.builder.ready': 'Нажми «Начать викторину», и мы соберём для тебя 10 случайных вопросов по этой теме.',
+            'quizzes.completed.locked': 'Этот квиз уже завершён после финального сабмита и больше не редактируется.',
             'quizzes.difficulty.easy': 'Лёгкая',
             'quizzes.difficulty.medium': 'Средняя',
             'quizzes.difficulty.hard': 'Сложная',
@@ -122,6 +127,9 @@ const I18n = (() => {
             'form.illustration.art.title': 'Название работы:',
             'form.illustration.description': 'Описание:',
             'form.illustration.file': 'Файл изображения:',
+            'form.illustration.subject': 'Персонаж или место:',
+            'form.illustration.select_subject': 'Выберите, кто или что на изображении',
+            'form.illustration.subject_label': 'Тема:',
             'form.illustration.submit': 'Загрузить',
 
             'form.success': 'Спасибо! Ваша работа отправлена в архив фанатов.',
@@ -156,6 +164,8 @@ const I18n = (() => {
             'about.loading': 'Загрузка истории...',
             'about.error': 'Не удалось загрузить информацию.',
             'about.empty': 'История еще не написана. Расскажите о себе!',
+            'characters.detail.title': 'Досье персонажа',
+            'characters.detail.subtitle': 'Подробная информация о героях серии.',
 
             // Workshop
             'workshop.title': 'Творческая мастерская',
@@ -178,8 +188,14 @@ const I18n = (() => {
             'supabase.connect': 'Подключите Supabase для просмотра.',
             'gallery.prev': 'Предыдущее',
             'gallery.next': 'Следующее',
+            'carousel.prev': 'Назад',
+            'carousel.next': 'Вперёд',
+            'map.close': 'Закрыть',
+            'map.filters.label': 'Фильтр по книгам',
             'review.local': '(Сохранено локально)',
             'review.score': 'Оценка: {score}/10.',
+            'search.no_results': 'Ничего не найдено',
+            'form.sent.banner': 'ОТПРАВЛЕНО',
 
             // Character Names
             'char.agatha': 'Агата Мистери',
@@ -223,6 +239,7 @@ const I18n = (() => {
             'hero.text': 'Dive into the thrilling world of mysteries and adventures with Agatha Mystery. Here you\'ll find unique maps of story locations, exciting quizzes, and detailed character biographies. Test your memory and knowledge of the books, participate in engaging games, and share your impressions. Create illustrations and write fanfiction — we have everything for true fans.',
             'hero.btn.map': 'Explore Map',
             'hero.btn.quiz': 'Take a Quiz',
+            'form.honeypot': 'Do not fill in this field',
             'home.start.title': 'Where to start',
             'home.start.characters.title': 'Meet the heroes',
             'home.start.characters.text': 'Quickly understand who is who in Agatha’s world: family, allies, pets, and experts from different countries.',
@@ -281,6 +298,8 @@ const I18n = (() => {
             // Quizzes page
             'quizzes.title': 'Quizzes',
             'quizzes.subtitle': 'Test your knowledge of the Agatha Mystery world!',
+            'quizzes.detail.title': 'Quiz',
+            'quizzes.detail.subtitle': 'Answer the questions and see your result.',
             'quizzes.loading': 'Loading quizzes...',
             'quizzes.error': 'Failed to load quizzes',
             'quizzes.questions': 'Questions',
@@ -289,6 +308,7 @@ const I18n = (() => {
             'quizzes.question': 'Question',
             'quizzes.answer.all': 'Answer all questions to see your result.',
             'quizzes.result': 'Your result: {correct} out of {total} ({percent}%).',
+            'quizzes.correct.title': 'Correct answers',
             'quizzes.notfound': 'Quiz not found.',
             'quizzes.of': 'of',
             'quizzes.input.placeholder': 'Enter your answer...',
@@ -303,6 +323,7 @@ const I18n = (() => {
             'quizzes.builder.available': 'Questions at this difficulty',
             'quizzes.builder.empty': 'No questions for this difficulty yet.',
             'quizzes.builder.ready': 'Press “Start quiz” and we will pick 10 random questions for this theme.',
+            'quizzes.completed.locked': 'This quiz has already been finished after the final submission and can no longer be edited.',
             'quizzes.difficulty.easy': 'Easy',
             'quizzes.difficulty.medium': 'Medium',
             'quizzes.difficulty.hard': 'Hard',
@@ -328,6 +349,9 @@ const I18n = (() => {
             'form.illustration.art.title': 'Artwork title:',
             'form.illustration.description': 'Description:',
             'form.illustration.file': 'Image file:',
+            'form.illustration.subject': 'Character or location:',
+            'form.illustration.select_subject': 'Choose who or what is shown in the image',
+            'form.illustration.subject_label': 'Subject:',
             'form.illustration.submit': 'Upload',
 
             'form.success': 'Thank you! Your work has been submitted to the fan archive.',
@@ -362,6 +386,8 @@ const I18n = (() => {
             'about.loading': 'Loading history...',
             'about.error': 'Failed to load information.',
             'about.empty': 'History hasn\'t been written yet. Tell us about yourself!',
+            'characters.detail.title': 'Character File',
+            'characters.detail.subtitle': 'Detailed information about the heroes of the series.',
 
             // Workshop
             'workshop.title': 'Creative Workshop',
@@ -384,8 +410,14 @@ const I18n = (() => {
             'supabase.connect': 'Connect Supabase to view.',
             'gallery.prev': 'Previous',
             'gallery.next': 'Next',
+            'carousel.prev': 'Previous',
+            'carousel.next': 'Next',
+            'map.close': 'Close',
+            'map.filters.label': 'Filter by books',
             'review.local': '(Saved locally)',
             'review.score': 'Score: {score}/10.',
+            'search.no_results': 'Nothing found',
+            'form.sent.banner': 'SUBMITTED',
 
             // Character Names
             'char.agatha': 'Agatha Mystery',
