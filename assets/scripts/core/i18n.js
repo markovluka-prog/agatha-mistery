@@ -9,6 +9,7 @@ const I18n = (() => {
             'nav.map': 'Карта мира',
             'nav.quizzes': 'Викторины',
             'nav.characters': 'Персонажи',
+            'nav.books': 'Книги',
             'nav.about': 'О нас',
             'nav.lang': 'EN',
 
@@ -231,6 +232,7 @@ const I18n = (() => {
             'nav.map': 'World Map',
             'nav.quizzes': 'Quizzes',
             'nav.characters': 'Characters',
+            'nav.books': 'Books',
             'nav.about': 'About Us',
             'nav.lang': 'RU',
 
