@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7D95BPFKZE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      if (localStorage.getItem('owner') !== 'true') {
+        gtag('config', 'G-7D95BPFKZE');
+      }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'">
+    <meta name="description" content="Все книги серии Агата Мистери по порядку — краткие описания без спойлеров, страны, персонажи каждой части.">
+    <meta name="keywords" content="Агата Мистери, все книги, список, по порядку, Стив Стивенсон">
+    <title>Все книги Агаты Мистери по порядку | Агата Мистери</title>
+
+    <link rel="stylesheet" href="../assets/styles/main.css">
+    <link rel="stylesheet" href="../assets/styles/navigation.css">
+    <style>
+        .books-intro {
+            max-width: 760px;
+            margin: 0 auto 48px;
+            text-align: center;
+        }
+        .books-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        .beginner-tip {
+            background: rgba(246, 212, 0, 0.10);
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            text-align: left;
+            margin-top: 24px;
+        }
+        .beginner-tip strong {
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .book-card {
+            display: grid;
+            grid-template-columns: 52px 1fr;
+            gap: 20px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(246,212,0,0.15);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .book-card:hover {
+            border-color: rgba(246,212,0,0.4);
+            background: rgba(255,255,255,0.07);
+        }
+        .book-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            opacity: 0.4;
+            line-height: 1;
+            padding-top: 4px;
+            text-align: right;
+        }
+        .book-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 0 0 4px;
+        }
+        .book-location {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            opacity: 0.7;
+            margin: 0 0 12px;
+        }
+        .book-location::before { content: "📍 "; }
+        .book-description {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: var(--text-light);
+            margin: 0 0 10px;
+        }
+        .book-characters {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            opacity: 0.7;
+            margin: 0 0 14px;
+        }
+        .book-characters b { opacity: 1; color: var(--text-light); }
+        .book-source {
+            font-size: 0.75rem;
+            opacity: 0.4;
+            margin: 0 0 10px;
+            font-style: italic;
+        }
+        .book-hook {
+            font-style: italic;
+            color: var(--secondary-color);
+            font-size: 0.93rem;
+            opacity: 0.9;
+            border-top: 1px solid rgba(246,212,0,0.15);
+            padding-top: 12px;
+            margin: 0;
+        }
+        .facts-section {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(246,212,0,0.15);
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 48px;
+        }
+        .facts-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 24px;
+        }
+        .fact-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        .fact-item:last-child { margin-bottom: 0; }
+        .fact-number {
+            min-width: 32px; height: 32px;
+            background: var(--secondary-color);
+            color: #141414;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .fact-text {
+            font-size: 0.98rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            padding-top: 4px;
+        }
+        .fact-source {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            font-style: italic;
+            display: block;
+            margin-top: 2px;
+        }
+        .cta-section {
+            text-align: center;
+            padding: 48px 24px;
+            margin-top: 16px;
+        }
+        .cta-section h2 { color: var(--secondary-color); margin-bottom: 12px; }
+        .cta-section p { color: var(--text-light); margin-bottom: 28px; line-height: 1.6; }
+        .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        @media (max-width: 600px) {
+            .book-card { grid-template-columns: 36px 1fr; gap: 12px; padding: 16px; }
+            .book-number { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1 data-i18n="site.title">Агата Мистери</h1>
+            </div>
+            <button class="burger-menu" aria-label="Меню" data-i18n-aria-label="nav.menu.label">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="../index.html" data-i18n="nav.home">Главная</a></li>
+                <li><a href="map.html" data-i18n="nav.map">Карта мира</a></li>
+                <li><a href="quiz.html" data-i18n="nav.quizzes">Викторины</a></li>
+                <li><a href="characters.html" data-i18n="nav.characters">Персонажи</a></li>
+                <li><a href="books.html" class="active">Книги</a></li>
+                <li><a href="about.html" data-i18n="nav.about">О нас</a></li>
+                <li><button class="lang-toggle" data-lang-toggle>RU</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h2 class="section-title" style="font-size:2.5rem;margin-bottom:16px;">Все книги по порядку</h2>
+            <p>Полный список серии — от первой до последней</p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+
+            <!-- ВВЕДЕНИЕ -->
+            <div class="books-intro">
+                <p>Агата Мистери — двенадцатилетняя племянница самого Шерлока Холмса — обладает фотографической памятью и носом на преступления. Вместе с четырнадцатилетним кузеном Ларри, который мечтает стать писателем, и верным котом Ватсоном она объездила весь мир — от Бермудских островов до Токио. В каждой книге — новая страна, новая тайна и новый шанс доказать, что возраст не помеха для настоящего детектива.</p>
+                <p>Серию написал итальянский автор под псевдонимом Стив Стивенсон. Книги выходят с 2006 года и переведены на десятки языков.</p>
+                <div class="beginner-tip">
+                    <strong>С чего начать новичку?</strong>
+                    Начни с первой книги — «Убийство в Оксфорде». Она знакомит со всеми главными персонажами и отлично вводит в атмосферу серии. Если хочешь попробовать с середины — книги 6 и 17 отлично читаются самостоятельно.
+                </div>
+            </div>
+
+            <!-- КНИГА 1 -->
+            <div class="book-card">
+                <div class="book-number">1</div>
+                <div class="book-body">
+                    <h3 class="book-title">Убийство в Оксфорде</h3>
+                    <p class="book-location">Великобритания, Оксфорд</p>
+                    <p class="book-description">В престижном Оксфордском университете пропадает ценный исторический артефакт, а главный подозреваемый оказывается совершенно невиновным. Агата и Ларри приезжают разобраться — и с первых же страниц понимают, что всё гораздо сложнее.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, мистер Кент</p>
+                    <p class="book-hook">Первое дело — и сразу в самое пекло. Готов искать улики вместе с Агатой?</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 2 -->
+            <div class="book-card">
+                <div class="book-number">2</div>
+                <div class="book-body">
+                    <h3 class="book-title">Тайна египетских мумий</h3>
+                    <p class="book-location">Египет, Каир</p>
+                    <p class="book-description">Загадочное проклятие фараона, исчезнувшая мумия и коридоры древних пирамид — вот что ждёт Агату в раскалённом Египте. Местные легенды оказываются куда реальнее, чем хотелось бы.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Мелания (специалист по Египту)</p>
+                    <p class="book-hook">Древние тайны хранят свои секреты тысячелетиями. Пора их раскрыть.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 3 -->
+            <div class="book-card">
+                <div class="book-number">3</div>
+                <div class="book-body">
+                    <h3 class="book-title">Похищение в Голливуде</h3>
+                    <p class="book-location">США, Лос-Анджелес, Голливуд</p>
+                    <p class="book-description">За кулисами самой известной киностудии мира происходит дерзкое похищение. Агата и Ларри оказываются прямо в центре голливудской интриги — среди декораций, звёзд и людей, которые умеют притворяться.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Бад (знает все студии Голливуда)</p>
+                    <p class="book-source">Агент Бад — источник: биографии персонажей сайта</p>
+                    <p class="book-hook">В Голливуде всё — игра. Но это преступление — самое настоящее.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 4 -->
+            <div class="book-card">
+                <div class="book-number">4</div>
+                <div class="book-body">
+                    <h3 class="book-title">Кража в Лувре</h3>
+                    <p class="book-location">Франция, Париж</p>
+                    <p class="book-description">Из самого охраняемого музея мира пропадает бесценная картина. Следы ведут в лабиринт парижских улиц и тайных галерей. Агате понадобится вся её память, чтобы собрать картину буквально по кусочкам.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, мистер Кент</p>
+                    <p class="book-hook">Шедевр не может просто исчезнуть. Или может?</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 5 -->
+            <div class="book-card">
+                <div class="book-number">5</div>
+                <div class="book-body">
+                    <h3 class="book-title">Тайна венецианского карнавала</h3>
+                    <p class="book-location">Италия, Венеция</p>
+                    <p class="book-description">Во время карнавала, когда все прячут лица за масками, совершается идеальное преступление. Агата должна найти преступника среди тысяч замаскированных гостей — и у неё есть только одна ночь.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-hook">Маски скрывают лица. Но улики всегда остаются.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 6 -->
+            <div class="book-card">
+                <div class="book-number">6</div>
+                <div class="book-body">
+                    <h3 class="book-title">Сокровище Бермудских островов</h3>
+                    <p class="book-location">Атлантический океан, Бермудский треугольник</p>
+                    <p class="book-description">Корабли исчезают в Бермудском треугольнике уже сотни лет — и вот Агата и Ларри сами оказываются посреди этой загадочной зоны. Карта исчезновений, старинные легенды и кто-то, кто очень не хочет, чтобы тайна раскрылась.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Бермудский треугольник, Бермуды)</p>
+                    <p class="book-hook">Треугольник хранит свои тайны. Агата намерена их забрать.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 7 -->
+            <div class="book-card">
+                <div class="book-number">7</div>
+                <div class="book-body">
+                    <h3 class="book-title">Корона дожа</h3>
+                    <p class="book-location">Италия, Венеция</p>
+                    <p class="book-description">Старинная корона венецианских правителей похищена, а погоня за вором разворачивается прямо на воде — по каналам и гондолам города, где машин не существует. Гранд-канал становится главной ареной самой водной погони в истории серии.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Венеция, Гранд-канал — «главная артерия венецианского преследования»)</p>
+                    <p class="book-hook">По каналам Венеции на гондоле — это не романтика, это погоня!</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 8 -->
+            <div class="book-card">
+                <div class="book-number">8</div>
+                <div class="book-body">
+                    <h3 class="book-title">Погоня за белой жирафой</h3>
+                    <p class="book-location">Кения, Момбаса</p>
+                    <p class="book-description">В африканском порту Момбасы чувствуется запах соли, специй и опасности. Корабль вот-вот отплывёт, а вместе с ним — и улики, которые Агата должна успеть поймать раньше. Сухопутная погоня превращается в морскую.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Момбаса — «узел погони, связывающий сухопутное преследование с морским»)</p>
+                    <p class="book-hook">Африка огромна. Но улики всегда оставляют след.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 9 -->
+            <div class="book-card">
+                <div class="book-number">9</div>
+                <div class="book-body">
+                    <h3 class="book-title">Шпион под прикрытием</h3>
+                    <p class="book-location">Швейцария, Женева</p>
+                    <p class="book-description">В нейтральной Швейцарии никто не должен быть ни за кого — но именно здесь разворачивается дело, где никому нельзя доверять. Агата впервые сталкивается с профессиональными шпионами и понимает: детективные книги не врали.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Алджернон (мастер расшифровки)</p>
+                    <p class="book-source">Агент Алджернон — источник: биографии персонажей сайта</p>
+                    <p class="book-hook">Когда все притворяются — настоящим становится только опасность.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 10 -->
+            <div class="book-card">
+                <div class="book-number">10</div>
+                <div class="book-body">
+                    <h3 class="book-title">Опасный круиз</h3>
+                    <p class="book-location">Норвегия, Тронхейм, Берген, фьорды</p>
+                    <p class="book-description">Круизный лайнер среди норвежских фьордов — казалось бы, идеальный отдых. Но уже на третий день на борту происходит нечто, что не вписывается ни в одно туристическое расписание. Агента Сэмюэля, который живёт здесь с семьёй, тоже втягивают в расследование.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Сэмюэль (живёт в Норвегии)</p>
+                    <p class="book-source">Локации: карта сайта (Тронхейм, Берген, Тронхеймс-фьорд) · Агент Сэмюэль — биографии персонажей сайта</p>
+                    <p class="book-hook">Фьорды красивы. И очень хорошо скрывают тайны.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 11 -->
+            <div class="book-card">
+                <div class="book-number">11</div>
+                <div class="book-body">
+                    <h3 class="book-title">Похищение в Ватикане</h3>
+                    <p class="book-location">Италия, Рим, Ватикан</p>
+                    <p class="book-description">Из стен самого маленького государства в мире исчезает нечто бесценное. Агата прилетает через аэропорт Фьюмичино, проходит по Виа Национале и понимает: дело касается всего католического мира. Ватикан не любит, когда его секреты раскрывают чужаки.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Рим, Фьюмичино, Виа Национале)</p>
+                    <p class="book-hook">За тысячелетними стенами хранятся не только молитвы.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 12 -->
+            <div class="book-card">
+                <div class="book-number">12</div>
+                <div class="book-body">
+                    <h3 class="book-title">Таинственная роза Альгамбры</h3>
+                    <p class="book-location">Испания, Гранада</p>
+                    <p class="book-description">Дворец Альгамбра хранит тайны мавританских правителей — и кто-то решил воспользоваться этим. В лабиринте залов и садов Гранады Агата ищет похищенную реликвию, а её фотографическая память работает на пределе.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Гранада, Альгамбра — «главный исторический фон испанской части расследования»)</p>
+                    <p class="book-hook">Альгамбра — самый красивый лабиринт в Европе. Выбраться из него ещё никому не удавалось быстро.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 13 -->
+            <div class="book-card">
+                <div class="book-number">13</div>
+                <div class="book-body">
+                    <h3 class="book-title">Загадка исчезнувшего аббата</h3>
+                    <p class="book-location">Франция, Прованс</p>
+                    <p class="book-description">В старинном монастыре на юге Франции пропал настоятель. Стены хранят молчание, монахи не говорят лишнего — а Агата уверена, что разгадка скрыта именно здесь, в этой намеренной тишине.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-hook">Тишина монастыря оглушительна. Особенно когда в ней прячется тайна.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 14 -->
+            <div class="book-card">
+                <div class="book-number">14</div>
+                <div class="book-body">
+                    <h3 class="book-title">Сыщик против сыщика</h3>
+                    <p class="book-location">США, Нью-Йорк, Манхэттен</p>
+                    <p class="book-description">В Нью-Йорке проходит конгресс детективов со всего мира — и именно здесь происходит преступление, которое никто не предвидел. Агата прилетает через аэропорт Кеннеди и с первых минут понимает: соперники-детективы могут оказаться опаснее преступников.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Нью-Йорк, Манхэттен, аэропорт Кеннеди — «место конгресса детективов»)</p>
+                    <p class="book-hook">Когда детективы собираются вместе — жди самого запутанного дела.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 15 -->
+            <div class="book-card">
+                <div class="book-number">15</div>
+                <div class="book-body">
+                    <h3 class="book-title">Секрет графа Дракулы</h3>
+                    <p class="book-location">Румыния, Клуж-Напока · Великобритания, Лондон</p>
+                    <p class="book-description">Легенда о Дракуле уводит Агату в Румынию — туманные замки, карпатские перевалы и местные, которые слишком хорошо знают, о чём молчать. А Ларри тем временем назначает романтическую встречу у Лондонского колеса обозрения.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Клуж-Напока — «старт румынской части», Лондонский глаз — «место встречи Ларри с Рози»)</p>
+                    <p class="book-hook">Граф Дракула — миф. Или нет?</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 16 -->
+            <div class="book-card">
+                <div class="book-number">16</div>
+                <div class="book-body">
+                    <h3 class="book-title">Разыскивается ковёр-самолёт</h3>
+                    <p class="book-location">Узбекистан, Самарканд</p>
+                    <p class="book-description">Из Лондона — в древний Самарканд, один из красивейших городов Центральной Азии. Там пропал старинный ковёр с зашифрованной картой — и теперь Агате нужно разобрать чужой язык, чужую культуру и чужие хитрости.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Самарканд — «главная цель охоты за похищенным ковром», Лондон — стартовая точка)</p>
+                    <p class="book-hook">За тысячи километров от дома — и улики тоже там.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 17 -->
+            <div class="book-card">
+                <div class="book-number">17</div>
+                <div class="book-body">
+                    <h3 class="book-title">Пожар в джунглях</h3>
+                    <p class="book-location">Бразилия, Рио-де-Жанейро, Манаус, Амазония</p>
+                    <p class="book-description">Пляж Ипанема, жара, карнавальные ритмы — и посреди всего этого кто-то поджигает джунгли. Агата встречается с агентом Уолтером прямо у океана, а потом путь ведёт вглубь Амазонии, где законы совсем другие.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Уолтер (химик, живёт в Рио)</p>
+                    <p class="book-source">Локации: карта сайта (Рио, пляж Ипанема, Манаус) · Уолтер — биографии персонажей сайта («встречает на пляже Ипанема»)</p>
+                    <p class="book-hook">Амазония — самые большие лёгкие планеты. И кто-то хочет их поджечь.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 18 -->
+            <div class="book-card">
+                <div class="book-number">18</div>
+                <div class="book-body">
+                    <h3 class="book-title">Тайна Бермудского треугольника</h3>
+                    <p class="book-location">Карибское море, Багамы</p>
+                    <p class="book-description">Ещё одна экспедиция в воды, где пропадают корабли и самолёты. На этот раз у Агаты есть карта и подсказка — но есть и противник, который знает эти воды не хуже.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Улисс (живёт на катамаране, 7 лет не сходит на берег)</p>
+                    <p class="book-source">Агент Улисс — биографии персонажей сайта</p>
+                    <p class="book-hook">Некоторые тайны тонут намеренно. Пора нырять.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 19 -->
+            <div class="book-card">
+                <div class="book-number">19</div>
+                <div class="book-body">
+                    <h3 class="book-title">По следам алмаза</h3>
+                    <p class="book-location">Нидерланды, Амстердам</p>
+                    <p class="book-description">Погоня на велосипедах по набережным Херенграхт, встреча у Магере-Брюг — знаменитого «тощего» моста — и план грабителя, который рассыпается на глазах у Агаты. Амстердам идеален для велосипедной погони.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Херенграхт, Magna Plaza, Магере-Брюг — «место раскрытия плана грабителя»)</p>
+                    <p class="book-hook">Алмаз маленький. Но его очень хорошо видно, когда знаешь куда смотреть.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 20 -->
+            <div class="book-card">
+                <div class="book-number">20</div>
+                <div class="book-body">
+                    <h3 class="book-title">Призрак Версаля</h3>
+                    <p class="book-location">Франция, Версаль</p>
+                    <p class="book-description">В залах Версальского дворца появляется привидение — или кто-то очень хочет, чтобы так казалось. Агата не верит в призраков, но верит в улики — и ищет их среди позолоченных зеркал и пустых коридоров.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, мистер Кент</p>
+                    <p class="book-hook">Призраков не существует. Но преступники очень любят ими притворяться.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 21 -->
+            <div class="book-card">
+                <div class="book-number">21</div>
+                <div class="book-body">
+                    <h3 class="book-title">Преступление на десерт</h3>
+                    <p class="book-location">США, Новый Орлеан</p>
+                    <p class="book-description">Новый Орлеан — город джаза, вуду и лучших десертов в Америке. Именно сюда сходятся все нити дела о пропавшей рукописи. Агата распутывает след в атмосфере карнавального города, где всё не то, чем кажется.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Новый Орлеан — «конечная точка следа украденной рукописи»)</p>
+                    <p class="book-hook">Рукопись — не просто бумага. Иногда за ней стоит целое состояние.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 22 -->
+            <div class="book-card">
+                <div class="book-number">22</div>
+                <div class="book-body">
+                    <h3 class="book-title">Миллион за птицу додо</h3>
+                    <p class="book-location">Великобритания, Оксфорд</p>
+                    <p class="book-description">Студент Оксфорда похищен — и выкуп назначен в лесу Уитем-Вудс. Агент Билл, орнитолог с фермой неподалёку, и его сокол Марло помогают отследить след. А птица додо тут причём? Узнаешь в конце.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Билл (орнитолог, ферма у Оксфорда, сокол Марло)</p>
+                    <p class="book-source">Локации: карта сайта (Оксфорд, Уитем-Вудс — «место выкупа у озера») · Агент Билл — биографии персонажей сайта</p>
+                    <p class="book-hook">Птица додо вымерла. Но дело с ней — очень живое.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 23 -->
+            <div class="book-card">
+                <div class="book-number">23</div>
+                <div class="book-body">
+                    <h3 class="book-title">Шифр контрабандистов</h3>
+                    <p class="book-location">Германия, Берлин</p>
+                    <p class="book-description">Из лондонской штаб-квартиры «Ока Интернэшнл» — прямо в Берлин. Зашифрованное послание, пропавший дядя Гельмут и город, который умеет хранить секреты. Агент-дешифровщик Алджернон здесь как нельзя кстати.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, агент Алджернон (мастер расшифровки)</p>
+                    <p class="book-source">Локации: карта сайта (Берлин, Берлин-Тегель — «поиск дяди Гельмута») · Алджернон — биографии персонажей сайта</p>
+                    <p class="book-hook">Шифр — это просто загадка. Агата умеет их разгадывать.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 24 -->
+            <div class="book-card">
+                <div class="book-number">24</div>
+                <div class="book-body">
+                    <h3 class="book-title">Месть на горе Фудзи</h3>
+                    <p class="book-location">Япония, Токио · Гора Фудзи</p>
+                    <p class="book-description">Из Токио — к подножию священной горы Фудзи. Расследование разворачивается на фоне японских традиций, которые Агата уважает, но нарушает — потому что иначе нельзя. Цель преступника — сама гора.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Токио — «стартовая точка», гора Фудзи — «ключевая цель расследования»)</p>
+                    <p class="book-hook">Фудзи молчала тысячи лет. Но молчание — не защита.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 25 -->
+            <div class="book-card">
+                <div class="book-number">25</div>
+                <div class="book-body">
+                    <h3 class="book-title">Непредвиденный казус в Барселоне</h3>
+                    <p class="book-location">Испания, Барселона</p>
+                    <p class="book-description">На площади Каталонии, у фонтана Каналетес на Рамбле — агент передаёт посылку. Но что-то идёт не так, и Агате приходится импровизировать в самом живом городе Испании. Барселона не позволяет скучать.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Барселона, площадь Каталонии, фонтан Каналетес — «место контакта между героями и агентом»)</p>
+                    <p class="book-hook">Казус — это когда план рассыпается. Хорошо, что Агата умеет думать на ходу.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 26 -->
+            <div class="book-card">
+                <div class="book-number">26</div>
+                <div class="book-body">
+                    <h3 class="book-title">Сокровища королевы пиратов</h3>
+                    <p class="book-location">Индонезия, Бали</p>
+                    <p class="book-description">Остров Бали — рис, храмы, океан и… пиратское сокровище, которое ищут сразу несколько групп. На Бали Ватсон попадает в переделку из-за сардин, а Агата распутывает дело на фоне яванских закатов.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Бали — «поиск пиратского сокровища») · Приключение Ватсона — биографии персонажей сайта</p>
+                    <p class="book-hook">Пираты давно ушли. Но сокровища остались.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 27 -->
+            <div class="book-card">
+                <div class="book-number">27</div>
+                <div class="book-body">
+                    <h3 class="book-title">Загадочное происшествие на Венском балу</h3>
+                    <p class="book-location">Австрия, Вена</p>
+                    <p class="book-description">Из танцевальной школы Лондона — в роскошный Венский бал. Среди вальсов, фраков и бальных платьев разворачивается главный конфликт книги. Агента в бальном платье узнать непросто — но улики она видит всегда.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Вена — «основная сцена бала», Лондон — «стартовая сцена в танцевальной школе»)</p>
+                    <p class="book-hook">На балу все улыбаются. Но кто-то улыбается слишком широко.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 28 -->
+            <div class="book-card">
+                <div class="book-number">28</div>
+                <div class="book-body">
+                    <h3 class="book-title">Охота за призраком Карпат</h3>
+                    <p class="book-location">Польша, Краков</p>
+                    <p class="book-description">Старинный город, средневековые улочки и легенда о призраке, который появляется раз в сто лет. Агата не верит в совпадения — и правильно делает. За каждой легендой стоит живой человек.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон, мистер Кент</p>
+                    <p class="book-hook">Призраки не существуют. Зато преступники — очень даже.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 29 -->
+            <div class="book-card">
+                <div class="book-number">29</div>
+                <div class="book-body">
+                    <h3 class="book-title">Модные интриги в Милане</h3>
+                    <p class="book-location">Италия, Милан</p>
+                    <p class="book-description">Неделя высокой моды в Милане — блеск, камеры, дизайнеры. И кто-то, кто использует всю эту суету как прикрытие. Агата ищет улики у Королевского дворца и на площади Пьяцца Гае Ауленти, пока вокруг кипит показ.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Милан, площадь Дуомо, Королевский дворец, Пьяцца Гае Ауленти)</p>
+                    <p class="book-hook">Мода — это иллюзия. Преступление — нет.</p>
+                </div>
+            </div>
+
+            <!-- КНИГА 30 -->
+            <div class="book-card">
+                <div class="book-number">30</div>
+                <div class="book-body">
+                    <h3 class="book-title">Пропавшее кольцо</h3>
+                    <p class="book-location">Ирландия, Дублин · Графство Голуэй</p>
+                    <p class="book-description">От собора Святого Патрика в Дублине — до приморской деревни Россавил и утёсов Моэр, где заканчивается земля и начинается Атлантика. Именно здесь, на «Ведьминой голове», расследование превращается в прямое столкновение.</p>
+                    <p class="book-characters"><b>Персонажи:</b> Ларри, Ватсон</p>
+                    <p class="book-source">Локации: карта сайта (Дублин, Россавил, утёсы Моэр — «место столкновения с преступниками»)</p>
+                    <p class="book-hook">Кольцо маленькое. Но дело — огромное, как ирландское небо.</p>
+                </div>
+            </div>
+
+            <!-- ФАКТЫ -->
+            <div class="facts-section">
+                <h2>Интересные факты о серии</h2>
+
+                <div class="fact-item">
+                    <div class="fact-number">1</div>
+                    <p class="fact-text">
+                        Мистер Кент — дворецкий с неожиданным прошлым: в молодости он был профессиональным боксёром. Его огромные руки теперь заваривают чай с той же точностью, с какой когда-то наносили удары.
+                        <span class="fact-source">Источник: биографии персонажей сайта</span>
+                    </p>
+                </div>
+
+                <div class="fact-item">
+                    <div class="fact-number">2</div>
+                    <p class="fact-text">
+                        Ватсон — не просто кот. На Бали его похитили ради сардин, а в другой книге он серенадами ухаживал за кошкой по имени Мэри. Сибирский кот с голубыми глазами умудряется попадать в приключения чаще, чем любой детектив.
+                        <span class="fact-source">Источник: биографии персонажей сайта · вопросы квиза</span>
+                    </p>
+                </div>
+
+                <div class="fact-item">
+                    <div class="fact-number">3</div>
+                    <p class="fact-text">
+                        Агент Улисс семь лет не сходит на берег — таково предсказание шамана. Он живёт на катамаране «Принцесса Мистери», а его попугай Чандлер ворует всё, до чего дотягивается.
+                        <span class="fact-source">Источник: биографии персонажей сайта</span>
+                    </p>
+                </div>
+
+                <div class="fact-item">
+                    <div class="fact-number">4</div>
+                    <p class="fact-text">
+                        За 30 книг Агата и Ларри побывали на 5 континентах. На карте сайта отмечены 46 реальных локаций из 19 книг — от Бермудского треугольника до утёсов Моэр в Ирландии.
+                        <span class="fact-source">Источник: карта локаций сайта</span>
+                    </p>
+                </div>
+
+                <div class="fact-item">
+                    <div class="fact-number">5</div>
+                    <p class="fact-text">
+                        Агент Билл — орнитолог, который держит ферму у Оксфорда и обучил сокола по имени Марло — в честь Кристофера Марло, английского поэта эпохи Шекспира. Агенты «Ока Интернэшнл» — люди с очень необычными хобби.
+                        <span class="fact-source">Источник: биографии персонажей сайта</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ПРИЗЫВ -->
+            <div class="cta-section">
+                <h2>Погрузись в мир Агаты глубже</h2>
+                <p>На сайте есть интерактивная карта с реальными локациями из книг и викторины на 940 вопросов — проверь, насколько хорошо ты знаешь серию!</p>
+                <div class="cta-buttons">
+                    <a href="map.html" class="btn btn-primary">Открыть карту локаций</a>
+                    <a href="quiz.html" class="btn btn-secondary">Пройти викторину</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p data-i18n="footer">&copy; 2024 Фанаты Агаты Мистери. Фан-сайт по книгам Стива Стивенсона.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/scripts/vendor/supabase.js"></script>
+    <script src="../assets/scripts/config/supabase-config.js"></script>
+    <script src="../assets/scripts/core/i18n.js"></script>
+    <script src="../assets/scripts/core/storage.js"></script>
+    <script src="../assets/scripts/core/main.js"></script>
+</body>
+
+</html>
