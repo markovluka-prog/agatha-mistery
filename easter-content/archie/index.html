@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Archie</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,37 +12,52 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 40px 16px 40px;
+      padding: 32px 16px 32px;
       background: #0d0d0d;
       font-family: Georgia, serif;
-      gap: 40px;
+      gap: 24px;
+      touch-action: none;
     }
     .title {
-      font-size: clamp(1.8rem, 5vw, 4rem);
+      font-size: clamp(1.6rem, 5vw, 4rem);
       color: #f5e9d0;
       text-align: center;
       letter-spacing: 0.04em;
+    }
+    #score {
+      font-size: 1.2rem;
+      color: #aaa;
+      font-family: monospace;
+      letter-spacing: 0.15em;
     }
     #game-wrap {
       position: relative;
       width: min(600px, 96vw);
       aspect-ratio: 3/2;
     }
-    canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-      border-radius: 8px;
+    canvas { width: 100%; height: 100%; display: block; border-radius: 8px; }
+    #controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
     }
-    #score {
-      font-size: 1.1rem;
-      color: #aaa;
-      font-family: monospace;
-      letter-spacing: 0.1em;
+    .ctrl-btn {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-size: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background 0.1s;
     }
+    .ctrl-btn:active, .ctrl-btn.pressed { background: rgba(255,255,255,0.3); }
     #hint {
-      font-size: 0.85rem;
-      color: #555;
+      font-size: 0.8rem;
+      color: #444;
       text-align: center;
       font-family: monospace;
     }
@@ -51,10 +66,12 @@
 <body>
   <p class="title">Archie Goodall, I mog u</p>
   <div id="score">0 : 0</div>
-  <div id="game-wrap">
-    <canvas id="c"></canvas>
+  <div id="game-wrap"><canvas id="c"></canvas></div>
+  <div id="controls">
+    <button class="ctrl-btn" id="btn-up">▲</button>
+    <button class="ctrl-btn" id="btn-down">▼</button>
   </div>
-  <div id="hint">W/S — left goalkeeper &nbsp;|&nbsp; ↑/↓ — right goalkeeper &nbsp;|&nbsp; Touch: drag your side</div>
+  <div id="hint">▲ ▼ — move goalkeeper &nbsp;|&nbsp; W/S on keyboard</div>
 
   <script>
     const canvas = document.getElementById('c');
@@ -68,6 +85,8 @@
     const GK_W = 18, GK_H = 80;
     const BALL_R = 10;
     const POST_Y = (H - GOAL_H) / 2;
+    const BOT_SPEED = 3.2;
+    const GK_SPEED = 5;
 
     let score = [0, 0];
     let ball, leftGK, rightGK;
@@ -87,11 +106,28 @@
     window.addEventListener('keydown', e => keys[e.key] = true);
     window.addEventListener('keyup',   e => keys[e.key] = false);
 
-    const GK_SPEED = 5;
+    const btnUp   = document.getElementById('btn-up');
+    const btnDown = document.getElementById('btn-down');
+    const pressed = { up: false, down: false };
+
+    function bindBtn(btn, key) {
+      btn.addEventListener('pointerdown', e => { e.preventDefault(); pressed[key] = true;  btn.classList.add('pressed'); });
+      btn.addEventListener('pointerup',   e => { e.preventDefault(); pressed[key] = false; btn.classList.remove('pressed'); });
+      btn.addEventListener('pointerleave',e => { pressed[key] = false; btn.classList.remove('pressed'); });
+    }
+    bindBtn(btnUp,   'up');
+    bindBtn(btnDown, 'down');
 
     function moveGK(gk, up, down) {
       if (up)   gk.y -= GK_SPEED;
       if (down) gk.y += GK_SPEED;
+      gk.y = Math.max(0, Math.min(H - GK_H, gk.y));
+    }
+
+    function botMove(gk) {
+      const target = ball.y - GK_H / 2;
+      const dy = target - gk.y;
+      gk.y += Math.sign(dy) * Math.min(Math.abs(dy), BOT_SPEED);
       gk.y = Math.max(0, Math.min(H - GK_H, gk.y));
     }
 
@@ -105,22 +141,22 @@
       const dt = Math.min((ts - lastTime) / 16.67, 3);
       lastTime = ts;
 
-      moveGK(leftGK,  keys['w'] || keys['W'], keys['s'] || keys['S']);
-      moveGK(rightGK, keys['ArrowUp'],         keys['ArrowDown']);
+      const goUp   = keys['w'] || keys['W'] || pressed.up;
+      const goDown = keys['s'] || keys['S'] || pressed.down;
+      moveGK(leftGK, goUp, goDown);
+      botMove(rightGK);
 
       ball.x += ball.vx * dt;
       ball.y += ball.vy * dt;
 
-      if (ball.y - BALL_R < 0)    { ball.y = BALL_R;      ball.vy = Math.abs(ball.vy); }
-      if (ball.y + BALL_R > H)    { ball.y = H - BALL_R;  ball.vy = -Math.abs(ball.vy); }
+      if (ball.y - BALL_R < 0)   { ball.y = BALL_R;     ball.vy =  Math.abs(ball.vy); }
+      if (ball.y + BALL_R > H)   { ball.y = H - BALL_R; ball.vy = -Math.abs(ball.vy); }
 
       if (ball.x - BALL_R < GOAL_W) {
-        const inGoal = ball.y > POST_Y && ball.y < POST_Y + GOAL_H;
-        if (!inGoal) { ball.x = GOAL_W + BALL_R; ball.vx = Math.abs(ball.vx); }
+        if (!(ball.y > POST_Y && ball.y < POST_Y + GOAL_H)) { ball.x = GOAL_W + BALL_R; ball.vx = Math.abs(ball.vx); }
       }
       if (ball.x + BALL_R > W - GOAL_W) {
-        const inGoal = ball.y > POST_Y && ball.y < POST_Y + GOAL_H;
-        if (!inGoal) { ball.x = W - GOAL_W - BALL_R; ball.vx = -Math.abs(ball.vx); }
+        if (!(ball.y > POST_Y && ball.y < POST_Y + GOAL_H)) { ball.x = W - GOAL_W - BALL_R; ball.vx = -Math.abs(ball.vx); }
       }
 
       for (const [gk, side] of [[leftGK, 1], [rightGK, -1]]) {
@@ -162,9 +198,7 @@
       ctx.fillStyle = 'rgba(255,255,255,0.08)';
       ctx.fillRect(0, POST_Y, GOAL_W, GOAL_H);
       ctx.fillRect(W - GOAL_W, POST_Y, GOAL_W, GOAL_H);
-
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
       ctx.strokeRect(0, POST_Y, GOAL_W, GOAL_H);
       ctx.strokeRect(W - GOAL_W, POST_Y, GOAL_W, GOAL_H);
 
@@ -175,68 +209,38 @@
       drawGK(ctx, leftGK,  '#3a7bd5', '#1a3a6a');
       drawGK(ctx, rightGK, '#d53a3a', '#6a1a1a');
 
+      ctx.font = 'bold 11px monospace';
+      ctx.fillStyle = 'rgba(255,100,100,0.7)';
+      ctx.textAlign = 'center';
+      ctx.fillText('BOT', rightGK.x + GK_W / 2, rightGK.y - 6);
+
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-      ctx.strokeStyle = '#222';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.strokeStyle = '#222'; ctx.lineWidth = 1.5; ctx.stroke();
       ctx.beginPath();
       ctx.arc(ball.x - 3, ball.y - 3, 3, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fill();
     }
 
     function drawGK(ctx, gk, bodyColor, darkColor) {
-      const x = gk.x, y = gk.y, w = GK_W, h = GK_H;
-      const cx = x + w / 2;
-
+      const x = gk.x, y = gk.y, w = GK_W, h = GK_H, cx = x + w / 2;
       ctx.fillStyle = bodyColor;
-      ctx.beginPath();
-      ctx.roundRect(x, y + h * 0.22, w, h * 0.55, 3);
-      ctx.fill();
-
+      ctx.beginPath(); ctx.roundRect(x, y + h * 0.22, w, h * 0.55, 3); ctx.fill();
       ctx.fillStyle = darkColor;
       ctx.fillRect(cx - 2, y + h * 0.22, 4, h * 0.55);
-
-      ctx.beginPath();
-      ctx.arc(cx, y + h * 0.13, w * 0.38, 0, Math.PI * 2);
-      ctx.fillStyle = '#f0c89a';
-      ctx.fill();
-
+      ctx.beginPath(); ctx.arc(cx, y + h * 0.13, w * 0.38, 0, Math.PI * 2);
+      ctx.fillStyle = '#f0c89a'; ctx.fill();
       ctx.fillStyle = '#ffe';
-      ctx.beginPath(); ctx.ellipse(x - 1, y + h * 0.35, 5, 7, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x - 1,     y + h * 0.35, 5, 7, 0, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.ellipse(x + w + 1, y + h * 0.35, 5, 7, 0, 0, Math.PI * 2); ctx.fill();
-
       ctx.fillStyle = '#222';
-      ctx.fillRect(x + 2, y + h * 0.77, w * 0.35, h * 0.23);
+      ctx.fillRect(x + 2,                y + h * 0.77, w * 0.35, h * 0.23);
       ctx.fillRect(x + w - 2 - w * 0.35, y + h * 0.77, w * 0.35, h * 0.23);
-
       ctx.fillStyle = '#111';
-      ctx.fillRect(x, y + h * 0.9, w * 0.4, h * 0.1);
+      ctx.fillRect(x,              y + h * 0.9, w * 0.4, h * 0.1);
       ctx.fillRect(x + w - w * 0.4, y + h * 0.9, w * 0.4, h * 0.1);
     }
-
-    let touchSide = null, touchStartY = 0, gkStartY = 0;
-    canvas.addEventListener('touchstart', e => {
-      e.preventDefault();
-      const t = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      const tx = (t.clientX - rect.left) * (W / rect.width);
-      const ty = (t.clientY - rect.top)  * (H / rect.height);
-      touchSide   = tx < W / 2 ? 'left' : 'right';
-      touchStartY = ty;
-      gkStartY    = touchSide === 'left' ? leftGK.y : rightGK.y;
-    }, { passive: false });
-    canvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      const t = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      const ty = (t.clientY - rect.top) * (H / rect.height);
-      const dy = ty - touchStartY;
-      if (touchSide === 'left')  leftGK.y  = Math.max(0, Math.min(H - GK_H, gkStartY + dy));
-      if (touchSide === 'right') rightGK.y = Math.max(0, Math.min(H - GK_H, gkStartY + dy));
-    }, { passive: false });
 
     requestAnimationFrame(loop);
   </script>
