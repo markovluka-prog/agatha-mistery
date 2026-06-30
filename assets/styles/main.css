@@ -357,7 +357,8 @@ img {
 }
 
 .card-image {
-    height: 240px;
+    aspect-ratio: 1 / 1;
+    height: auto;
     background: linear-gradient(120deg, #E9D8A6 0%, #F6D400 100%);
     display: flex;
     align-items: center;

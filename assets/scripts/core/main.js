@@ -1373,9 +1373,6 @@ const App = (() => {
             const fullBio = safeText(character.fullBio);
             container.innerHTML = `
                 <article class="card">
-                    <div class="card-image" style="height: 400px;" data-lightbox-url="${safeAttr(image)}" data-lightbox-caption="${safeAttr(character.name)}">
-                        ${image ? `<img src="${safeAttr(image)}" alt="${charName}">` : `<div class="no-image">${safeText(t('noimage', 'No image'))}</div>`}
-                    </div>
                     <div class="card-body">
                         <h2 class="card-title">${charName}</h2>
                         <p class="card-text">${fullBio}</p>
